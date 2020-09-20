@@ -63,7 +63,11 @@
 
 #include <kern/macro_help.h>
 #include <sys/cdefs.h>
+#include <Availability.h>
 
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
 
 __BEGIN_DECLS
 /* Assert error */
@@ -75,7 +79,11 @@ extern void     Assert(
 	int             line,
 	const char      *expression) __attribute__((noinline));
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12
 extern int kext_assertions_enable;
+#else
+#define kext_assertions_enable 1
+#endif
 
 #define __Panic(fmt, args...) panic(fmt, ##args)
 

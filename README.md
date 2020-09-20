@@ -71,3 +71,4 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `RootDomain.h` to avoid report virtual methods before 10.9
     - In `OSMetaClass.h` to avoid DriverKit usage before 10.15
     - In `cdefs.h` to avoid Darwin14 aliases before 10.10
+    - In `assert.h` to avoid kext assertion checking before 10.12
