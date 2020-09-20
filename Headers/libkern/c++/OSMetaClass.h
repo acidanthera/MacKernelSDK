@@ -30,9 +30,14 @@
 
 #include <sys/types.h>
 
+#include <Availability.h>
 #include <libkern/OSReturn.h>
 #include <kern/debug.h>
 #include <ptrauth.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
 
 /*
  * LIBKERN_ macros below can be used to describe the ownership semantics
@@ -875,15 +880,22 @@ protected:
 		const int    freeWhen) const = 0;
 
 public:
+
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
 	virtual kern_return_t
 	Dispatch(const IORPC rpc);
 
 	kern_return_t
 	Invoke(const IORPC rpc);
+#endif
 
 private:
 #if APPLE_KEXT_VTABLE_PADDING
 // Virtual Padding
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
+	virtual void _RESERVEDOSMetaClassBase3();
+#endif
 	virtual void _RESERVEDOSMetaClassBase4();
 	virtual void _RESERVEDOSMetaClassBase5();
 	virtual void _RESERVEDOSMetaClassBase6();
@@ -1743,8 +1755,13 @@ public:
 #define OSDeclareDefaultStructors(className)   \
 _OSDeclareDefaultStructors(className, )
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
 #define OSDeclareDefaultStructorsWithDispatch(className)   \
 _OSDeclareDefaultStructors(className, dispatch)
+#else
+#define OSDeclareDefaultStructorsWithDispatch(className)   \
+_OSDeclareDefaultStructors(className, )
+#endif
 
 
 /*!
@@ -1773,8 +1790,13 @@ _OSDeclareDefaultStructors(className, dispatch)
 #define OSDeclareAbstractStructors(className)                                   \
 _OSDeclareAbstractStructors(className, )
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
 #define OSDeclareAbstractStructorsWithDispatch(className)                       \
 _OSDeclareAbstractStructors(className, dispatch)
+#else
+#define OSDeclareAbstractStructorsWithDispatch(className)                       \
+_OSDeclareAbstractStructors(className, )
+#endif
 
 /*!
  * @define OSDeclareFinalStructors

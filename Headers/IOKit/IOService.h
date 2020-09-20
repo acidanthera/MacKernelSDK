@@ -61,6 +61,10 @@ extern "C" {
 
 #include <Availability.h>
 
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 #ifndef UINT64_MAX
 #define UINT64_MAX        18446744073709551615ULL
 #endif
@@ -450,7 +454,7 @@ public:
 
 public:
 
-#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
 
 /*! @function       configureReport
  *   @abstract       configure IOReporting channels
@@ -485,7 +489,7 @@ public:
 private:
 #if __LP64__
 
-#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
 	OSMetaClassDeclareReservedUsed(IOService, 0);
 	OSMetaClassDeclareReservedUsed(IOService, 1);
 #else
@@ -507,7 +511,7 @@ private:
 	OSMetaClassDeclareReservedUsed(IOService, 4);
 	OSMetaClassDeclareReservedUsed(IOService, 5);
 
-#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
 	OSMetaClassDeclareReservedUsed(IOService, 6);
 	OSMetaClassDeclareReservedUsed(IOService, 7);
 #else
