@@ -38,7 +38,12 @@
 #ifndef _STRING_H_
 #define _STRING_H_      1
 
+#include <Availability.h>
 #include <sys/types.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
 
 #ifdef __cplusplus
 extern "C" {

@@ -54,4 +54,4 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - MAC Framework (`security/_label.h`, `security/mac_framework.h`, `security/mac_policy.h`)
 - Added kmod targeting earlier macOS kernels:
     - 10.8 (`Library/x86_64/libkmod.a`)
-
+- Fixed `string.h` to avoid using new checked interfaces before 10.13
