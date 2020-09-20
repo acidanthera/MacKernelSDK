@@ -468,9 +468,7 @@ kauth_filesec_t kauth_filesec_alloc(int size);
 void            kauth_filesec_free(kauth_filesec_t fsp);
 extern kauth_scope_t kauth_register_scope(const char *_identifier, kauth_scope_callback_t _callback, void *_idata);
 extern void     kauth_deregister_scope(kauth_scope_t _scope);
-__kpi_deprecated("Use EndpointSecurity instead")
 extern kauth_listener_t kauth_listen_scope(const char *_identifier, kauth_scope_callback_t _callback, void *_idata);
-__kpi_deprecated("Use EndpointSecurity instead")
 extern void     kauth_unlisten_scope(kauth_listener_t _scope);
 extern int      kauth_authorize_action(kauth_scope_t _scope, kauth_cred_t _credential, kauth_action_t _action,
     uintptr_t _arg0, uintptr_t _arg1, uintptr_t _arg2, uintptr_t _arg3);

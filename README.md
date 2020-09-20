@@ -76,3 +76,4 @@ To compile for 32-bit you will need to add a set of flags in your project:
 - Fixed compiler warnings:
     - In `IOPCIDevice.h` due to missing overrides
     - In `OSMetaClass.h` due to using unsupported memory checking with older clang
+    - In `kauth.h` due to KPI deprecation
