@@ -42,7 +42,9 @@
 #include <sys/socket.h>
 
 #include <Availability.h>
-#define __NKE_API_DEPRECATED __API_DEPRECATED("Network Kernel Extension KPI is deprecated", macos(10.4, 10.15))
+#ifndef __NKE_API_DEPRECATED
+#define __NKE_API_DEPRECATED
+#endif
 
 __BEGIN_DECLS
 

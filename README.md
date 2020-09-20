@@ -61,9 +61,10 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - Cryptography (`corecrypto`, `libkern/crypto`)
     - CPU PM (`i386/cpu_topology.h` and `i386/pmCPU.h`)
     - MAC Framework (`security/_label.h`, `security/mac_framework.h`, `security/mac_policy.h`)
-- Added extra reverse-engineered headers:
+- Added extra compiled and reverse-engineered headers:
     - SMBus (`IOKit/IOSMBusController.h`)
     - Apple Smart Battery (`IOKit/battery/AppleSmartBatteryCommands.h`)
+    - KDP (`kdp/kdp_support.h`)
 - Added kmod targeting earlier macOS kernels:
     - 10.8 (`Library/x86_64/libkmod.a`)
 - Added availability checking when targeting older macOS versions:
@@ -77,3 +78,4 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `IOPCIDevice.h` due to missing overrides
     - In `OSMetaClass.h` due to using unsupported memory checking with older clang
     - In `kauth.h` due to KPI deprecation
+    - In `net`, `netinit`, `sys` due to NKE KPI deprecation

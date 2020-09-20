@@ -43,7 +43,9 @@
 #include <sys/_types/_sa_family_t.h>
 
 #include <Availability.h>
-#define __NKE_API_DEPRECATED __API_DEPRECATED("Network Kernel Extension KPI is deprecated", macos(10.4, 10.15.4))
+#ifndef __NKE_API_DEPRECATED
+#define __NKE_API_DEPRECATED
+#endif
 
 #if (TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR)
 #define KPI_INTERFACE_EMBEDDED 1
