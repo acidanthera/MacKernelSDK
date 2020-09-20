@@ -40,6 +40,16 @@
 #endif
 
 /*
+ * Older Apple compiler cannot use memory checking intrinsics in kernelspace.
+ * Disable them when clearly unavailable.
+ */
+#if !defined(__apple_build_version__) || __apple_build_version__ >= 11000000
+#define __HAS_XNU_MEMORY_MODEL 1
+#else
+#define __HAS_XNU_MEMORY_MODEL 0
+#endif
+
+/*
  * LIBKERN_ macros below can be used to describe the ownership semantics
  * of functions handling subclasses of OSObject.
  * The attributes propagate with inheritance, but can be overriden.
@@ -75,12 +85,12 @@
  *  This can be customized using the attributes
  *  LIBKERN_RETURNS_RETAINED_ON_ZERO and LIBKERN_RETURNS_RETAINED_ON_NONZERO.
  */
-#if __has_attribute(os_returns_retained)
+#if __has_attribute(os_returns_retained) && __HAS_XNU_MEMORY_MODEL
 #define LIBKERN_RETURNS_RETAINED __attribute__((os_returns_retained))
 #else
 #define LIBKERN_RETURNS_RETAINED
 #endif
-#if __has_attribute(os_returns_not_retained)
+#if __has_attribute(os_returns_not_retained) && __HAS_XNU_MEMORY_MODEL
 #define LIBKERN_RETURNS_NOT_RETAINED __attribute__((os_returns_not_retained))
 #else
 #define LIBKERN_RETURNS_NOT_RETAINED
@@ -91,7 +101,7 @@
  * It specifies that this function call would consume the reference to the
  * annotated parameter.
  */
-#if __has_attribute(os_consumed)
+#if __has_attribute(os_consumed) && __HAS_XNU_MEMORY_MODEL
 #define LIBKERN_CONSUMED __attribute__((os_consumed))
 #else
 #define LIBKERN_CONSUMED
@@ -102,7 +112,7 @@
  * It specifies that this method call consumes a reference to "this" (e.g.
  * by storing a reference to "this" in a passed parameter).
  */
-#if __has_attribute(os_consumes_this)
+#if __has_attribute(os_consumes_this) && __HAS_XNU_MEMORY_MODEL
 #define LIBKERN_CONSUMES_THIS __attribute__((os_consumes_this))
 #else
 #define LIBKERN_CONSUMES_THIS
@@ -114,7 +124,7 @@
  * It specifies that an out parameter at +1 is written into an argument iff
  * the function returns a zero return value.
  */
-#if __has_attribute(os_returns_retained_on_zero)
+#if __has_attribute(os_returns_retained_on_zero) && __HAS_XNU_MEMORY_MODEL
 #define LIBKERN_RETURNS_RETAINED_ON_ZERO __attribute__((os_returns_retained_on_zero))
 #else
 #define LIBKERN_RETURNS_RETAINED_ON_ZERO
@@ -126,7 +136,7 @@
  * It specifies that an out parameter at +1 is written into an argument iff
  * the function returns a non-zero return value.
  */
-#if __has_attribute(os_returns_retained_on_non_zero)
+#if __has_attribute(os_returns_retained_on_non_zero) && __HAS_XNU_MEMORY_MODEL
 #define LIBKERN_RETURNS_RETAINED_ON_NONZERO __attribute__((os_returns_retained_on_non_zero))
 #else
 #define LIBKERN_RETURNS_RETAINED_ON_NONZERO

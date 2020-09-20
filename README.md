@@ -56,6 +56,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
 
 ## Extensions and modifications
 
+- Based on macOS 11 SDK from Xcode 12.0 (12A7209)
 - Added extra headers from `xnu-6153.141.1`:
     - Cryptography (`corecrypto`, `libkern/crypto`)
     - CPU PM (`i386/cpu_topology.h` and `i386/pmCPU.h`)
@@ -74,3 +75,4 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `assert.h` to avoid kext assertion checking before 10.12
 - Fixed compiler warnings:
     - In `IOPCIDevice.h` due to missing overrides
+    - In `OSMetaClass.h` due to using unsupported memory checking with older clang
