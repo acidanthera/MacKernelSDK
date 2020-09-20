@@ -55,3 +55,4 @@ To compile for 32-bit you will need to add a set of flags in your project:
 - Added kmod targeting earlier macOS kernels:
     - 10.8 (`Library/x86_64/libkmod.a`)
 - Fixed `string.h` to avoid using new checked interfaces before 10.13
+- Fixed `IOService.h` compatibility with versions before 10.9

@@ -59,6 +59,7 @@ extern "C" {
 #include <kern/thread_call.h>
 }
 
+#include <Availability.h>
 
 #ifndef UINT64_MAX
 #define UINT64_MAX        18446744073709551615ULL
@@ -448,6 +449,9 @@ public:
 	virtual IOService * copyClientWithCategory( const OSSymbol * category );
 
 public:
+
+#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
+
 /*! @function       configureReport
  *   @abstract       configure IOReporting channels
  *   @availability   SPI on OS X v10.9 / iOS 7 and later
@@ -476,10 +480,19 @@ public:
 	    void                     *result,
 	    void                     *destination);
 
+#endif
+
 private:
 #if __LP64__
+
+#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
 	OSMetaClassDeclareReservedUsed(IOService, 0);
 	OSMetaClassDeclareReservedUsed(IOService, 1);
+#else
+	OSMetaClassDeclareReservedUnused(IOService, 0);
+	OSMetaClassDeclareReservedUnused(IOService, 1);
+#endif
+
 	OSMetaClassDeclareReservedUnused(IOService, 2);
 	OSMetaClassDeclareReservedUnused(IOService, 3);
 	OSMetaClassDeclareReservedUnused(IOService, 4);
@@ -493,8 +506,15 @@ private:
 	OSMetaClassDeclareReservedUsed(IOService, 3);
 	OSMetaClassDeclareReservedUsed(IOService, 4);
 	OSMetaClassDeclareReservedUsed(IOService, 5);
+
+#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090
 	OSMetaClassDeclareReservedUsed(IOService, 6);
 	OSMetaClassDeclareReservedUsed(IOService, 7);
+#else
+	OSMetaClassDeclareReservedUnused(IOService, 6);
+	OSMetaClassDeclareReservedUnused(IOService, 7);
+#endif
+
 #endif
 
 	OSMetaClassDeclareReservedUnused(IOService, 8);
