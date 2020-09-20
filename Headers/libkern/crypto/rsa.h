@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2000-2006 Apple Computer, Inc. All rights reserved.
+ * Copyright (c) 2016 Apple Computer, Inc. All rights reserved.
  *
  * @APPLE_OSREFERENCE_LICENSE_HEADER_START@
  *
@@ -26,47 +26,32 @@
  * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
  */
 
-#ifndef _CRYPTO_SHA1_H_
-#define _CRYPTO_SHA1_H_
+#ifndef _RSA_H
+#define _RSA_H
 
-#ifdef  __cplusplus
-extern "C" {
+#if defined(__cplusplus)
+extern "C"
+{
 #endif
 
-#define SHA_DIGEST_LENGTH       20
-#define SHA1_RESULTLEN          SHA_DIGEST_LENGTH
+#include <corecrypto/ccrsa.h>
+#define RSA_MAX_KEY_BITSIZE 4096
 
-typedef struct sha1_ctxt {
-	union {
-		u_int8_t        b8[20];
-		u_int32_t       b32[5]; /* state (ABCDE) */
-	} h;
-	union {
-		u_int8_t        b8[8];
-		u_int32_t       b32[2];
-		u_int64_t       b64[1]; /* # of bits, modulo 2^64 (msb first) */
-	} c;
-	union {
-		u_int8_t        b8[64];
-		u_int32_t       b32[16]; /* input buffer */
-	} m;
-	u_int8_t        count;          /* unused; for compatibility only */
-} SHA1_CTX;
+typedef struct{
+	ccrsa_pub_ctx_decl(ccn_sizeof(RSA_MAX_KEY_BITSIZE), key);
+} rsa_pub_ctx;
 
-/* For compatibility with the other SHA-1 implementation. */
-#define sha1_init(c)            SHA1Init(c)
-#define sha1_loop(c, b, l)      SHA1Update(c, b, l)
-#define sha1_result(c, b)       SHA1Final(b, c)
+int rsa_make_pub(rsa_pub_ctx *pub,
+    size_t exp_nbytes, const uint8_t *exp,
+    size_t mod_nbytes, const uint8_t *mod);
 
-extern void SHA1Init(SHA1_CTX *);
-extern void SHA1Update(SHA1_CTX *, const void *, size_t);
-#ifdef XNU_KERNEL_PRIVATE
-extern void SHA1UpdateUsePhysicalAddress(SHA1_CTX *, const void *, size_t);
-#endif
-extern void SHA1Final(void *, SHA1_CTX *);
+int rsa_verify_pkcs1v15(rsa_pub_ctx *pub, const uint8_t *oid,
+    size_t digest_len, const uint8_t *digest,
+    size_t sig_len, const uint8_t *sig,
+    bool *valid);
 
-#ifdef  __cplusplus
+#if defined(__cplusplus)
 }
 #endif
 
-#endif /*_CRYPTO_SHA1_H_*/
+#endif

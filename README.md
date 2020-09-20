@@ -44,4 +44,14 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - `-static`
     - `-target i386-apple-macos10.6`
 
-3. C++ Standard Library (`CLANG_CXX_LIBRARY`) -- Compiler Default or **empty**.
+3. C++ Standard Library (`CLANG_CXX_LIBRARY`) to **Compiler Default** or empty.
+
+## Extensions and modifications
+
+- Added extra headers from `xnu-6153.141.1`:
+    - Cryptography (`corecrypto`, `libkern/crypto`)
+    - CPU PM (`i386/cpu_topology.h` and `i386/pmCPU.h`)
+    - MAC Framework (`security/_label.h`, `security/mac_framework.h`, `security/mac_policy.h`)
+- Added kmod targeting earlier macOS kernels:
+    - 10.8 (`Library/x86_64/libkmod.a`)
+
