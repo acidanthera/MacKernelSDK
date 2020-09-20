@@ -79,3 +79,4 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `OSMetaClass.h` due to using unsupported memory checking with older clang
     - In `kauth.h` due to KPI deprecation
     - In `net`, `netinit`, `sys` due to NKE KPI deprecation
+    - In `OSUnserialize.h` due to `OSStringPtr` misuse

@@ -69,7 +69,7 @@ class OSString;
  */
 extern "C++" OSObjectPtr OSUnserializeXML(
 	const char  * buffer,
-	OSStringPtr * errorString = NULL);
+	OSString   ** errorString = NULL);
 
 /*!
  * @function OSUnserializeXML
@@ -96,13 +96,13 @@ extern "C++" OSObjectPtr OSUnserializeXML(
 extern "C++" OSObjectPtr OSUnserializeXML(
 	const char  * buffer,
 	size_t        bufferSize,
-	OSStringPtr   *errorString = NULL);
+	OSString   ** errorString = NULL);
 
 extern "C++" OSObjectPtr
-OSUnserializeBinary(const char *buffer, size_t bufferSize, OSStringPtr *errorString);
+OSUnserializeBinary(const char *buffer, size_t bufferSize, OSString **errorString);
 
 #ifdef __APPLE_API_OBSOLETE
-extern OSObjectPtr OSUnserialize(const char *buffer, OSStringPtr *errorString = NULL);
+extern OSObjectPtr OSUnserialize(const char *buffer, OSString **errorString = NULL);
 #endif /* __APPLE_API_OBSOLETE */
 
 #endif /* _OS_OSUNSERIALIZE_H */
