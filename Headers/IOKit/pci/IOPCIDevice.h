@@ -405,8 +405,8 @@ public:
                                     UInt32 type,  OSDictionary * properties,
                                     IOUserClient ** handler ) APPLE_KEXT_OVERRIDE;
 
-    virtual bool handleOpen(IOService * forClient, IOOptionBits options, void * arg);
-    virtual void handleClose(IOService * forClient, IOOptionBits options);
+    virtual bool handleOpen(IOService * forClient, IOOptionBits options, void * arg) APPLE_KEXT_OVERRIDE;
+    virtual void handleClose(IOService * forClient, IOOptionBits options) APPLE_KEXT_OVERRIDE;
 
     virtual IOReturn requestProbe( IOOptionBits options ) APPLE_KEXT_OVERRIDE;
 

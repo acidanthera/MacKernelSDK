@@ -72,3 +72,5 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `OSMetaClass.h` to avoid DriverKit usage before 10.15
     - In `cdefs.h` to avoid Darwin14 aliases before 10.10
     - In `assert.h` to avoid kext assertion checking before 10.12
+- Fixed compiler warnings:
+    - In `IOPCIDevice.h` due to missing overrides
