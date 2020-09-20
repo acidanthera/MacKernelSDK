@@ -26,6 +26,14 @@ To start using **MacKernelSDK** do the following steps:
 
     ![xcode-link](Docs/xcode-link.png)
 
+4. Ensure that **Library Search Paths** contains the `libkmod.a` location, e.g.:
+
+    ```
+    $(PROJECT_DIR)/MacKernelSDK/Library/x86_64
+    ```
+
+    Otherwise Xcode will link to the original libkmod.
+
 4. Optionally add `/MacKernelSDK` to `.gitignore`.
 
 ## Targeting `i386`
@@ -52,6 +60,9 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - Cryptography (`corecrypto`, `libkern/crypto`)
     - CPU PM (`i386/cpu_topology.h` and `i386/pmCPU.h`)
     - MAC Framework (`security/_label.h`, `security/mac_framework.h`, `security/mac_policy.h`)
+- Added extra reverse-engineered headers:
+    - SMBus (`IOKit/IOSMBusController.h`)
+    - Apple Smart Battery (`IOKit/battery/AppleSmartBatteryCommands.h`)
 - Added kmod targeting earlier macOS kernels:
     - 10.8 (`Library/x86_64/libkmod.a`)
 - Fixed `string.h` to avoid using new checked interfaces before 10.13
