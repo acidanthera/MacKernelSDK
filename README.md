@@ -65,6 +65,8 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - Apple Smart Battery (`IOKit/battery/AppleSmartBatteryCommands.h`)
 - Added kmod targeting earlier macOS kernels:
     - 10.8 (`Library/x86_64/libkmod.a`)
-- Fixed `string.h` to avoid using new checked interfaces before 10.13
-- Fixed `IOService.h` compatibility with versions before 10.9
-- Fixed DriverKit `Dispatch` compatibility with versions before 10.15
+- Added availability checking when targeting older macOS versions:
+    - In `string.h` to avoid using new checked interfaces before 10.13
+    - In `IOService.h` to avoid report virtual methods before 10.9
+    - In `RootDomain.h` to avoid report virtual methods before 10.9
+    - In `OSMetaClass.h` to avoid DriverKit usage before 10.15

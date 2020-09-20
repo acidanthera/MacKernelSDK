@@ -32,7 +32,11 @@
 #include <IOKit/pwr_mgt/IOPM.h>
 #include <IOKit/IOBufferMemoryDescriptor.h>
 #include <sys/vnode.h>
+#include <Availability.h>
 
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
 
 /*!
  * Types for PM Assertions
@@ -322,6 +326,8 @@ private:
 	virtual bool        askChangeDown( unsigned long ) APPLE_KEXT_OVERRIDE;
 	virtual void        tellChangeUp( unsigned long ) APPLE_KEXT_OVERRIDE;
 	virtual void        tellNoChangeDown( unsigned long ) APPLE_KEXT_OVERRIDE;
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
 	virtual IOReturn configureReport(IOReportChannelList   *channels,
 	    IOReportConfigureAction action,
 	    void                    *result,
@@ -330,6 +336,7 @@ private:
 	    IOReportUpdateAction     action,
 	    void                     *result,
 	    void                     *destination) APPLE_KEXT_OVERRIDE;
+#endif
 
 	void             configureReportGated(uint64_t channel_id,
 	    uint64_t action,
