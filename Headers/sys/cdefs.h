@@ -67,6 +67,12 @@
 #ifndef _CDEFS_H_
 #define _CDEFS_H_
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 #if defined(__cplusplus)
 #define __BEGIN_DECLS   extern "C" {
 #define __END_DECLS     }
@@ -473,7 +479,7 @@
 #define __DARWIN_ONLY_64_BIT_INO_T      0
 #define __DARWIN_ONLY_UNIX_CONFORMANCE  0
 #define __DARWIN_ONLY_VERS_1050         0
-#if defined(__x86_64__)
+#if defined(__x86_64__) && __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_10
 #define __DARWIN_SUF_DARWIN14   "_darwin14"
 #define __DARWIN14_ALIAS(sym)   __asm("_" __STRING(sym) __DARWIN_SUF_DARWIN14)
 #else
