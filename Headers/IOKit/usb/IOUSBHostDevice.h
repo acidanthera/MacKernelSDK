@@ -307,19 +307,19 @@ public:
      * @discussion      For a discussion of proper usage for <code>open</code> and <code>close</code>, see the discussion of "Session Management" above.
      */
 
-    virtual bool attach(IOService* provider);
-    virtual bool start(IOService* provider);
-    virtual bool terminate(IOOptionBits options = 0);
-    virtual bool willTerminate(IOService* provider, IOOptionBits options);
-    virtual void stop(IOService* provider);
-    virtual void free(void);
+    virtual bool attach(IOService* provider) APPLE_KEXT_OVERRIDE;
+    virtual bool start(IOService* provider) APPLE_KEXT_OVERRIDE;
+    virtual bool terminate(IOOptionBits options = 0) APPLE_KEXT_OVERRIDE;
+    virtual bool willTerminate(IOService* provider, IOOptionBits options) APPLE_KEXT_OVERRIDE;
+    virtual void stop(IOService* provider) APPLE_KEXT_OVERRIDE;
+    virtual void free(void) APPLE_KEXT_OVERRIDE;
 
-    virtual bool compareProperty(OSDictionary* matching, const char* key);
-    virtual bool compareProperty(OSDictionary* matching, const OSString* key);
-    virtual bool matchPropertyTable(OSDictionary* table, SInt32* score);
-    virtual bool matchPropertyTable(OSDictionary* table);
+    virtual bool compareProperty(OSDictionary* matching, const char* key) APPLE_KEXT_OVERRIDE;
+    virtual bool compareProperty(OSDictionary* matching, const OSString* key) APPLE_KEXT_OVERRIDE;
+    virtual bool matchPropertyTable(OSDictionary* table, SInt32* score) APPLE_KEXT_OVERRIDE;
+    virtual bool matchPropertyTable(OSDictionary* table) APPLE_KEXT_OVERRIDE;
 
-    virtual IOReturn setProperties(OSObject* properties);
+    virtual IOReturn setProperties(OSObject* properties) APPLE_KEXT_OVERRIDE;
 
     /*!
      * @brief       Open a session to the IOUSBHostDevice
@@ -329,9 +329,9 @@ public:
      * @param       arg See IOService.h
      * @return      bool true if the session could be opened, otherwise false.
      */
-    virtual bool open(IOService* forClient, IOOptionBits options = 0, void* arg = 0);
-    virtual bool handleOpen(IOService* forClient, IOOptionBits options, void* arg);
-    virtual bool handleIsOpen(const IOService* forClient) const;
+    virtual bool open(IOService* forClient, IOOptionBits options = 0, void* arg = 0) APPLE_KEXT_OVERRIDE;
+    virtual bool handleOpen(IOService* forClient, IOOptionBits options, void* arg) APPLE_KEXT_OVERRIDE;
+    virtual bool handleIsOpen(const IOService* forClient) const APPLE_KEXT_OVERRIDE;
     
     /*!
      * @brief       Close a session to the IOUSBHostDevice
@@ -339,23 +339,23 @@ public:
      * @param       forClient The IOService that is closing its session.  Any IO associated with the specified client will be aborted.
      * @param       options See IOService.h
      */
-    virtual void close(IOService* forClient, IOOptionBits options = 0);
-    virtual void handleClose(IOService* forClient, IOOptionBits options);
+    virtual void close(IOService* forClient, IOOptionBits options = 0) APPLE_KEXT_OVERRIDE;
+    virtual void handleClose(IOService* forClient, IOOptionBits options) APPLE_KEXT_OVERRIDE;
 
-    virtual IOReturn newUserClient(task_t owningTask, void* securityID, UInt32 type, IOUserClient** handler);
+    virtual IOReturn newUserClient(task_t owningTask, void* securityID, UInt32 type, IOUserClient** handler) APPLE_KEXT_OVERRIDE;
 
-    virtual IOReturn message(UInt32 type, IOService* provider,  void* argument = 0);
+    virtual IOReturn message(UInt32 type, IOService* provider,  void* argument = 0) APPLE_KEXT_OVERRIDE;
 
-    virtual const char* stringFromReturn(IOReturn code);
+    virtual const char* stringFromReturn(IOReturn code) APPLE_KEXT_OVERRIDE;
 
-    virtual bool setProperty(const OSSymbol* aKey, OSObject*   anObject);
-    virtual bool setProperty(const OSString* aKey, OSObject*   anObject);
-    virtual bool setProperty(const char*     aKey, OSObject*   anObject);
-    virtual bool setProperty(const char*     aKey, const char* aString);
-    virtual bool setProperty(const char*     aKey, bool        aBoolean);
+    virtual bool setProperty(const OSSymbol* aKey, OSObject*   anObject) APPLE_KEXT_OVERRIDE;
+    virtual bool setProperty(const OSString* aKey, OSObject*   anObject) APPLE_KEXT_OVERRIDE;
+    virtual bool setProperty(const char*     aKey, OSObject*   anObject) APPLE_KEXT_OVERRIDE;
+    virtual bool setProperty(const char*     aKey, const char* aString) APPLE_KEXT_OVERRIDE;
+    virtual bool setProperty(const char*     aKey, bool        aBoolean) APPLE_KEXT_OVERRIDE;
 
-    virtual bool setProperty(const char* aKey, unsigned long long aValue, unsigned int aNumberOfBits);
-    virtual bool setProperty(const char* aKey, void*      	      bytes,  unsigned int length);
+    virtual bool setProperty(const char* aKey, unsigned long long aValue, unsigned int aNumberOfBits) APPLE_KEXT_OVERRIDE;
+    virtual bool setProperty(const char* aKey, void*      	      bytes,  unsigned int length) APPLE_KEXT_OVERRIDE;
 
 protected:
     virtual IOReturn terminateGated(IOOptionBits options = 0);
@@ -391,13 +391,13 @@ public:
      */
 
     virtual void          registerPowerService();
-    virtual IOReturn      addPowerChild(IOService* theChild);
-    virtual IOReturn      removePowerChild(IOPowerConnection* theChild);
-    virtual IOReturn      powerStateWillChangeTo(IOPMPowerFlags capabilities, unsigned long stateNumber, IOService* whatDevice);
-    virtual IOReturn      setPowerState(unsigned long stateNumber, IOService* whatDevice);
-    virtual IOReturn      powerStateDidChangeTo(IOPMPowerFlags capabilities, unsigned long stateNumber, IOService* whatDevice);
-    virtual unsigned long initialPowerStateForDomainState(IOPMPowerFlags domainState);
-    virtual void          PMstop(void);
+    virtual IOReturn      addPowerChild(IOService* theChild) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn      removePowerChild(IOPowerConnection* theChild) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn      powerStateWillChangeTo(IOPMPowerFlags capabilities, unsigned long stateNumber, IOService* whatDevice) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn      setPowerState(unsigned long stateNumber, IOService* whatDevice) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn      powerStateDidChangeTo(IOPMPowerFlags capabilities, unsigned long stateNumber, IOService* whatDevice) APPLE_KEXT_OVERRIDE;
+    virtual unsigned long initialPowerStateForDomainState(IOPMPowerFlags domainState) APPLE_KEXT_OVERRIDE;
+    virtual void          PMstop(void) APPLE_KEXT_OVERRIDE;
     virtual IOReturn      forcePower(tPowerState powerState, bool clamp, uint32_t timeoutMs = 0);
     
     /*!
@@ -438,7 +438,7 @@ protected:
     static IOPMPowerState  _sPowerStates[kPowerStateCount];
     static const OSSymbol* _sPowerStateSymbols[kPowerStateCount];
     
-    virtual void     powerChangeDone(unsigned long stateNumber);
+    virtual void     powerChangeDone(unsigned long stateNumber) APPLE_KEXT_OVERRIDE;
     virtual IOReturn powerStateWillChangeToGated(IOPMPowerFlags capabilities, unsigned long stateNumber, IOService* whatDevice);
     virtual IOReturn setPowerStateGated(unsigned long stateNumber, IOService* whatDevice);
     virtual IOReturn powerStateDidChangeToGated(IOPMPowerFlags capabilities, unsigned long stateNumber, IOService* whatDevice);

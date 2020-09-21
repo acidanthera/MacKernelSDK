@@ -195,7 +195,7 @@ protected:
 
 #pragma mark IOUSBHostIOSource overrides
 public:
-    virtual void free();
+    virtual void free() APPLE_KEXT_OVERRIDE;
 
     /*! @functiongroup IO 
      *  @discussion All I/O calls will synchronize with the workloop.  Furthermore, all completion callbacks will also synchronize with the workloop.  Therefore, when using the asynchronous I/O methods it is most performant to make subsequent calls from completion callback as the workloop lock will already be owned.
@@ -205,15 +205,15 @@ public:
      * @brief       Abort pending I/O requests.
      * @discussion  See IOUSBHostIOSource::abort for documentation
      */
-    virtual IOReturn abort(IOOptionBits options = kAbortAsynchronous, IOReturn withError = kIOReturnAborted, IOService* forClient = NULL);
+    virtual IOReturn abort(IOOptionBits options = kAbortAsynchronous, IOReturn withError = kIOReturnAborted, IOService* forClient = NULL) APPLE_KEXT_OVERRIDE;
     
 protected:
-    virtual IOReturn openGated();
-    virtual IOReturn closeGated();
-    virtual IOReturn destroyGated();
-    virtual IOReturn abortGated(IOOptionBits options, IOReturn withError, IOService* forClient);
-    virtual UInt32 getOutstandingIO(IOService* forClient);
-    virtual UInt32 adjustOutstandingIO(IOService* forClient, SInt32 increment);
+    virtual IOReturn openGated() APPLE_KEXT_OVERRIDE;
+    virtual IOReturn closeGated() APPLE_KEXT_OVERRIDE;
+    virtual IOReturn destroyGated() APPLE_KEXT_OVERRIDE;
+    virtual IOReturn abortGated(IOOptionBits options, IOReturn withError, IOService* forClient) APPLE_KEXT_OVERRIDE;
+    virtual UInt32 getOutstandingIO(IOService* forClient) APPLE_KEXT_OVERRIDE;
+    virtual UInt32 adjustOutstandingIO(IOService* forClient, SInt32 increment) APPLE_KEXT_OVERRIDE;
 
     // Protected pad slots for IOUSBHostIOSource overrides
     OSMetaClassDeclareReservedUnused(IOUSBHostPipe, 0);
@@ -445,14 +445,14 @@ public:
      * @discussion  See IOUSBHostIOSource::io for documentation
      * @param       completionTimeoutMs Must be 0 for interrupt endpoints.
      */
-    virtual IOReturn io(IOMemoryDescriptor* dataBuffer, uint32_t dataBufferLength, IOUSBHostCompletion* completion, uint32_t completionTimeoutMs = 0);
+    virtual IOReturn io(IOMemoryDescriptor* dataBuffer, uint32_t dataBufferLength, IOUSBHostCompletion* completion, uint32_t completionTimeoutMs = 0) APPLE_KEXT_OVERRIDE;
     
     /*!
      * @brief       Perform a request on a bulk or interrupt endpoint
      * @discussion  See IOUSBHostIOSource::io for documentation
      * @param       completionTimeoutMs Must be 0 for interrupt endpoints.
      */
-    virtual IOReturn io(IOMemoryDescriptor* dataBuffer, uint32_t dataBufferLength, uint32_t& bytesTransferred, uint32_t completionTimeoutMs = 0);
+    virtual IOReturn io(IOMemoryDescriptor* dataBuffer, uint32_t dataBufferLength, uint32_t& bytesTransferred, uint32_t completionTimeoutMs = 0) APPLE_KEXT_OVERRIDE;
     
     /*!
      * @brief       Enqueue or perform a request on an isochronous endpoint
@@ -472,7 +472,7 @@ public:
      * @discussion  See IOUSBHostIOSource::io for documentation
      * @param       completionTimeoutMs Must be 0 for interrupt endpoints.
      */
-    virtual IOReturn io(IOMemoryDescriptor* dataBuffer, uint32_t dataBufferLength, IOUSBHostBundledCompletion* completion, uint32_t completionTimeoutMs = 0);
+    virtual IOReturn io(IOMemoryDescriptor* dataBuffer, uint32_t dataBufferLength, IOUSBHostBundledCompletion* completion, uint32_t completionTimeoutMs = 0) APPLE_KEXT_OVERRIDE;
     
     // Public pad slots for IO
     OSMetaClassDeclareReservedUnused(IOUSBHostPipe, 50);

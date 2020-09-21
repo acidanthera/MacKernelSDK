@@ -168,7 +168,7 @@ class __IOUSBHOSTFAMILY_DEPRECATED IOUSBHostIOSource : public OSObject
     OSDeclareAbstractStructors(IOUSBHostIOSource)
 
 protected:
-    virtual void free();
+	virtual void free() APPLE_KEXT_OVERRIDE;
     
     virtual bool initWithOwners(AppleUSBHostController* controller, IOUSBHostDevice* device);
 

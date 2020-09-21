@@ -203,16 +203,16 @@ protected:
 #pragma mark IOService overrides
 public:
     // The following methods, with the notable exception of <code>open</code> and <code>close</code> should be considered private and should not be called by function drivers.  For a discussion of proper usage for <code>open</code> and <code>close</code>, see the discussion of "Session Management" above.
-    virtual bool        attach(IOService* provider);
-    virtual bool        start(IOService* provider);
-    virtual bool        terminate(IOOptionBits options = 0);
-    virtual void        stop(IOService* provider);
-    virtual void        free();
+    virtual bool        attach(IOService* provider) APPLE_KEXT_OVERRIDE;
+    virtual bool        start(IOService* provider) APPLE_KEXT_OVERRIDE;
+    virtual bool        terminate(IOOptionBits options = 0) APPLE_KEXT_OVERRIDE;
+    virtual void        stop(IOService* provider) APPLE_KEXT_OVERRIDE;
+    virtual void        free() APPLE_KEXT_OVERRIDE;
 
-    virtual bool compareProperty(OSDictionary* matching, const char* key);
-    virtual bool compareProperty(OSDictionary* matching, const OSString* key);
-    virtual bool matchPropertyTable(OSDictionary* table, SInt32* score);
-    virtual bool matchPropertyTable(OSDictionary* table);
+    virtual bool compareProperty(OSDictionary* matching, const char* key) APPLE_KEXT_OVERRIDE;
+    virtual bool compareProperty(OSDictionary* matching, const OSString* key) APPLE_KEXT_OVERRIDE;
+    virtual bool matchPropertyTable(OSDictionary* table, SInt32* score) APPLE_KEXT_OVERRIDE;
+    virtual bool matchPropertyTable(OSDictionary* table) APPLE_KEXT_OVERRIDE;
 
 
     enum
@@ -230,7 +230,7 @@ public:
      * @param       arg See IOService.h, or the value of the alt setting to use if <code>kUSBHostOpenOptionSelectAlternateSetting</code> is included in the options mask
      * @return      bool true if the session could be opened, otherwise false.
      */
-    virtual bool        open(IOService* forClient, IOOptionBits options = 0, void* arg = 0);
+    virtual bool        open(IOService* forClient, IOOptionBits options = 0, void* arg = 0) APPLE_KEXT_OVERRIDE;
     
     /*!
      * @brief       Close a session to the IOUSBHostInterface
@@ -238,13 +238,13 @@ public:
      * @param       forClient The IOService that is closing its session.
      * @param       options See IOService.h
      */
-    virtual void        close(IOService* forClient, IOOptionBits options = 0);
+    virtual void        close(IOService* forClient, IOOptionBits options = 0) APPLE_KEXT_OVERRIDE;
 
-    virtual IOReturn    newUserClient(task_t owningTask, void* securityID, UInt32 type, IOUserClient** handler);
+    virtual IOReturn    newUserClient(task_t owningTask, void* securityID, UInt32 type, IOUserClient** handler) APPLE_KEXT_OVERRIDE;
 
-    virtual IOReturn    message(UInt32 type, IOService* provider,  void* argument = 0);
+    virtual IOReturn    message(UInt32 type, IOService* provider,  void* argument = 0) APPLE_KEXT_OVERRIDE;
 
-    virtual const char* stringFromReturn(IOReturn code);
+    virtual const char* stringFromReturn(IOReturn code) APPLE_KEXT_OVERRIDE;
 
 protected:
     virtual IOReturn openGated(IOService* forClient, IOOptionBits options, void* arg);

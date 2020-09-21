@@ -62,13 +62,13 @@ public:
      */
     IOUSBHostStream* withOwnersAndStreamID(AppleUSBHostController* controller, IOUSBHostDevice* device, IOUSBHostPipe* pipe, uint32_t streamID);
 
-    virtual void free();
+    virtual void free() APPLE_KEXT_OVERRIDE;
     
     /*!
      * @brief       Abort pending I/O requests.
      * @discussion  See IOUSBHostIOSource::abort for documentation.  A stream context must be set as non-active on the device via an out-of-band (class-defined) mechanism before this method is called (USB 3.1 8.12.1.4).  A non-active stream will not be selected by the device to become the current stream on the endpoint.
      */
-    virtual IOReturn abort(IOOptionBits options = kAbortAsynchronous, IOReturn withError = kIOReturnAborted, IOService* forClient = NULL);
+    virtual IOReturn abort(IOOptionBits options = kAbortAsynchronous, IOReturn withError = kIOReturnAborted, IOService* forClient = NULL) APPLE_KEXT_OVERRIDE;
 
     /*!
      * @brief       Retrieve the IOUSBHostPipe to which this stream belongs
@@ -87,14 +87,14 @@ public:
      * @discussion  See IOUSBHostIOSource::io for documentation
      * @param       completionTimeoutMs Must be 0 for streams.
      */
-    virtual IOReturn io(IOMemoryDescriptor* dataBuffer, uint32_t dataBufferLength, IOUSBHostCompletion* completion, uint32_t completionTimeoutMs = 0);
+    virtual IOReturn io(IOMemoryDescriptor* dataBuffer, uint32_t dataBufferLength, IOUSBHostCompletion* completion, uint32_t completionTimeoutMs = 0) APPLE_KEXT_OVERRIDE;
     
     /*!
      * @brief       Perform a request on a stream
      * @discussion  See IOUSBHostIOSource::io for documentation
      * @param       completionTimeoutMs Must be 0 for streams.
      */
-    virtual IOReturn io(IOMemoryDescriptor* dataBuffer, uint32_t dataBufferLength, uint32_t& bytesTransferred, uint32_t completionTimeoutMs = 0);
+    virtual IOReturn io(IOMemoryDescriptor* dataBuffer, uint32_t dataBufferLength, uint32_t& bytesTransferred, uint32_t completionTimeoutMs = 0) APPLE_KEXT_OVERRIDE;
 
     // Public pad slots for future expansion
     OSMetaClassDeclareReservedUnused(IOUSBHostStream, 0);
@@ -111,9 +111,9 @@ public:
 protected:
     virtual bool initWithOwnersAndStreamID(AppleUSBHostController* controller, IOUSBHostDevice* device, IOUSBHostPipe* pipe, uint32_t streamID);
 
-    virtual IOReturn closeGated();
+    virtual IOReturn closeGated() APPLE_KEXT_OVERRIDE;
 
-    virtual IOReturn abortGated(IOOptionBits options, IOReturn withError, IOService* forClient);
+    virtual IOReturn abortGated(IOOptionBits options, IOReturn withError, IOService* forClient) APPLE_KEXT_OVERRIDE;
 
     // Protected pad slots for future expansion
     OSMetaClassDeclareReservedUnused(IOUSBHostStream, 10);
