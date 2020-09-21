@@ -65,6 +65,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - SMBus (`IOKit/IOSMBusController.h`)
     - Apple Smart Battery (`IOKit/battery/AppleSmartBatteryCommands.h`)
     - KDP (`kdp/kdp_support.h`)
+    - NKE private APIs (`IOKit/network`)
 - Added kmod targeting earlier macOS kernels:
     - 10.8 (`Library/x86_64/libkmod.a`)
 - Added availability checking when targeting older macOS versions:
@@ -78,5 +79,5 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `IOPCIDevice.h` due to missing overrides
     - In `OSMetaClass.h` due to using unsupported memory checking with older clang
     - In `kauth.h` due to KPI deprecation
-    - In `net`, `netinit`, `sys` due to NKE KPI deprecation
+    - In `net`, `netinit`, `network`, `sys` due to NKE KPI deprecation
     - In `OSUnserialize.h` due to `OSStringPtr` misuse

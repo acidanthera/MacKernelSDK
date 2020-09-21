@@ -24,8 +24,15 @@
 #define _IOETHERNETCONTROLLER_H
 
 #include <IOKit/network/IONetworkController.h>
+#include <Availability.h>
 
-#define APPLE_KEXT_DEPRECATE __kpi_deprecated("DriverKit/NetworkingDriverKit is the new Networking Driver Development framework, please transition your Networking Driver to that Framework")
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
+#ifndef APPLE_KEXT_DEPRECATE
+#define APPLE_KEXT_DEPRECATE
+#endif
 
 /*! @defined kIOEthernetControllerClass
     @abstract kIOEthernetControllerClass is the name of the
@@ -562,8 +569,8 @@ protected:
 	virtual void setVlanTag(mbuf_t m, UInt32 vlanTag);
 	
 	
-	
-	
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
+
 public:
 	
 	/*! @struct IOEthernetControllerAVBSupport
@@ -1166,7 +1173,17 @@ private:
 	
 	
 	
+#else
     // Virtual function padding
+    OSMetaClassDeclareReservedUnused( IOEthernetController,  2);
+    OSMetaClassDeclareReservedUnused( IOEthernetController,  3);
+    OSMetaClassDeclareReservedUnused( IOEthernetController,  4);
+    OSMetaClassDeclareReservedUnused( IOEthernetController,  5);
+    OSMetaClassDeclareReservedUnused( IOEthernetController,  6);
+    OSMetaClassDeclareReservedUnused( IOEthernetController,  7);
+    OSMetaClassDeclareReservedUnused( IOEthernetController,  8);
+    OSMetaClassDeclareReservedUnused( IOEthernetController,  9);
+#endif
     OSMetaClassDeclareReservedUnused( IOEthernetController, 10);
     OSMetaClassDeclareReservedUnused( IOEthernetController, 11);
     OSMetaClassDeclareReservedUnused( IOEthernetController, 12);

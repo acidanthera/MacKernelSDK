@@ -222,6 +222,80 @@ enum {
     kIONetworkEventTypeLinkSpeedChange      = 0xff000005
 };
 
+#ifdef __PRIVATE_SPI__
+enum {
+    kIONetworkWorkLoopSynchronous   = 0x00000001
+};
+
+enum {
+    kIONetworkClientBehaviorLinkStateActiveRegister = 0x00000001,
+    kIONetworkClientBehaviorLinkStateChangeMessage  = 0x00000002
+};
+
+/*! @enum IOMbufServiceClass
+    @discussion Service class of a mbuf packet.
+    @constant kIOMbufServiceClassBKSYS Background System-Initiated.
+    @constant kIOMbufServiceClassBK  Background.
+    @constant kIOMbufServiceClassBE  Best Effort.
+    @constant kIOMbufServiceClassRD  Responsive Data.
+    @constant kIOMbufServiceClassOAM Operations, Administration, and Management.
+    @constant kIOMbufServiceClassAV  Multimedia Audio/Video Streaming.
+    @constant kIOMbufServiceClassRV  Responsive Multimedia Audio/Video.
+    @constant kIOMbufServiceClassVI  Interactive Video.
+    @constant kIOMbufServiceClassVO  Interactive Voice.
+    @constant kIOMbufServiceClassCTL Network Control.
+*/
+enum IOMbufServiceClass {
+    kIOMbufServiceClassBKSYS    = 100,
+    kIOMbufServiceClassBK       = 200,
+    kIOMbufServiceClassBE       = 0,
+    kIOMbufServiceClassRD       = 300,
+    kIOMbufServiceClassOAM      = 400,
+    kIOMbufServiceClassAV       = 500,
+    kIOMbufServiceClassRV       = 600,
+    kIOMbufServiceClassVI       = 700,
+    kIOMbufServiceClassVO       = 800,
+    kIOMbufServiceClassCTL      = 900
+};
+
+/*! @enum IONetworkTransmitStatus
+    @discussion Constants for packet transmit status.
+    @constant kIONetworkTransmitStatusSuccess Packet sent across link.
+    @constant kIONetworkTransmitStatusFailed  Failed to send packet across link.
+    @constant kIONetworkTransmitStatusAborted Send aborted, peer was asleep.
+    @constant kIONetworkTransmitStatusQueueFull Driver send queue was full.
+*/
+enum {
+    kIONetworkTransmitStatusSuccess     = 0,
+    kIONetworkTransmitStatusFailed      = 1,
+    kIONetworkTransmitStatusAborted     = 2,
+    kIONetworkTransmitStatusQueueFull   = 3
+};
+
+typedef uint32_t IONetworkTransmitStatus;
+
+/*! @typedef IONetworkPacketPollingParameters
+    @discussion Mirrors the definition of <code>ifnet_poll_params()</code>.
+    @field maxPacketCount The maximum number of packets to be dequeued each
+    time the driver's <code>pollInputPackets</code> is invoked. A zero value
+    indicates the use of default maximum defined by the system.
+    @field lowThresholdPackets Low watermark packets threshold.
+    @field highThresholdPackets High watermark packets threshold.
+    @field lowThresholdBytes Low watermark bytes threshold.
+    @field highThresholdBytes High watermark bytes threshold.
+    @field pollIntervalTime The interval time between each invocation of
+    the driver's <code>pollInputPackets</code> in nanoseconds.
+*/
+struct IONetworkPacketPollingParameters {
+    uint32_t    maxPacketCount;
+    uint32_t    lowThresholdPackets;
+    uint32_t    highThresholdPackets;
+    uint32_t    lowThresholdBytes;
+    uint32_t    highThresholdBytes;
+    uint64_t    pollIntervalTime;
+    uint64_t    reserved[4];
+};
+#endif /* __PRIVATE_SPI__ */
 
 /*! @class IONetworkInterface
     @abstract Abstract class that manages the connection between an
@@ -253,6 +327,21 @@ class IONetworkInterface : public IOService
 
     friend class IONetworkStack;
 
+#ifdef __PRIVATE_SPI__
+public:
+/*! @typedef OutputPreEnqueueHandler
+    @param target Reference supplied when the handler was installed.
+    @param refCon Reference supplied when the handler was installed.
+    @param packet The output packet; may be the head of a chain of packets.
+    Call <code>enqueueOutputPacket()</code> for each packet in the chain to
+    enqueue the packet before returning. The handler executes on the thread
+    context of the sending client.
+*/
+    typedef errno_t (*OutputPreEnqueueHandler)(
+        void * target, void * refCon, mbuf_t packet );
+
+    static IOReturn errnoToIOReturn( errno_t error );
+#endif /* __PRIVATE_SPI__ */
 
 private:
     IONetworkController *   _driver;
@@ -307,6 +396,12 @@ private:
         void *                      rxCtlAction;        
         uint64_t                    rxPollEmpty;
         uint64_t                    rxPollTotal;
+#ifdef __PRIVATE_SPI__
+        OutputPreEnqueueHandler     peqHandler;
+        void *                      peqTarget;
+        void *                      peqRefcon;
+        uint32_t                    subType;
+#endif
         uint16_t                    txStartDelayQueueLength;	/* optional */
         uint16_t                    txStartDelayTimeout;        /* optional */
         IOOptionBits                clientBehavior;
@@ -322,6 +417,10 @@ private:
     SInt32          syncSIOCSIFMTU(IONetworkController * ctr, struct ifreq * ifr);
     void            drainOutputQueue(ifnet_t ifp, IONetworkController * driver);
     IOReturn        haltOutputThread(uint32_t stateBit);
+#ifdef __PRIVATE_SPI__
+    void            actionInputCtl(IONetworkController * driver,
+                                ifnet_ctl_cmd_t cmd, uint32_t arglen, void * arg );
+#endif
     void            pushInputQueue( IOMbufQueue * queue );
     void            pushInputPacket( mbuf_t packet, uint32_t length );
     int             if_start_precheck( ifnet_t ifp );
@@ -341,6 +440,13 @@ private:
                                 uint32_t max_count,
                                 mbuf_t * first_packet, mbuf_t * last_packet,
                                 uint32_t *  cnt, uint32_t * len);
+#ifdef __PRIVATE_SPI__
+    static errno_t  if_input_ctl(ifnet_t ifp, ifnet_ctl_cmd_t cmd,
+                                 uint32_t arglen, void * arg);
+    static errno_t  if_output_pre_enqueue(ifnet_t ifp, mbuf_t packet);
+    static errno_t  if_output_ctl(ifnet_t ifp, ifnet_ctl_cmd_t cmd,
+                                  u_int32_t arglen, void *arg);
+#endif
     void            notifyDriver( uint32_t type, void * data );
     static void     handleNetworkInputEvent(thread_call_param_t param0, thread_call_param_t param1);
 
@@ -1005,12 +1111,414 @@ protected:
                                         uint16_t outputStartDelayTimeout );
 
 public:
+#ifdef __PRIVATE_SPI__
+/*! @function setInterfaceSubType
+    @abstract Sets the interface sub-type.
+    @discussion The sub-type must be set before the interface is attached to
+    the networking stack. The driver's <code>configureInterface()</code>
+    or <code>attachToDataLinkLayer</code> in a subclass are valid call sites.
+    @param subType A constant defined in <code>IONetworkTypesPrivate.h</code>.
+    @result Returns <code>true</code> on success, <code>false</code> otherwise.
+*/
+    bool    setInterfaceSubType( uint32_t subType );
+
+/*! @function isBPFTapEnabled
+    @abstract Query if the BPF tap is enabled.
+    @abstract Allows a driver to poll the BPF tap state after receiving a
+    <code>kIONetworkNotificationBPFTapStateChange</code> notification.
+    @param options No options are currently defined, always pass zero.
+    @result Returns <code>true</code> if BPF tap is enabled,
+    <code>false</code> otherwise.
+*/
+    bool    isBPFTapEnabled( IOOptionBits options = 0 ) const;
+
+/*! @function getLoggingLevel
+    @abstract Query the logging level for the interface.
+    @abstract Allows a driver to poll the logging level after receiving a
+    <code>kIONetworkNotificationLoggingLevelChange</code> notification.
+    @param options No options are currently defined, always pass zero.
+    @result Returns the current logging level.
+*/
+    int32_t getLoggingLevel( IOOptionBits options = 0 ) const;
+
+/*! @enum OutputPacketSchedulingModel
+    @discussion Output packet scheduling models.
+    @constant kOutputPacketSchedulingModelNormal
+    The default output packet scheduling model where the driver or media does
+    not require strict scheduling strategy, and that the networking stack is
+    free to choose the most appropriate scheduling and queueing algorithm,
+    including shaping traffics.
+    @constant kOutputPacketSchedulingModelDriverManaged
+    The alternative output packet scheduling model where the driver or media
+    requires strict scheduling strategy (e.g. 802.11 WMM), and that the
+    networking stack is only responsible for creating multiple queues for the
+    corresponding service classes.
+    @constant kOutputPacketSchedulingModelFqCodel
+    The FQ-CoDel packet scheduling model.
+*/
+    enum {
+        kOutputPacketSchedulingModelNormal          = 0,
+        kOutputPacketSchedulingModelDriverManaged   = 1,
+        kOutputPacketSchedulingModelFqCodel         = 2
+    };
+
+/*! @function configureOutputPullModel
+    @abstract Configure and use the pull-model to transmit packets.
+    @discussion A driver that supports the pull-model to transmit packets must
+    call this method from <code>configureInterface()</code> to configure the
+    model, and to transition the interface to use the pull-model exclusively.
+    In the pull-model, the interface will manage an output queue that a driver
+    can pull packets from. An output thread will notify the driver through
+    <code>outputStart()</code> when packets are added to the output queue.
+    @param driverQueueSize The number of packets that the driver's transmit
+    queue or ring can hold. This parameter is not currently used by the family,
+    and drivers can pass zero.
+    @param options <code>kIONetworkWorkLoopSynchronous</code> forces the output
+    thread to call <code>outputStart()</code> on the driver's work loop context.
+    @param outputQueueSize The size of the interface output queue. Unless the
+    driver has special requirements, it is advisable to pass zero to let the
+    networking stack choose the output queue size.
+    @param outputSchedulingModel An output packet scheduling model.
+    Pass zero or <code>kOutputPacketSchedulingModelNormal</code> for the default
+    model which lets the network stacking choose the most appropriate scheduling
+    and queueing algorithm.
+    @param outputTargetQdelay Allow drivers to set the default target delay.
+    @result <code>kIOReturnSuccess</code> if interface was successfully
+    configured to use the pull-model for outbound packets.
+*/
+    virtual IOReturn configureOutputPullModel(
+                            uint32_t       driverQueueSize,
+                            IOOptionBits   options               = 0,
+                            uint32_t       outputQueueSize       = 0,
+                            uint32_t       outputSchedulingModel = 0,
+                            uint32_t       outputTargetQdelay = 0);
+
+    OSMetaClassDeclareReservedUsed(IONetworkInterface, 5);
+
+/*! @function configureInputPacketPolling
+    @abstract Configure and enable polling of input packets.    
+    @discussion A driver that supports polled-mode processing of input packets
+    must call this method from <code>configureInterface()</code> to configure
+    input polling. Once configured, the network stack is allowed to dynamically
+    transition the input model from the default push-model where packets are
+    pushed by the driver to the network stack, to the pull-model where a poller
+    thread will periodically pull packets (if any) from the driver.
+    @param driverQueueSize The number of packets that the driver's receive
+    queue or ring can hold when completely full.
+    @param options <code>kIONetworkWorkLoopSynchronous</code> forces the
+    poller thread to call <code>pollInputPackets()</code> on the driver's
+    work loop context. The <code>setInputPacketPollingEnable()</code>
+    method call is always synchronized against the driver's work loop.
+    @result <code>kIOReturnSuccess</code> if input polling was successfully
+    configured.
+*/
+    virtual IOReturn configureInputPacketPolling(
+                            uint32_t       driverQueueSize,
+                            IOOptionBits   options = 0 );
+
+    OSMetaClassDeclareReservedUsed(IONetworkInterface, 6);
+
+/*! @function reportDataTransferRates
+    @abstract For drivers to report the current data transfer rates.
+    @discussion The rates reported by this method will supersede the single
+    link speed reported by <code>IONetworkController::setLinkStatus</code>.
+    This method allows the driver to report asymmetric input and output data
+    rates, and also the effective data rates when available. 
+    @param outputRateMax The maximum output data rate in bit/s.
+    @param inputRateMax The maximum input data rate in bit/s.
+    @param outputRateEffective The effective output data rate in bit/s.
+    If zero, the outputRateMax value is passed to the network stack.
+    @param inputRateEffective The effective input data rate in bit/s.
+    If zero, the inputRateMax value is passed to the network stack.
+*/
+    virtual void     reportDataTransferRates(
+                            uint64_t    outputRateMax,
+                            uint64_t    inputRateMax,
+                            uint64_t    outputRateEffective = 0,
+                            uint64_t    inputRateEffective  = 0 );
+
+    OSMetaClassDeclareReservedUsed(IONetworkInterface, 7);
+
+/*! @function stopOutputThread
+	@abstract Called by drivers to stop the output thread.
+	@discussion Only drivers that support the pull output model should call
+    this method. In the stop state, the output thread will not invoke the
+    driver's <code>outputStart()</code> method, even when new packets are
+    added to the output queue. This method is synchronous with respect to
+    any <code>outputStart()</code> invocation, so upon returning from this
+    method it is guaranteed that the output thread has stopped executing
+    driver code. The network interface will internally stop the output
+    thread before detaching from the network stack, and also before system
+    shutdown and restart.
+	@param options No options are currently defined, always pass zero.
+    @result <code>kIOReturnSuccess</code> if the thread was stopped,
+    <code>kIOReturnTimeout</code> if the wait for output thread to exit
+    <code>outputStart()</code> timed out.
+*/
+    IOReturn         stopOutputThread( IOOptionBits options = 0 );
+
+/*! @function startOutputThread
+	@abstract Called by drivers to start the output thread.
+	@discussion The output thread is initially in a stop state, and it must
+    be started before it can invoke the driver's <code>outputStart()</code>
+    method. Drivers may also issue start to release a previous stop request.
+    After starting the output thread, if the output queue is not empty, or
+    after a new packet is added to the output queue, the output thread will
+    wakeup and invoke the driver's <code>outputStart()</code> method.
+	@param options No options are currently defined, always pass zero.
+    @result <code>kIOReturnSuccess</code> if start was successful,
+    <code>kIOReturnNotAttached</code> if the network interface has detached
+    from the network stack.
+*/
+    IOReturn         startOutputThread( IOOptionBits options = 0 );
+
+/*! @function signalOutputThread
+	@abstract Informs the output thread that driver has completed packet
+    transmission.
+	@discussion A driver that supports the pull output model must call this
+    method after packet transmission is complete, and driver resources are
+    available to <code>outputStart()</code> to handle additional packets.
+    It is recommended to batch this call when retiring a group of output
+    packets. This method will wake up the output thread if the output queue
+    is not empty, and the output thread is not stopped.
+	@param options No options are currently defined, always pass zero.
+*/
+    void             signalOutputThread( IOOptionBits options = 0 );
+
+/*! @function flushOutputQueue
+	@abstract Flush all packets in the interface output queue.
+	@discussion A driver that supports the pull output model can use this
+    method to free all packets currently held in the interface output queue.
+	@param options No options are currently defined, always pass zero.
+*/
+    void             flushOutputQueue( IOOptionBits options = 0 );
+
+/*! @function dequeueOutputPackets
+	@abstract Dequeue packets from the interface output queue.
+	@discussion A driver that supports the output pull-model will typically
+    call this method from <code>outputStart()</code> after it has calculated
+    the maximum number of packets that can be dequeued based on available
+    resources. Drivers should not dequeue more packets than they can accept
+    since there is no facility to insert a packet to the head of the queue.
+    The only recourse is to drop the packet, or store the packet on a driver
+    managed queue which is not recommended. This method can dequeue a single
+    packet as a mbuf chain, or multiple packets using a linked list of mbuf
+    chains. It is also possible for the queue to not return any packet to the
+    driver in order to throttle the transmit rate. Although typically called
+    from <code>outputStart()</code>, this is not a mandatory requirement. E.g.
+    a driver may choose to dequeue in the transmit completion path to quickly
+    fill an available transmit slot.
+    @param maxCount The maximum number of packets to dequeue. This value must
+    be greater than zero.
+    @param packetHead Pointer to the first packet that was dequeued.
+    @param packetTail Optional pointer to the last packet that was dequeued.
+	@param packetCount Optional pointer to store the number of packets that
+    was dequeued.
+	@param packetBytes Optional pointer to store the total length of packets
+    that was dequeued. The length of each packet is given by
+    <code>mbuf_pkthdr_len()</code>.
+	@result <code>kIOReturnSuccess</code> if at least one packet was dequeued,
+	<code>kIOReturnBadArgument</code> if an argument was invalid,
+    <code>kIOReturnNoFrames</code> if the queue is empty, or the queue is
+    limiting the transmit rate.
+*/
+    virtual IOReturn dequeueOutputPackets(
+                            uint32_t            maxCount,
+                            mbuf_t *            packetHead,
+                            mbuf_t *            packetTail  = 0,
+                            uint32_t *          packetCount = 0,
+                            uint64_t *          packetBytes = 0 );
+
+    OSMetaClassDeclareReservedUsed(IONetworkInterface, 8);
+
+/*! @function dequeueOutputPacketsWithServiceClass
+	@abstract Dequeue packets of a particular service class from the interface
+    output queue.
+    @discussion See <code>dequeueOutputPackets</code>.
+    @param maxCount The maximum number of packets to dequeue. This value must
+    be greater than zero.
+    @param serviceClass A service class specification provided by the caller.
+    Only packets belonging to the specified service class will be dequeued.
+    @param packetHead Pointer to the first packet that was dequeued.
+    @param packetTail Optional pointer to the last packet that was dequeued.
+	@param packetCount Optional pointer to store the number of packets that
+    was dequeued.
+	@param packetBytes Optional pointer to store the total length of packets
+    that was dequeued. The length of each packet is given by
+    <code>mbuf_pkthdr_len()</code>.
+	@result <code>kIOReturnSuccess</code> if at least one packet was dequeued,
+	<code>kIOReturnBadArgument</code> if an argument was invalid,
+    <code>kIOReturnNoFrames</code> if the queue is empty, no packet belongs to
+    the service class or the queue is limiting the transmit rate.
+*/
+    virtual IOReturn dequeueOutputPacketsWithServiceClass(
+                            uint32_t            maxCount,
+                            IOMbufServiceClass  serviceClass,
+                            mbuf_t *            packetHead,
+                            mbuf_t *            packetTail  = 0,
+                            uint32_t *          packetCount = 0,
+                            uint64_t *          packetBytes = 0 );
+
+    OSMetaClassDeclareReservedUsed(IONetworkInterface, 9);
+
+/*! @function dequeueOutputPacketsWithMaxSize
+	@abstract Dequeue packets with a byte size constraint.
+    @discussion See <code>dequeueOutputPackets</code>.
+    @param maxSize The maximum byte size of the dequeued packet chain.
+    This value must be greater than zero.
+    @param packetHead Pointer to the first packet that was dequeued.
+    @param packetTail Optional pointer to the last packet that was dequeued.
+	@param packetCount Optional pointer to store the number of packets that
+    was dequeued.
+	@param packetBytes Optional pointer to store the total length of packets
+    that was dequeued. The length of each packet is given by
+    <code>mbuf_pkthdr_len()</code>.
+*/
+    IOReturn dequeueOutputPacketsWithMaxSize(
+                            uint32_t            maxSize,
+                            mbuf_t *            packetHead,
+                            mbuf_t *            packetTail  = 0,
+                            uint32_t *          packetCount = 0,
+                            uint64_t *          packetBytes = 0 );
+
+/*  @function installOutputPreEnqueueHandler
+    @abstract Install a handler to intercept all output packets before they
+    are added to the output queue.
+    @discussion A single handler can be installed before the interface is
+    attached to the networking stack. The handler will not be invoked unless
+    the driver configures the interface to utilize the new output pull-model.
+    @param handler A C-function handler.
+    @target A reference passed to the handler.
+    @refCon A reference constant passed to the handler.
+    @result <code>kIOReturnSuccess</code> if the handler was successfully
+    installed, <code>kIOReturnBadArgument</code> if the handler provided was
+    NULL, or <code>kIOReturnError</code> if the call was made after the
+    interface has already attached to the networking stack.
+*/
+    IOReturn         installOutputPreEnqueueHandler(
+                            OutputPreEnqueueHandler handler,
+                            void *                  target,
+                            void *                  refCon );
+
+/* @function enqueueOutputPacket
+   @abstract Enqueue a packet to the output queue.
+   @discussion Wrapper for the private <code>ifnet_enqueue()</code>.
+   @param packet The packet being enqueued; only one packet is allowed
+   to be enqueued at a time.
+   @param options No options are currently defined, always pass zero.
+   @result The value returned by <code>ifnet_enqueue()</code>.
+*/
+    errno_t          enqueueOutputPacket(
+                            mbuf_t          packet,
+                            IOOptionBits    options = 0 );
+
+/*! @function enqueueInputPacket
+    @abstract Queue a packet received by the driver before forwarding it to
+    the networking stack.
+    @discussion When input polling is not enabled, drivers should call this
+    method to queue each received packet on the interface input queue, then
+    flush the input queue at the end of the driver receive loop. When this
+    method is called as a result of input polling, driver must specify the
+    polling queue by passing the queue provided by the poller. Access to the
+    interface input queue is unsynchronized, since input packet handling is
+    expected to be single-threaded. The input packet must point to a header
+    mbuf with <code>MBUF_PKTHDR</code> flag set, with any additional mbufs
+    linked by the next chain. The length in the packet header, including the
+    data length for every mbuf in the chain must be set. If FCS is included
+    in the packet data, then the <code>MBUF_HASFCS</code> mbuf flag must be
+    set. This is the preferred interface to queue and submit an input packet,
+    and is functionally equivalent to calling <code>inputPacket</code> with
+    the <code>kInputOptionQueuePacket</code> option. Submitting a chain of
+    packets is not supported. 
+    @param packet The input packet. Caller ceases ownership of the packet
+    regardless of the return value.
+    @param queue Defaults to zero which specifies the interface input queue.
+    To handoff a packet during input polling, pass the queue provided by the
+    poller.
+	@param options No options are currently defined, always pass zero.
+	@result <code>kIOReturnSuccess</code> if packet was added to the queue,
+    or an error code otherwise.
+*/
+    virtual IOReturn enqueueInputPacket(
+                            mbuf_t          packet,
+                            IOMbufQueue *   queue   = 0,
+                            IOOptionBits    options = 0 );
+
+    OSMetaClassDeclareReservedUsed(IONetworkInterface, 10);
+
+/*! @function reportTransmitCompletionStatus
+    @abstract Report the transmit completion status for an outgoing packet.
+    @discussion Invoked by drivers that are capable of reporting when a packet
+    has been transmitted across the link layer. Besides reporting the packet
+    transmit status using this method, driver must also publish the
+    <code>kIONetworkFeatureTransmitCompletionStatus</code> feature.
+    @param packet The packet that was transmitted.
+    @param status The transmit status.
+    @param param1 Always pass zero.
+    @param param2 Always pass zero.
+    @param No options are currently defined, always pass zero.
+    @result <code>kIOReturnSuccess</code> if the transmit status was valid
+    and accepted, otherwise <code>kIOReturnBadArgument</code> for bad status,
+    or <code>kIOReturnError</code> if an error occurred when passing the status
+    to the networking stack.
+*/
+    IOReturn reportTransmitCompletionStatus(
+                            mbuf_t                  packet,
+                            IOReturn                status,
+                            uint32_t                param1  = 0,
+                            uint32_t                param2  = 0,
+                            IOOptionBits            options = 0 );
+
+/*! @function reportDatapathIssue
+    @abstract Used by kernel network driver or family to inform userspace
+    of a datapath issue.
+    @discussion An issue report will be sent to any userspace applications
+    or daemons that have registered for datapath issues notifications from
+    this network interface.
+    @param issue Subsystem specific error code.
+    @param data Reserved for future use.
+    @param length Reserved for future use.
+    @result Returns <code>kIOReturnSuccess</code> if successful,
+    otherwise an appropriate error code.
+*/
+    IOReturn reportDatapathIssue(
+                            IOReturn 	issue,
+                            void * 		data   = 0,
+                            IOByteCount length = 0 );
+
+/*! @function setPacketPollingParameters
+    @abstract Modify the input polling parameters.
+    @discussion Invokes <code>ifnet_set_poll_params()</code> using the
+    parameters provided.
+    @param params Polling parameters.
+    @param options No options are currently defined, always pass zero.
+    @result Returns <code>kIOReturnSuccess</code> if successful,
+    otherwise an appropriate error code.
+*/
+    IOReturn setPacketPollingParameters(
+                            const IONetworkPacketPollingParameters * params,
+                            IOOptionBits options = 0 );
+
+    /*! @function configureClientBehavior
+     @abstract Configure client behavior.
+     @discussion Invoked by drivers that wish to alter IONetworkInterface's behavior.
+     @param options set <code>kIONetworkClientBehaviorLinkStateActiveRegister</code>
+     to have IONetworkInterface trigger matching when link state goes to active.
+     set <code>kIONetworkClientBehaviorLinkStateChangeMessage</code> to have
+     IONetworkInterface deliver an IOKit message when link state changes.
+     @result Returns <code>kIOReturnSuccess</code> if successful,
+     otherwise an appropriate error code.
+     */
+    IOReturn configureClientBehavior( IOOptionBits options = 0 );
+
+#else   /* !__PRIVATE_SPI__ */
     OSMetaClassDeclareReservedUnused( IONetworkInterface,  5);
     OSMetaClassDeclareReservedUnused( IONetworkInterface,  6);
     OSMetaClassDeclareReservedUnused( IONetworkInterface,  7);
     OSMetaClassDeclareReservedUnused( IONetworkInterface,  8);
     OSMetaClassDeclareReservedUnused( IONetworkInterface,  9);
     OSMetaClassDeclareReservedUnused( IONetworkInterface, 10);
+#endif  /* !__PRIVATE_SPI__ */
     OSMetaClassDeclareReservedUnused( IONetworkInterface, 11);
     OSMetaClassDeclareReservedUnused( IONetworkInterface, 12);
     OSMetaClassDeclareReservedUnused( IONetworkInterface, 13);
