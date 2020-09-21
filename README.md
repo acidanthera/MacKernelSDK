@@ -76,10 +76,11 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `OSMetaClass.h` to avoid DriverKit usage before 10.15
     - In `cdefs.h` to avoid Darwin14 aliases before 10.10
     - In `assert.h` to avoid kext assertion checking before 10.12
+    - In `IOHIDDevice.h` to avoid new virtual methods before 10.14
 - Fixed compiler warnings:
     - In `IOPCIDevice.h` due to missing overrides
     - In `OSMetaClass.h` due to using unsupported memory checking with older clang
     - In `kauth.h` due to KPI deprecation
     - In `net`, `netinit`, `network`, `sys` due to NKE KPI deprecation
-    - In `usb` due to USB KPI deprecation and missing overrides
+    - In `hid`, `usb` due to USB and HID KPI deprecation and missing overrides
     - In `OSUnserialize.h` due to `OSStringPtr` misuse

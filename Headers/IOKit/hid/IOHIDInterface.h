@@ -39,11 +39,7 @@ class OSAction;
     @abstract In kernel interface to a HID device.
 */
 
-#if defined(KERNEL) && !defined(KERNEL_PRIVATE)
-class __deprecated_msg("Use DriverKit") IOHIDInterface : public IOService
-#else
 class IOHIDInterface : public IOService
-#endif
 {
     OSDeclareDefaultStructorsWithDispatch( IOHIDInterface )
     

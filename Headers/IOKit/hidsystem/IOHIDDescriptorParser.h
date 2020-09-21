@@ -23,11 +23,7 @@
 #ifndef __IOHIDDescriptorParser__
 #define __IOHIDDescriptorParser__
 
-#if defined(KERNEL) && !defined(KERNEL_PRIVATE)
-#define __iohid_deprecated(_msg) __deprecated_msg(_msg)
-#else /* !defined(KERNEL) || defined(KERNEL_PRIVATE) */
 #define __iohid_deprecated(_msg)
-#endif /* !defined(KERNEL) || defined(KERNEL_PRIVATE) */
 
 #if RTKIT
 #include <stdio.h>

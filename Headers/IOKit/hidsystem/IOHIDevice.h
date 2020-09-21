@@ -45,11 +45,7 @@ typedef enum {
   kHIRelativePointingDevice = 2
 } IOHIDKind;
 
-#if defined(KERNEL) && !defined(KERNEL_PRIVATE)
-class __deprecated_msg("Use DriverKit") IOHIDevice : public IOService
-#else
 class IOHIDevice : public IOService
-#endif
 {
   OSDeclareDefaultStructors(IOHIDevice);
 

@@ -35,6 +35,11 @@
 #include <IOKit/IOEventSource.h>
 #include <IOKit/hid/IOHIDDeviceTypes.h>
 #include <HIDDriverKit/IOHIDDevice.h>
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
 
 class   IOHIDSystem;
 class   IOHIDPointing;
@@ -67,11 +72,7 @@ class   IOHIDDeviceElementContainer;
     by the physical device, as long as the reports abide to the USB
     specification. */
 
-#if defined(KERNEL) && !defined(KERNEL_PRIVATE)
-class __deprecated_msg("Use DriverKit") IOHIDDevice : public IOService
-#else
 class IOHIDDevice : public IOService
-#endif
 {
     OSDeclareDefaultStructorsWithDispatch ( IOHIDDevice )
 
@@ -692,6 +693,9 @@ public:
     virtual OSArray * newDeviceUsagePairs();
     
 protected:
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
+
     /*! @function createInterface
      @abstract Creates an IOHIDInterface nub for the device to attach to.
      @discussion Will create multiple interfaces, if applicable and support is
@@ -707,6 +711,15 @@ protected:
     OSMetaClassDeclareReservedUsed(IOHIDDevice, 13);
     virtual void destroyInterface(IOOptionBits options = 0);
 
+#else
+
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 12);
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 13);
+
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
+
     /*! @function conformsTo
      @abstract Checks if a device conforms to a certain usage page/usage.
      @discussion Iterates through the usages returned from newDeviceUsagePairs
@@ -721,6 +734,13 @@ protected:
      created. */
     OSMetaClassDeclareReservedUsed(IOHIDDevice, 15);
     virtual void completeReport(OSAction * action, IOReturn status, uint32_t actualByteCount);
+
+#else
+
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 14);
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 15);
+
+#endif
 
     OSMetaClassDeclareReservedUnused(IOHIDDevice, 16);
     OSMetaClassDeclareReservedUnused(IOHIDDevice, 17);

@@ -40,11 +40,7 @@ class IOHIDEvent;
     @abstract
     @discussion
 */
-#if defined(KERNEL) && !defined(KERNEL_PRIVATE)
-class __deprecated_msg("Use DriverKit") IOHIDEventDriver : public IOHIDEventService
-#else
 class IOHIDEventDriver : public IOHIDEventService
-#endif
 {
     OSDeclareDefaultStructors( IOHIDEventDriver )
 
