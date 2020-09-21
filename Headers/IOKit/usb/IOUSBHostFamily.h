@@ -105,7 +105,9 @@
 #include <IOKit/usb/StandardUSB.h>
 #include <IOKit/usb/IOUSBHostFamilyDefinitions.h>
 
-#define __IOUSBHOSTFAMILY_DEPRECATED __kpi_deprecated("Use USBDriverKit")
+#ifndef __IOUSBHOSTFAMILY_DEPRECATED
+#define __IOUSBHOSTFAMILY_DEPRECATED
+#endif
 
 #pragma mark Typedefs
 
