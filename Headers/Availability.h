@@ -116,6 +116,13 @@
 
 */
 
+/*
+ * Detect our SDK by this macro
+ */
+#ifndef __ACIDANTHERA_MAC_SDK
+#define __ACIDANTHERA_MAC_SDK 1
+#endif
+
 /* 
  * __API_TO_BE_DEPRECATED is used as a version number in API that will be deprecated 
  * in an upcoming release. This soft deprecation is an intermediate step before formal 

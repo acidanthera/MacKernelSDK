@@ -36,6 +36,8 @@ To start using **MacKernelSDK** do the following steps:
 
 4. Optionally add `/MacKernelSDK` to `.gitignore`.
 
+5. To make sure that you use the right SDK check for `__ACIDANTHERA_MAC_SDK` macro in `Availability.h`.
+
 ## Targeting `i386`
 
 To compile for 32-bit you will need to add a set of flags in your project:
