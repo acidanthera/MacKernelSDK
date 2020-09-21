@@ -66,6 +66,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - Apple Smart Battery (`IOKit/battery/AppleSmartBatteryCommands.h`)
     - KDP (`kdp/kdp_support.h`)
     - NKE private APIs (`IOKit/network`)
+    - IOUSBFamily from macOS 10.10 SDK
 - Added kmod targeting earlier macOS kernels:
     - 10.8 (`Library/x86_64/libkmod.a`)
 - Added availability checking when targeting older macOS versions:

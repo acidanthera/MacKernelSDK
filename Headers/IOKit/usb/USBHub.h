@@ -24,12 +24,6 @@
 #ifndef _USBHUB_H
 #define _USBHUB_H
 
-#if KERNEL
-#ifndef __IOUSBFAMILY__
-#warning "Deprecated header file.  See IOUSBHostFamily for USB-Host KPI."
-#endif
-#endif
-
 #include <IOKit/usb/USB.h>
 #include <IOKit/usb/USBSpec.h>
 
