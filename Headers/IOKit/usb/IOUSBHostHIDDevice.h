@@ -148,7 +148,7 @@ protected:
     IOTimerEventSource       *_interruptRetriesTimer;
 
     // IOHIDDevice Methods
-    virtual bool      handleStart (IOService *provider);
+    virtual bool      handleStart (IOService *provider) APPLE_KEXT_OVERRIDE;
     virtual void      interruptRetry(IOTimerEventSource* timer);
 
     // IOUSBHIDDevice Methods
@@ -184,55 +184,55 @@ protected:
 
 public:
     // IOService Methods
-    virtual bool start (IOService *provider);
+    virtual bool start (IOService *provider) APPLE_KEXT_OVERRIDE;
     
-    virtual bool willTerminate (IOService *provider, IOOptionBits options);
+    virtual bool willTerminate (IOService *provider, IOOptionBits options) APPLE_KEXT_OVERRIDE;
     
-    virtual void stop (IOService *provider);
+    virtual void stop (IOService *provider) APPLE_KEXT_OVERRIDE;
     
-    virtual void free (void);
+    virtual void free (void) APPLE_KEXT_OVERRIDE;
 
-    virtual bool setProperty(const OSSymbol* aKey, OSObject* anObject);
+    virtual bool setProperty(const OSSymbol* aKey, OSObject* anObject) APPLE_KEXT_OVERRIDE;
 
-    virtual bool setProperty(const OSString* aKey, OSObject* anObject);
+    virtual bool setProperty(const OSString* aKey, OSObject* anObject) APPLE_KEXT_OVERRIDE;
 
-    virtual bool setProperty(const char* aKey, OSObject* anObject);
+    virtual bool setProperty(const char* aKey, OSObject* anObject) APPLE_KEXT_OVERRIDE;
 
-    virtual bool setProperty(const char* aKey, const char * aString);
+    virtual bool setProperty(const char* aKey, const char * aString) APPLE_KEXT_OVERRIDE;
 
-    virtual bool setProperty(const char* aKey, bool aBoolean);
+    virtual bool setProperty(const char* aKey, bool aBoolean) APPLE_KEXT_OVERRIDE;
 
-    virtual bool setProperty(const char* aKey, unsigned long long aValue, unsigned int aNumberOfBits);
+    virtual bool setProperty(const char* aKey, unsigned long long aValue, unsigned int aNumberOfBits) APPLE_KEXT_OVERRIDE;
 
-    virtual bool setProperty(const char* aKey, void* bytes, unsigned int length);
+    virtual bool setProperty(const char* aKey, void* bytes, unsigned int length) APPLE_KEXT_OVERRIDE;
     
     
     // IOHIDDevice Methods
-    virtual IOReturn  newReportDescriptor (IOMemoryDescriptor **descriptor ) const;
+    virtual IOReturn  newReportDescriptor (IOMemoryDescriptor **descriptor ) const APPLE_KEXT_OVERRIDE;
     
-    virtual OSString* newTransportString (void) const;
+    virtual OSString* newTransportString (void) const APPLE_KEXT_OVERRIDE;
     
-    virtual OSString* newManufacturerString (void) const;
+    virtual OSString* newManufacturerString (void) const APPLE_KEXT_OVERRIDE;
     
-    virtual OSString* newProductString (void) const;
+    virtual OSString* newProductString (void) const APPLE_KEXT_OVERRIDE;
     
-    virtual OSString* newSerialNumberString (void) const;
+    virtual OSString* newSerialNumberString (void) const APPLE_KEXT_OVERRIDE;
     
-    virtual OSNumber* newVendorIDNumber (void) const;
+    virtual OSNumber* newVendorIDNumber (void) const APPLE_KEXT_OVERRIDE;
     
-    virtual OSNumber* newProductIDNumber (void) const;
+    virtual OSNumber* newProductIDNumber (void) const APPLE_KEXT_OVERRIDE;
     
-    virtual OSNumber* newVersionNumber (void) const;
+    virtual OSNumber* newVersionNumber (void) const APPLE_KEXT_OVERRIDE;
     
-    virtual OSNumber* newLocationIDNumber (void) const;
+    virtual OSNumber* newLocationIDNumber (void) const APPLE_KEXT_OVERRIDE;
     
-    virtual OSNumber* newCountryCodeNumber (void) const;
+    virtual OSNumber* newCountryCodeNumber (void) const APPLE_KEXT_OVERRIDE;
     
-    virtual IOReturn getReport (IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options);
+    virtual IOReturn getReport (IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options) APPLE_KEXT_OVERRIDE;
     
-    virtual IOReturn setReport (IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options = 0);
+    virtual IOReturn setReport (IOMemoryDescriptor *report, IOHIDReportType reportType, IOOptionBits options = 0) APPLE_KEXT_OVERRIDE;
     
-    virtual IOReturn setReport(IOMemoryDescriptor * report, IOHIDReportType reportType, IOOptionBits options, UInt32 completionTimeout, IOHIDCompletion* completion = 0);
+    virtual IOReturn setReport(IOMemoryDescriptor * report, IOHIDReportType reportType, IOOptionBits options, UInt32 completionTimeout, IOHIDCompletion* completion = 0) APPLE_KEXT_OVERRIDE;
     
     
     // IOUSBHIDDevice Methods
@@ -242,7 +242,7 @@ public:
     
     virtual OSString* newIndexedString (UInt8 index) const;
 
-    virtual OSNumber* newReportIntervalNumber() const;
+    virtual OSNumber* newReportIntervalNumber() const APPLE_KEXT_OVERRIDE;
     
     // Public pad slots for future expansion
     OSMetaClassDeclareReservedUnused(IOUSBHostHIDDevice, 10);
