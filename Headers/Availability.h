@@ -171,6 +171,7 @@
 #define __MAC_10_15         101500
 #define __MAC_10_15_1       101501
 #define __MAC_10_15_4       101504
+#define __MAC_11_0          110000
 /* __MAC_NA is not defined to a value but is uses as a token by macros to indicate that the API is unavailable */
 
 #define __IPHONE_2_0      20000
