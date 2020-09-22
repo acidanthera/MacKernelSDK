@@ -1456,6 +1456,8 @@ protected:
 
     virtual void sendPacket(void * pkt, UInt32 pktSize);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_7
+
 /*! @function getDebuggerLinkStatus
     @abstract Debugger polled-mode link status handler.
     @discussion This method should be implemented by a driver that wishes to support
@@ -1501,6 +1503,12 @@ protected:
     // Virtual function padding
     OSMetaClassDeclareReservedUsed( IONetworkController,  0); // getDebuggerLinkStatus
     OSMetaClassDeclareReservedUsed( IONetworkController,  1); // setDebuggerMode
+
+#else
+    // Virtual function padding
+    OSMetaClassDeclareReservedUnused( IONetworkController,  0);
+    OSMetaClassDeclareReservedUnused( IONetworkController,  1);
+#endif
 
 #ifdef __PRIVATE_SPI__
 public:
