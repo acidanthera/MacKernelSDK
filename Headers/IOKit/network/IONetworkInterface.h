@@ -23,6 +23,12 @@
 #ifndef _IONETWORKINTERFACE_H
 #define _IONETWORKINTERFACE_H
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 /*! @defined kIONetworkInterfaceClass
     @abstract The name of the IONetworkInterface class. 
 */
@@ -1486,6 +1492,7 @@ public:
                             void * 		data   = 0,
                             IOByteCount length = 0 );
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
 /*! @function setPacketPollingParameters
     @abstract Modify the input polling parameters.
     @discussion Invokes <code>ifnet_set_poll_params()</code> using the
@@ -1498,7 +1505,9 @@ public:
     IOReturn setPacketPollingParameters(
                             const IONetworkPacketPollingParameters * params,
                             IOOptionBits options = 0 );
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_13
     /*! @function configureClientBehavior
      @abstract Configure client behavior.
      @discussion Invoked by drivers that wish to alter IONetworkInterface's behavior.
@@ -1510,6 +1519,7 @@ public:
      otherwise an appropriate error code.
      */
     IOReturn configureClientBehavior( IOOptionBits options = 0 );
+#endif
 
 #else   /* !__PRIVATE_SPI__ */
     OSMetaClassDeclareReservedUnused( IONetworkInterface,  5);
