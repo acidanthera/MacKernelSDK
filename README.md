@@ -71,7 +71,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - IOUSBFamily from macOS 10.10 SDK
     - IO80211Family from Black80211 originally created by Roman Peshkov
 - Added kmod targeting earlier macOS kernels:
-    - 10.8 (`Library/x86_64/libkmod.a`)
+    - 10.6 or newer (`Library/x86_64/libkmod.a`)
 - Added availability checking when targeting older macOS versions:
     - In `string.h` to avoid using new checked interfaces before 10.13
     - In `IOService.h` to avoid report virtual methods before 10.9
