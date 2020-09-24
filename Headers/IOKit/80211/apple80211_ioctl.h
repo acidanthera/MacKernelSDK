@@ -346,7 +346,7 @@ struct apple80211req
 #define APPLE80211_IOC_OFFLOAD_TCPKA_ENABLE 265
 #define APPLE80211_IOC_RANGING_CAPS 266
 #define APPLE80211_IOC_PER_CORE_RSSI_REPORT 267
-#define APPLE80211_IOC_NSS
+#define APPLE80211_IOC_NSS  353
 
 #define APPLE80211_IOC_CARD_SPECIFIC            0xffffffff    // req_type
 
@@ -361,6 +361,31 @@ struct apple80211_ssid_data
     u_int32_t    ssid_len;
     u_int8_t     ssid_bytes[APPLE80211_MAX_SSID_LEN];
 };
+
+struct apple80211_virt_if_create_data {
+    uint32_t version;
+    uint8_t mac[APPLE80211_ADDR_LEN];
+    uint16_t unk1;
+    uint32_t role;
+    uint8_t bsd_name[15];
+} __attribute__((packed));
+
+struct apple80211_virt_if_delete_data {
+    uint32_t version;
+    uint8_t bsd_name[15];
+} __attribute__((packed));
+
+struct apple80211_ht_capability {
+    uint32_t version;
+    uint8_t unk1;
+    uint8_t unk2;
+    uint16_t unk3;
+    uint8_t unk4;
+    uint8_t unk5[16];
+    uint16_t unk6;
+    uint unk7;
+    uint8_t unk8;
+} __attribute__((packed));
 
 struct apple80211_channel_data
 {
@@ -778,5 +803,46 @@ struct apple80211_40mhz_intolerant_data
     u_int32_t    version;
     u_int32_t    enabled;    // bit enabled or not
 };
+
+struct apple80211_tx_nss_data
+{
+    uint32_t version;
+    uint8_t nss;
+};
+
+struct apple80211_nss_data
+{
+    uint32_t version;
+    uint8_t nss;
+};
+
+struct apple80211_awdl_peer_traffic_registration
+{
+    uint32_t version;
+    void *addr;
+    uint32_t name_len;
+    char name[152];
+    uint32_t active;
+} __attribute__((packed));
+
+struct apple80211_awdl_election_metric
+{
+    uint32_t version;
+    uint32_t metric;
+} __attribute__((packed));
+
+struct apple80211_awdl_sync_enabled
+{
+    uint32_t version;
+    uint32_t unk1;
+    uint32_t enabled;
+} __attribute__((packed));
+
+struct apple80211_awdl_sync_frame_template
+{
+    uint32_t version;
+    uint32_t payload_len;
+    void *payload;
+} __attribute__((packed));
 
 #endif // _APPLE80211_IOCTL_H_

@@ -546,6 +546,17 @@ enum apple80211_card_capability
 };
 #define APPLE80211_CAP_MAX    63
 
+enum apple80211_virtual_interface_type
+{
+    APPLE80211_VIF_P2P_DEVICE = 1,
+    APPLE80211_VIF_P2P_CLIENT = 2,
+    APPLE80211_VIF_P2P_GO = 3,
+    APPLE80211_VIF_AWDL = 4,
+    APPLE80211_VIF_SOFT_AP = 5,
+    
+    APPLE80211_VIF_MAX
+};
+
 enum apple80211_assoc_flags {
     APPLE80211_ASSOC_F_CLOSED    = 1,    // flag: scan was directed, needed to remember closed networks
 };
@@ -594,8 +605,13 @@ struct apple80211_status_msg_hdr
 #define APPLE80211_M_ROAMED                  30
 #define APPLE80211_M_ACT_FRM_TX_COMPLETE     31
 #define APPLE80211_M_DEAUTH_RECEIVED         32
+#define APPLE80211_M_DRIVER_AVAILABLE        0x37
+#define APPLE80211_M_LINK_ADDRESS_CHANGED    0x3B
+#define APPLE80211_M_ROAM_START              0x46
+#define APPLE80211_M_ROAM_END                0x47
+#define APPLE80211_M_INTERFACE_STATE         0x3A
 
-#define APPLE80211_M_MAX                     32
+#define APPLE80211_M_MAX                    0x3A
 #define APPLE80211_M_BUFF_SIZE               APPLE80211_MAP_SIZE( APPLE80211_M_MAX )
 
 // Registry Information
