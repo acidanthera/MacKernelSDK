@@ -60,9 +60,13 @@ To compile for 32-bit you will need to add a set of flags in your project:
 
 - Based on macOS 11 SDK from Xcode 12.0 (12A7209)
 - Added extra headers from `xnu-6153.141.1`:
+    - Absolute time macros (`libkern/OSBase.h`)
     - Cryptography (`corecrypto`, `libkern/crypto`)
     - CPU PM (`i386/cpu_topology.h` and `i386/pmCPU.h`)
     - MAC Framework (`security/_label.h`, `security/mac_framework.h`, `security/mac_policy.h`)
+- Added private headers from IOHIDFamily 1446.140.2:
+    - `IOHIDPrivateKeys.h`
+    - `IOHIDEventServiceKeys_Private.h`
 - Added extra compiled and reverse-engineered headers:
     - SMBus (`IOKit/IOSMBusController.h`)
     - Apple Smart Battery (`IOKit/battery/AppleSmartBatteryCommands.h`)
