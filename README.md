@@ -85,5 +85,5 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `OSMetaClass.h` due to using unsupported memory checking with older clang
     - In `kauth.h` due to KPI deprecation
     - In `net`, `netinit`, `network`, `sys` due to NKE KPI deprecation
-    - In `hid`, `usb` due to USB and HID KPI deprecation and missing overrides
+    - In `hid`, `serial`, `usb` due to missing overrides and KPI deprecation in favor of `DriverKit`
     - In `OSUnserialize.h` due to `OSStringPtr` misuse
