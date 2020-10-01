@@ -3,7 +3,7 @@
 #define _IOKIT_IOHIDWORKLOOP_H
 
 #include <IOKit/IOWorkLoop.h>
-class __kpi_deprecated ("Use DriverKit") IOHIDWorkLoop : public IOWorkLoop
+class IOHIDWorkLoop : public IOWorkLoop
 {
     OSDeclareDefaultStructors(IOHIDWorkLoop)
     
