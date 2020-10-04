@@ -537,7 +537,7 @@ public:
     @discussion This method sets masked bits in a configuration space register on the device by reading and writing the register. The value of the masked bits before the write is returned.
     @param offset An 8-bit offset into configuration space, of which bits 0-1 are ignored.
     @param mask An 32-bit mask indicating which bits in the value parameter are valid.
-    @param data An 32-bit value to be written in host byte order (big endian on PPC).
+    @param value An 32-bit value to be written in host byte order (big endian on PPC).
     @result The value of the register masked with the mask before the write. */
     
     virtual UInt32 setConfigBits( UInt8 offset, UInt32 mask, UInt32 value );
@@ -687,7 +687,7 @@ public:
 /*! @function hasPCIPowerManagement
     @abstract determine whether or not the device supports PCI Bus Power Management.
     @discussion This method will look at the device's capabilties registers and determine whether or not the device supports the PCI BUS Power Management Specification.
-    @param state(optional) Check for support of a specific state (e.g. kPCIPMCPMESupportFromD3Cold). If state is not suuplied or is 0, then check for a property in the registry which tells which state the hardware expects the device to go to during sleep.
+    @param state (optional) Check for support of a specific state (e.g. kPCIPMCPMESupportFromD3Cold). If state is not suuplied or is 0, then check for a property in the registry which tells which state the hardware expects the device to go to during sleep.
     @result true if the specified state is supported */
     virtual bool hasPCIPowerManagement(IOOptionBits state = 0);
     
@@ -695,7 +695,7 @@ public:
 /*! @function enablePCIPowerManagement
     @abstract enable PCI power management for sleep state
     @discussion This method will enable PCI Bus Powermanagement when going to sleep mode.
-    @param state(optional) Enables PCI Power Management by placing the function in the given state (e.g. kPCIPMCSPowerStateD3). If state is not specified or is 0xffffffff, then the IOPCIDevice determines the desired state. If state is kPCIPMCSPowerStateD0 (0) then PCI Power Management is disabled.
+    @param state (optional) Enables PCI Power Management by placing the function in the given state (e.g. kPCIPMCSPowerStateD3). If state is not specified or is 0xffffffff, then the IOPCIDevice determines the desired state. If state is kPCIPMCSPowerStateD0 (0) then PCI Power Management is disabled.
     @result kIOReturnSuccess if there were no errors */
     virtual IOReturn enablePCIPowerManagement(IOOptionBits state = 0xffffffff);
     
