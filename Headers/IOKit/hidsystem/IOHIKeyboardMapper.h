@@ -113,7 +113,7 @@ typedef struct _stickyKeys_ModifierInfo
 
 class IOHIDKeyboardDevice;
 
-class __kpi_deprecated ("Use DriverKit") IOHIKeyboardMapper : public OSObject
+class IOHIKeyboardMapper : public OSObject
 {
   OSDeclareDefaultStructors(IOHIKeyboardMapper);
 
