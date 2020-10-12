@@ -5,7 +5,7 @@
 
 class IO80211P2PInterface : public IO80211VirtualInterface {
     OSDeclareDefaultStructors(IO80211P2PInterface)
-    
+
 public:
     virtual void free(void) APPLE_KEXT_OVERRIDE;
 #if __IO80211_TARGET >= __MAC_11_0
@@ -19,7 +19,7 @@ public:
                                   IOReportUpdateAction      action,
                                   void                     *result,
                                   void                     *destination) APPLE_KEXT_OVERRIDE;
-    
+
     virtual bool terminate( IOOptionBits options = 0 ) APPLE_KEXT_OVERRIDE;
     virtual bool attach(IOService *) APPLE_KEXT_OVERRIDE;
     virtual void detach(IOService *) APPLE_KEXT_OVERRIDE;

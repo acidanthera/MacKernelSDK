@@ -55,7 +55,7 @@
 
 enum apple80211_phymode {
     APPLE80211_MODE_UNKNOWN            = 0,
-    APPLE80211_MODE_AUTO            = 0x1,                  // autoselect
+    APPLE80211_MODE_AUTO               = 1,                 // autoselect
     APPLE80211_MODE_11A                = 2 << (1 - 1),      // 5GHz, OFDM
     APPLE80211_MODE_11B                = 2 << (2 - 1),      // 2GHz, CCK
     APPLE80211_MODE_11G                = 2 << (3 - 1),      // 2GHz, OFDM
@@ -418,14 +418,14 @@ struct apple80211_rate
 /*
  DSCP TOS/Traffic class values for WME access categories taken from
  WiFi WMM Test Plan v 1.3.1 Appendix C.
- 
+
  TOS/Traffic class field looks like:
- 
+
  0   1   2   3   4   5   6   7
  +---+---+---+---+---+---+---+---+
  |          DSCP         |  ECN  |
  +---+---+---+---+---+---+---+---+
- 
+
  These bits are numbered according to rfc 2474, but might be misleading.
  It looks like bit 0 is actually the high order bit.
  */
@@ -558,7 +558,7 @@ enum apple80211_virtual_interface_type
     APPLE80211_VIF_P2P_GO       = 3,
     APPLE80211_VIF_AWDL         = 4,
     APPLE80211_VIF_SOFT_AP      = 5,
-    
+
     APPLE80211_VIF_MAX
 };
 
@@ -572,7 +572,7 @@ struct apple80211_status_msg_hdr
 {
     u_int32_t    msg_type;        //    type of message
     u_int32_t    msg_len;         //  length of data (not including msg_type and msg_len)
-    
+
     // data follows
 };
 

@@ -8,7 +8,7 @@ class IO80211PeerManager;
 
 class IO80211VirtualInterface : public IOService {
     OSDeclareDefaultStructors(IO80211VirtualInterface)
-    
+
 public:
     virtual void free(void) APPLE_KEXT_OVERRIDE;
 #if __IO80211_TARGET >= __MAC_11_0
@@ -83,15 +83,15 @@ public:
     OSMetaClassDeclareReservedUnused( IO80211VirtualInterface, 14);
     OSMetaClassDeclareReservedUnused( IO80211VirtualInterface, 15);
 public:
-    
+
     static void startOutputQueues();
-    
+
     static void stopOutputQueues();
-    
+
     static void postMessage(unsigned int, void* data = NULL, unsigned long dataLen = 0);
-    
+
     static int getInterfaceRole();
-    
+
     const char *getBSDName();
 public:
     char buf[0x300];

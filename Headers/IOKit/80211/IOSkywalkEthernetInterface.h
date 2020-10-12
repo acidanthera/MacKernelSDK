@@ -5,9 +5,9 @@
 
 class IOSkywalkEthernetInterface : public IOEthernetController {
     OSDeclareAbstractStructors( IOSkywalkEthernetInterface )
-    
+
 public:
-    
+
 };
 
 #endif /* IOSkywalkEthernetInterface_h */

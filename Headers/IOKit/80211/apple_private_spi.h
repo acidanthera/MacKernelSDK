@@ -60,15 +60,15 @@ enum IOMbufServiceClass {
 #endif
 
 struct packet_info_tag {
-    
+
 };
 
 struct apple80211_debug_command {
-    
+
 };
 
 struct ifnet_init_eparams {
-    
+
 };
 
 #endif /* apple_private_spi_h */

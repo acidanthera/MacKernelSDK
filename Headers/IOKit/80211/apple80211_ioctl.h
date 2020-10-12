@@ -34,7 +34,7 @@
 #error "Please define __IO80211_TARGET to the requested version"
 #endif
 
-#include "apple80211_var.h"
+#include <IOKit/80211/apple80211_var.h>
 
 struct apple80211req
 {
@@ -345,7 +345,7 @@ struct apple80211req
 #define APPLE80211_IOC_OFFLOAD_TCPKA_ENABLE 265
 #define APPLE80211_IOC_RANGING_CAPS 266
 #define APPLE80211_IOC_PER_CORE_RSSI_REPORT 267
-#define APPLE80211_IOC_NSS  353
+#define APPLE80211_IOC_NSS 353
 
 #define APPLE80211_IOC_CARD_SPECIFIC            0xffffffff    // req_type
 

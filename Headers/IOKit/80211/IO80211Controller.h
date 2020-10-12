@@ -217,8 +217,8 @@ public:
 #endif
     virtual mbuf_flags_t inputPacket(mbuf_t);
     virtual SInt32 apple80211_ioctl_get(IO80211Interface *,IO80211VirtualInterface *,ifnet_t,void *);
-    
-    
+
+
 #if __IO80211_TARGET >= __MAC_10_15
     virtual SInt32 apple80211_ioctl_get(IO80211SkywalkInterface *,void *);
     virtual SInt32 apple80211_ioctl_set(IO80211Interface *,IO80211VirtualInterface *,IO80211SkywalkInterface *,void *);
@@ -227,8 +227,8 @@ public:
 #else
     virtual SInt32 apple80211_ioctl_set(IO80211Interface *,IO80211VirtualInterface *,ifnet_t,void *);
 #endif
-    
-    
+
+
 #if __IO80211_TARGET >= __MAC_11_0
     virtual bool detachInterface(IOSkywalkInterface *, bool);
 #endif
@@ -239,7 +239,7 @@ public:
     virtual IOReturn enable(IO80211SkywalkInterface *);
     virtual IOReturn disable(IO80211SkywalkInterface *);
 #endif
-    
+
 //public:
 //    IO80211SkywalkInterface* getInfraInterface(void);
 //    IO80211ScanManager* getPrimaryInterfaceScanManager(void);
@@ -315,7 +315,7 @@ public:
 //    UInt32 setupControlPathLogging(void);
 //    IOReturn createIOReporters(IOService *);
 //    IOReturn powerChangeHandler(void *,void *,unsigned int,IOService *,void *,unsigned long);
-    
+
     OSMetaClassDeclareReservedUnused( IO80211Controller,  0);
     OSMetaClassDeclareReservedUnused( IO80211Controller,  1);
     OSMetaClassDeclareReservedUnused( IO80211Controller,  2);
