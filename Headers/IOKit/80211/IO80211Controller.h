@@ -127,10 +127,6 @@ struct apple80211_lteCoex_report;
 typedef IOReturn (*IOCTL_FUNC)(IO80211Controller*, IO80211Interface*, IO80211VirtualInterface*, apple80211req*, bool);
 extern IOCTL_FUNC gGetHandlerTable[];
 extern IOCTL_FUNC gSetHandlerTable[];
-#define __int64 int
-#define ulong unsigned long
-#define _QWORD UInt64
-#define uint UInt
 
 class IO80211Controller : public IOEthernetController {
     OSDeclareAbstractStructors(IO80211Controller)
@@ -142,8 +138,8 @@ public:
     virtual bool terminate(unsigned int) APPLE_KEXT_OVERRIDE;
 #endif
     virtual bool init(OSDictionary *) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn configureReport(IOReportChannelList *,uint,void *,void *) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn updateReport(IOReportChannelList *,uint,void *,void *) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn configureReport(IOReportChannelList *,UInt,void *,void *) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn updateReport(IOReportChannelList *,UInt,void *,void *) APPLE_KEXT_OVERRIDE;
     virtual bool start(IOService *) APPLE_KEXT_OVERRIDE;
     virtual void stop(IOService *) APPLE_KEXT_OVERRIDE;
     virtual IOService* getProvider(void) const APPLE_KEXT_OVERRIDE;
@@ -160,30 +156,32 @@ public:
 #endif
     virtual IONetworkInterface* createInterface(void) APPLE_KEXT_OVERRIDE;
     virtual bool configureInterface(IONetworkInterface *) APPLE_KEXT_OVERRIDE;
-//    virtual IOReturn outputStart(IONetworkInterface *,uint) APPLE_KEXT_OVERRIDE;
+#ifdef __PRIVATE_SPI__
+    virtual IOReturn outputStart(IONetworkInterface *,UInt) APPLE_KEXT_OVERRIDE;
+#endif
     virtual IOReturn getHardwareAddress(IOEthernetAddress *) APPLE_KEXT_OVERRIDE;
-    virtual void requestPacketTx(void*, uint);
+    virtual void requestPacketTx(void*, UInt);
     virtual IOReturn getHardwareAddressForInterface(IO80211Interface *,IOEthernetAddress *);
-    virtual void inputMonitorPacket(mbuf_t,uint,void *,ulong);
+    virtual void inputMonitorPacket(mbuf_t,UInt,void *,unsigned long);
     virtual int outputRaw80211Packet(IO80211Interface *,mbuf_t);
     virtual int outputActionFrame(IO80211Interface *,mbuf_t);
-    virtual int bpfOutputPacket(OSObject *,uint,mbuf_t m);
-    virtual SInt32 monitorModeSetEnabled(IO80211Interface*, bool, uint);
+    virtual int bpfOutputPacket(OSObject *,UInt,mbuf_t m);
+    virtual SInt32 monitorModeSetEnabled(IO80211Interface*, bool, UInt);
     virtual IO80211Interface* getNetworkInterface(void);
 #if __IO80211_TARGET >= __MAC_10_15
     virtual IO80211SkywalkInterface* getPrimarySkywalkInterface(void);
 #endif
-    virtual SInt32 apple80211_ioctl(IO80211Interface *, IO80211VirtualInterface*, ifnet_t,ulong,void *);
+    virtual SInt32 apple80211_ioctl(IO80211Interface *, IO80211VirtualInterface*, ifnet_t,unsigned long,void *);
 #if __IO80211_TARGET >= __MAC_10_15
-    virtual SInt32 apple80211_ioctl(IO80211SkywalkInterface *,ulong,void *);
+    virtual SInt32 apple80211_ioctl(IO80211SkywalkInterface *,unsigned long,void *);
 #endif
-    virtual SInt32 apple80211_ioctl(IO80211Interface *interface, ifnet_t net,ulong id,void *data) {
+    virtual SInt32 apple80211_ioctl(IO80211Interface *interface, ifnet_t net,unsigned long id,void *data) {
         return apple80211_ioctl(interface, NULL, net, id, data);
     }
     virtual SInt32 apple80211Request(unsigned int, int, IO80211Interface*, void*) = 0;
-    virtual SInt32 apple80211VirtualRequest(uint,int,IO80211VirtualInterface *,void *);
+    virtual SInt32 apple80211VirtualRequest(UInt,int,IO80211VirtualInterface *,void *);
 #if __IO80211_TARGET >= __MAC_10_15
-    virtual SInt32 apple80211SkywalkRequest(uint,int,IO80211SkywalkInterface *,void *);
+    virtual SInt32 apple80211SkywalkRequest(UInt,int,IO80211SkywalkInterface *,void *);
 #endif
     virtual SInt32 stopDMA() = 0;
     virtual UInt32 hardwareOutputQueueDepth(IO80211Interface*) = 0;
@@ -212,7 +210,7 @@ public:
     virtual IOReturn disablePacketTimestamping(void) {
         return kIOReturnUnsupported;
     }
-    virtual UInt32 selfDiagnosticsReport(int,char const*,uint);
+    virtual UInt32 selfDiagnosticsReport(int,char const*,UInt);
     virtual UInt32 getDataQueueDepth(OSObject *);
 #if __IO80211_TARGET >= __MAC_11_0
     virtual bool isAssociatedToMovingNetwork(void) { return false; }
@@ -234,8 +232,8 @@ public:
 #if __IO80211_TARGET >= __MAC_11_0
     virtual bool detachInterface(IOSkywalkInterface *, bool);
 #endif
-    virtual IO80211VirtualInterface* createVirtualInterface(ether_addr *,uint);
-    virtual bool attachVirtualInterface(IO80211VirtualInterface **,ether_addr *,uint,bool);
+    virtual IO80211VirtualInterface* createVirtualInterface(ether_addr *,UInt);
+    virtual bool attachVirtualInterface(IO80211VirtualInterface **,ether_addr *,UInt,bool);
     virtual bool detachVirtualInterface(IO80211VirtualInterface *,bool);
 #if __IO80211_TARGET >= __MAC_10_15
     virtual IOReturn enable(IO80211SkywalkInterface *);
@@ -249,17 +247,17 @@ public:
 //    IOReturn addReporterLegend(IOService *,IOReporter *,char const*,char const*);
 //    IOReturn removeReporterFromLegend(IOService *,IOReporter *,char const*,char const*);
 //    IOReturn unlockIOReporterLegend(void);
-//    void lockIOReporterLegend(void);//怀疑对象，之前是返回int
-//    IOReturn logIOReportLogStreamSubscription(ulong long);
-//    IOReturn addIOReportLogStreamForProvider(IOService *,ulong long *);
+//    void lockIOReporterLegend(void);// Suspected return type - int
+//    IOReturn logIOReportLogStreamSubscription(unsigned long long);
+//    IOReturn addIOReportLogStreamForProvider(IOService *,unsigned long long *);
 //    IOReturn addSubscriptionForThisReporterFetchedOnTimer(IOReporter *,char const*,char const*,IOService *) ;
 //    IOReturn addSubscriptionForProviderFetchedOnTimer(IOService *);
 //    void handleIOReporterTimer(IOTimerEventSource *);
-//    void setIOReportersStreamFlags(ulong long);
-//    void updateIOReportersStreamFrequency(void); //怀疑对象，之前是返回int
+//    void setIOReportersStreamFlags(unsigned long long);
+//    void updateIOReportersStreamFrequency(void); // Suspected return type - int
 //    void setIOReportersStreamLevel(CCStreamLogLevel);
 //    void powerChangeGated(OSObject *,void *,void *,void *,void *);
-//    int copyOut(void const*,ulong long,ulong);
+//    int copyOut(void const*,unsigned long long,unsigned long);
 //    SInt32 getASSOCIATE_RESULT(IO80211Interface *,IO80211VirtualInterface *,IO80211SkywalkInterface *,apple80211_assoc_result_data *);
 //    IOReturn copyIn(unsigned long long,void *,unsigned long);
 //    void logIOCTL(apple80211req *);
