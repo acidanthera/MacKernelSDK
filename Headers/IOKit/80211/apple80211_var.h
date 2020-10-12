@@ -19,6 +19,7 @@
  *
  * @APPLE_LICENSE_HEADER_END@
  */
+
 #ifndef _APPLE80211_VAR_H_
 #define _APPLE80211_VAR_H_
 
@@ -54,14 +55,15 @@
 
 enum apple80211_phymode {
     APPLE80211_MODE_UNKNOWN            = 0,
-    APPLE80211_MODE_AUTO               = 0x1,        // autoselect
-    APPLE80211_MODE_11A                = 0x2,        // 5GHz, OFDM
-    APPLE80211_MODE_11B                = 0x4,        // 2GHz, CCK
-    APPLE80211_MODE_11G                = 0x8,        // 2GHz, OFDM
-    APPLE80211_MODE_11N                = 0x10,       // 2GHz/5GHz, OFDM
-    APPLE80211_MODE_TURBO_A            = 0x20,       // 5GHz, OFDM, 2x clock
-    APPLE80211_MODE_TURBO_G            = 0x40,       // 2GHz, OFDM, 2x clock
-	APPLE80211_MODE_11AC               = 0x80,
+    APPLE80211_MODE_AUTO               = 1,                 // autoselect
+    APPLE80211_MODE_11A                = 2 << (1 - 1),      // 5GHz, OFDM
+    APPLE80211_MODE_11B                = 2 << (2 - 1),      // 2GHz, CCK
+    APPLE80211_MODE_11G                = 2 << (3 - 1),      // 2GHz, OFDM
+    APPLE80211_MODE_11N                = 2 << (4 - 1),      // 2GHz/5GHz, OFDM
+    APPLE80211_MODE_TURBO_A            = 2 << (5 - 1),      // 5GHz, OFDM, 2x clock
+    APPLE80211_MODE_TURBO_G            = 2 << (6 - 1),      // 2GHz, OFDM, 2x clock
+    APPLE80211_MODE_11AC               = 2 << (7 - 1),
+    APPLE80211_MODE_11AX               = 2 << (8 - 1),
 };
 
 enum apple80211_physubmode {
@@ -91,7 +93,6 @@ enum apple80211_apmode    {
     APPLE80211_AP_MODE_ANY        = 3,        // Any supported mode
 };
 
-// states are the same as in itlwm
 enum apple80211_state {
     APPLE80211_S_INIT    = 0,            // default state
     APPLE80211_S_SCAN    = 1,            // scanning
@@ -138,17 +139,17 @@ enum apple80211_authtype_lower
 
 enum apple80211_authtype_upper
 {
-    APPLE80211_AUTHTYPE_NONE         = 0,    //    No upper auth
-    APPLE80211_AUTHTYPE_WPA          = 1,    //    WPA
-    APPLE80211_AUTHTYPE_WPA_PSK      = 2,    //    WPA PSK
-    APPLE80211_AUTHTYPE_WPA2         = 3,    //    WPA2
-    APPLE80211_AUTHTYPE_WPA2_PSK     = 4,    //    WPA2 PSK
-    APPLE80211_AUTHTYPE_LEAP         = 5,    //    LEAP
-    APPLE80211_AUTHTYPE_8021X        = 6,    //    802.1x
-    APPLE80211_AUTHTYPE_WPS          = 7,    //    WiFi Protected Setup
-	APPLE80211_AUTHTYPE_SHA256_PSK   = 8,
-	APPLE80211_AUTHTYPE_SHA256_8021X = 9,
-	APPLE80211_AUTHTYPE_WPA3_SAE     = 10
+    APPLE80211_AUTHTYPE_NONE         = 0,         //    No upper auth
+    APPLE80211_AUTHTYPE_WPA          = 1 << 0,    //    WPA
+    APPLE80211_AUTHTYPE_WPA_PSK      = 1 << 1,    //    WPA PSK
+    APPLE80211_AUTHTYPE_WPA2         = 1 << 2,    //    WPA2
+    APPLE80211_AUTHTYPE_WPA2_PSK     = 1 << 3,    //    WPA2 PSK
+    APPLE80211_AUTHTYPE_LEAP         = 1 << 4,    //    LEAP
+    APPLE80211_AUTHTYPE_8021X        = 1 << 5,    //    802.1x
+    APPLE80211_AUTHTYPE_WPS          = 1 << 6,    //    WiFi Protected Setup
+    APPLE80211_AUTHTYPE_SHA256_PSK   = 1 << 7,
+    APPLE80211_AUTHTYPE_SHA256_8021X = 1 << 8,
+    APPLE80211_AUTHTYPE_WPA3_SAE     = 1 << 9
 };
 
 // Unify association status code and deauth reason codes into a single enum describing
@@ -183,10 +184,10 @@ enum apple80211_associate_result
 
 enum apple80211_link_down_reason
 {
-	APPLE80211_LINK_DOWN_REASON_INTERNAL_ERROR   = 0,
-	APPLE80211_LINK_DOWN_REASON_BEACONLOST       = 1,
-	APPLE80211_LINK_DOWN_REASON_DEAUTH           = 2,
-	APPLE80211_LINK_DOWN_REASON_INTERNAL_ERROR_2 = 3
+   APPLE80211_LINK_DOWN_REASON_INTERNAL_ERROR   = 0,
+   APPLE80211_LINK_DOWN_REASON_BEACONLOST       = 1,
+   APPLE80211_LINK_DOWN_REASON_DEAUTH           = 2,
+   APPLE80211_LINK_DOWN_REASON_INTERNAL_ERROR_2 = 3
 };
 
 enum apple80211_unit
@@ -213,7 +214,7 @@ enum apple80211_locale
     APPLE80211_LOCALE_KOREA      = 4,
     APPLE80211_LOCALE_APAC       = 5,
     APPLE80211_LOCALE_ROW        = 6,
-	APPLE80211_LOCALE_INDONESIA  = 7
+    APPLE80211_LOCALE_INDONESIA  = 7
 };
 
 enum apple80211_scan_type
@@ -311,15 +312,20 @@ enum apple80211_guard_interval
 
 struct apple80211_key
 {
-    u_int32_t            version;
-    u_int32_t            key_len;
-    u_int32_t            key_cipher_type;                    // apple80211_cipher_type
-    u_int16_t            key_flags;
-    u_int16_t            key_index;
-    u_int8_t             key[ APPLE80211_KEY_BUFF_LEN ];
-    u_int32_t            key_rsc_len;
-    u_int8_t             key_rsc[ APPLE80211_RSC_LEN ];    // receive sequence counter
-    struct ether_addr    key_ea;                            // key applies to this bssid
+    u_int32_t           version;
+    u_int32_t           key_len;
+    u_int32_t           key_cipher_type;                    // apple80211_cipher_type
+    u_int16_t           key_flags;
+    u_int16_t           key_index;
+    u_int8_t            key[ APPLE80211_KEY_BUFF_LEN ];
+    u_int8_t            pad[30];
+    u_int32_t           key_rsc_len;
+    u_int8_t            key_rsc[ APPLE80211_RSC_LEN ];    // receive sequence counter
+    struct ether_addr   key_ea;                           // key applies to this bssid
+    uint                wowl_kck_len;
+    uint8_t             wowl_kck_key[16];
+    uint                wowl_kek_len;
+    u_int8_t            wowl_kek_key[24];
 };
 
 // Changing this affects any structure that contains a channel
@@ -361,7 +367,7 @@ struct apple80211_rate
 #define APPLE80211_REASON_NOT_AUTHED                 6
 #define APPLE80211_REASON_NOT_ASSOCED                7
 #define APPLE80211_REASON_ASSOC_LEAVING              8
-#define    APPLE80211_REASON_ASSOC_NOT_AUTHED        9
+#define APPLE80211_REASON_ASSOC_NOT_AUTHED           9
 #define APPLE80211_REASON_POWER_CAP                  10
 #define APPLE80211_REASON_SUPPORTED_CHANS            11
 
@@ -385,7 +391,7 @@ struct apple80211_rate
 #define APPLE80211_STATUS_REASSOCIATION_DENIED       11
 #define APPLE80211_STATUS_ASSOCIATION_DENIED         12
 #define APPLE80211_STATUS_AUTH_ALG_UNSUPPORTED       13
-#define    APPLE80211_STATUS_INVALID_AUTH_SEQ_NUM    14
+#define APPLE80211_STATUS_INVALID_AUTH_SEQ_NUM       14
 #define APPLE80211_STATUS_CHALLENGE_FAILURE          15
 #define APPLE80211_STATUS_TIMEOUT                    16
 #define APPLE80211_STATUS_AP_FULL                    17
@@ -474,7 +480,6 @@ struct apple80211_scan_result
     void*                 asr_ie_data;
 };
 
-
 struct apple80211_network_data
 {
     u_int32_t                   version;
@@ -503,8 +508,8 @@ struct apple80211_station
 
 struct apple80211_wow_pattern
 {
-    size_t len;
-    u_int8_t * pattern;
+    size_t      len;
+    u_int8_t    *pattern;
 };
 
 enum apple80211_wake_condition
@@ -545,6 +550,17 @@ enum apple80211_card_capability
     APPLE80211_CAP_TSN             = 21,   // CAPABILITY: WPA with WEP group key
 };
 #define APPLE80211_CAP_MAX    63
+
+enum apple80211_virtual_interface_type
+{
+    APPLE80211_VIF_P2P_DEVICE   = 1,
+    APPLE80211_VIF_P2P_CLIENT   = 2,
+    APPLE80211_VIF_P2P_GO       = 3,
+    APPLE80211_VIF_AWDL         = 4,
+    APPLE80211_VIF_SOFT_AP      = 5,
+
+    APPLE80211_VIF_MAX
+};
 
 enum apple80211_assoc_flags {
     APPLE80211_ASSOC_F_CLOSED    = 1,    // flag: scan was directed, needed to remember closed networks
@@ -594,8 +610,13 @@ struct apple80211_status_msg_hdr
 #define APPLE80211_M_ROAMED                  30
 #define APPLE80211_M_ACT_FRM_TX_COMPLETE     31
 #define APPLE80211_M_DEAUTH_RECEIVED         32
+#define APPLE80211_M_DRIVER_AVAILABLE        0x37
+#define APPLE80211_M_LINK_ADDRESS_CHANGED    0x3B
+#define APPLE80211_M_ROAM_START              0x46
+#define APPLE80211_M_ROAM_END                0x47
+#define APPLE80211_M_INTERFACE_STATE         0x3A
 
-#define APPLE80211_M_MAX                     32
+#define APPLE80211_M_MAX                     0x3A
 #define APPLE80211_M_BUFF_SIZE               APPLE80211_MAP_SIZE( APPLE80211_M_MAX )
 
 // Registry Information
@@ -621,3 +642,4 @@ struct apple80211_status_msg_hdr
 #define APPLE80211_M_RSN_MSG_MAX                 2
 
 #endif // _APPLE80211_VAR_H_
+

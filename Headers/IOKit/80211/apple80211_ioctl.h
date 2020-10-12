@@ -50,7 +50,6 @@ struct apple80211req
 
 // req_type
 
-
 #define APPLE80211_IOC_SSID                     1    // req_type
 
 #define APPLE80211_IOC_AUTH_TYPE                2    // req_type
@@ -346,7 +345,7 @@ struct apple80211req
 #define APPLE80211_IOC_OFFLOAD_TCPKA_ENABLE 265
 #define APPLE80211_IOC_RANGING_CAPS 266
 #define APPLE80211_IOC_PER_CORE_RSSI_REPORT 267
-#define APPLE80211_IOC_NSS
+#define APPLE80211_IOC_NSS 353
 
 #define APPLE80211_IOC_CARD_SPECIFIC            0xffffffff    // req_type
 
@@ -361,6 +360,31 @@ struct apple80211_ssid_data
     u_int32_t    ssid_len;
     u_int8_t     ssid_bytes[APPLE80211_MAX_SSID_LEN];
 };
+
+struct apple80211_virt_if_create_data {
+    uint32_t    version;
+    uint8_t     mac[APPLE80211_ADDR_LEN];
+    uint16_t    unk1;
+    uint32_t    role;
+    uint8_t     bsd_name[15];
+} __attribute__((packed));
+
+struct apple80211_virt_if_delete_data {
+    uint32_t    version;
+    uint8_t     bsd_name[15];
+} __attribute__((packed));
+
+struct apple80211_ht_capability {
+    uint32_t    version;
+    uint8_t     unk1;
+    uint8_t     unk2;
+    uint16_t    unk3;
+    uint8_t     unk4;
+    uint8_t     unk5[16];
+    uint16_t    unk6;
+    uint        unk7;
+    uint8_t     unk8;
+} __attribute__((packed));
 
 struct apple80211_channel_data
 {
@@ -377,7 +401,7 @@ struct apple80211_bssid_data
 struct apple80211_capability_data
 {
     u_int32_t    version;
-    u_int8_t     capabilities[APPLE80211_MAP_SIZE( APPLE80211_CAP_MAX + 1 )];
+    u_int8_t     capabilities[11];
 };
 
 struct apple80211_state_data
@@ -426,7 +450,7 @@ struct apple80211_rate_data
 struct apple80211_status_dev_data
 {
     u_int32_t    version;
-    u_int8_t    dev_name[MAXPATHLEN];
+    u_int8_t     dev_name[MAXPATHLEN];
 };
 
 struct apple80211_powersave_data
@@ -512,41 +536,41 @@ struct apple80211_scan_data
     u_int32_t                    bss_type;                            // apple80211_apmode
     struct ether_addr            bssid;                               // target BSSID
     u_int32_t                    ssid_len;                            // length of the SSID
-    u_int8_t                     ssid[APPLE80211_MAX_SSID_LEN];
-    u_int32_t                    scan_type;                            // apple80211_scan_type
-    u_int32_t                    phy_mode;                             // apple80211_phymode vector
-    u_int16_t                    dwell_time;                           // time to spend on each channel (ms)
-    u_int32_t                    rest_time;                            // time between scanning each channel (ms)
-    u_int32_t                    num_channels;                         // 0 if not passing in channels
-    struct apple80211_channel    channels[APPLE80211_MAX_CHANNELS];    // channel list
+    u_int8_t                     ssid[APPLE80211_MAX_SSID_LEN];       // direct scan ssid or AirDrop scan ssid like "Air-xxxx"
+    u_int32_t                    scan_type;                           // apple80211_scan_type
+    u_int32_t                    phy_mode;                            // apple80211_phymode vector
+    u_int16_t                    dwell_time;                          // time to spend on each channel (ms)
+    u_int32_t                    rest_time;                           // time between scanning each channel (ms)
+    u_int32_t                    num_channels;                        // 0 if not passing in channels
+    struct apple80211_channel    channels[APPLE80211_MAX_CHANNELS];   // channel list
 };
 
 struct apple80211_scan_multiple_data
 {
-  uint32_t                  version;
-  uint32_t                  ap_mode; // apple80211_apmode
-  uint32_t                  ssid_count;
-  apple80211_ssid_data      ssids[16];
-  uint32_t                  bssid_count;
-  ether_addr                bssids[16];
-  uint32_t                  scan_type;
-  uint32_t                  phy_mode;
-  uint32_t                  dwell_time;
-  uint32_t                  rest_time;
-  uint32_t                  num_channels;
-  struct apple80211_channel channels[128];
-  uint16_t                  unk_2;
+    uint32_t                  version;
+    uint32_t                  ap_mode; // apple80211_apmode
+    uint32_t                  ssid_count;
+    apple80211_ssid_data      ssids[16];
+    uint32_t                  bssid_count;
+    ether_addr                bssids[16];
+    uint32_t                  scan_type;
+    uint32_t                  phy_mode;
+    uint32_t                  dwell_time;
+    uint32_t                  rest_time;
+    uint32_t                  num_channels;
+    struct apple80211_channel channels[128];
+    uint16_t                  unk_2;
 };
 
 struct apple80211_link_changed_event_data
 {
-	bool       isLinkDown; // 0
-	uint32_t   rssi;       // 4
-	uint16_t   snr;        // 8
-	uint16_t   nf;         // 10
-	char       cca;        // 12
-	bool       voluntary;  // 16
-	uint32_t   reason;     // 20
+    bool       isLinkDown; // 0
+    uint32_t   rssi;       // 4
+    uint16_t   snr;        // 8
+    uint16_t   nf;         // 10
+    char       cca;        // 12
+    bool       voluntary;  // 16
+    uint32_t   reason;     // 20
 };
 
 struct apple80211_apmode_data
@@ -565,10 +589,12 @@ struct apple80211_assoc_data
     u_int8_t                 ad_ssid[ APPLE80211_MAX_SSID_LEN ];
     struct ether_addr        ad_bssid;         // prefer over ssid if not zeroed
     struct apple80211_key    ad_key;
-    u_int16_t                ad_rsn_ie_len;
+    uint16_t                 pad;
     u_int8_t                 ad_rsn_ie[ APPLE80211_MAX_RSN_IE_LEN ];
     u_int32_t                ad_flags;         // apple80211_assoc_flags
 };
+
+static_assert(offsetof(apple80211_assoc_data, ad_rsn_ie) == 206, "offsetof(apple80211_assoc_data, ad_rsn_ie)");
 
 struct apple80211_deauth_data
 {
@@ -598,8 +624,8 @@ struct apple80211_rate_set_data
 
 struct apple80211_short_slot_data
 {
-    u_int32_t   version;
-    u_int8_t    mode;
+    u_int32_t    version;
+    u_int8_t     mode;
 };
 
 struct apple80211_retry_limit_data
@@ -779,4 +805,46 @@ struct apple80211_40mhz_intolerant_data
     u_int32_t    enabled;    // bit enabled or not
 };
 
+struct apple80211_tx_nss_data
+{
+    uint32_t    version;
+    uint8_t     nss;
+};
+
+struct apple80211_nss_data
+{
+    uint32_t    version;
+    uint8_t     nss;
+};
+
+struct apple80211_awdl_peer_traffic_registration
+{
+    uint32_t    version;
+    void        *addr;
+    uint32_t    name_len;
+    char        name[152];
+    uint32_t    active;
+} __attribute__((packed));
+
+struct apple80211_awdl_election_metric
+{
+    uint32_t    version;
+    uint32_t    metric;
+} __attribute__((packed));
+
+struct apple80211_awdl_sync_enabled
+{
+    uint32_t    version;
+    uint32_t    unk1;
+    uint32_t    enabled;
+} __attribute__((packed));
+
+struct apple80211_awdl_sync_frame_template
+{
+    uint32_t    version;
+    uint32_t    payload_len;
+    void        *payload;
+} __attribute__((packed));
+
 #endif // _APPLE80211_IOCTL_H_
+
