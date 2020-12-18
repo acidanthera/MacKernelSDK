@@ -67,6 +67,13 @@ To compile for 32-bit you will need to add a set of flags in your project:
 - Added private headers from IOHIDFamily 1446.140.2:
     - `IOHIDPrivateKeys.h`
     - `IOHIDEventServiceKeys_Private.h`
+    - `IOHIDEvent.h`
+    - `IOHIDEventFieldDefs.h`
+    - `IOHIDEventService.h`
+    - `IOHIDEventTypes.h`
+    - `IOHIDUtility.h`
+- Added private headers from IOHIDFamily 1035.70.7:
+    - `AppleHIDUsageTables.h` (removed in newer releases)
 - Added extra compiled and reverse-engineered headers:
     - SMBus (`IOKit/IOSMBusController.h`)
     - Apple Smart Battery (`IOKit/battery/AppleSmartBatteryCommands.h`)
