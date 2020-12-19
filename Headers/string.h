@@ -72,17 +72,17 @@ extern size_t   strnlen(const char *, size_t);
 
 /* strcpy() is being deprecated. Please use strlcpy() instead. */
 extern char     *strcpy(char *, const char *) __deprecated;
-extern char     *strncpy(char *, const char *, size_t);
+extern char     *strncpy(char *, const char *, size_t) __deprecated;
 
 extern size_t   strlcat(char *, const char *, size_t);
 extern size_t   strlcpy(char *, const char *, size_t);
 
 /* strcat() is being deprecated. Please use strlcat() instead. */
 extern char     *strcat(char *, const char *) __deprecated;
-extern char     *strncat(char *, const char *, size_t);
+extern char     *strncat(char *, const char *, size_t) __deprecated;
 
 /* strcmp() is being deprecated. Please use strncmp() instead. */
-extern int      strcmp(const char *, const char *);
+extern int      strcmp(const char *, const char *) __deprecated;
 extern int      strncmp(const char *, const char *, size_t);
 
 extern int      strcasecmp(const char *s1, const char *s2);
