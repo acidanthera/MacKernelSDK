@@ -789,7 +789,7 @@ protected:
                                                                 IOFixed                         joystickRz,
                                                                 IOOptionBits                    options         = 0 );
     
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12
     /*!
      @function dispatchBiometricEvent
      @abstract Dispatch biometric event
@@ -804,7 +804,11 @@ protected:
                                                    IOFixed                      level,
                                                    IOHIDBiometricEventType      eventType,
                                                    IOOptionBits                 options = 0);
-    
+#else
+    OSMetaClassDeclareReservedUnused(IOHIDEventService, 14);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_13
     /*!
      @function copyEventForClient
      @abstract Copy event/events for client
@@ -856,7 +860,15 @@ protected:
      */
     OSMetaClassDeclareReservedUsed(IOHIDEventService, 19);
     virtual void           closeForClient(IOService *client, void *context, IOOptionBits options = 0);
-    
+#else
+    OSMetaClassDeclareReservedUnused(IOHIDEventService, 15);
+    OSMetaClassDeclareReservedUnused(IOHIDEventService, 16);
+    OSMetaClassDeclareReservedUnused(IOHIDEventService, 17);
+    OSMetaClassDeclareReservedUnused(IOHIDEventService, 18);
+    OSMetaClassDeclareReservedUnused(IOHIDEventService, 19);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     /*!
      @function dispatchExtendedGameControllerEvent
      @abstract Dispatch extended game controller event
@@ -905,19 +917,17 @@ protected:
                                                                 boolean_t                       thumbstickButtonLeft,
                                                                 boolean_t                       thumbstickButtonRight,
                                                                 IOOptionBits                    options         = 0 );
-    
+#else
+    OSMetaClassDeclareReservedUnused(IOHIDEventService, 20);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     OSMetaClassDeclareReservedUsed(IOHIDEventService, 21);
     virtual IOHIDEvent *copyMatchingEvent(OSDictionary *matching);
 #else
-    OSMetaClassDeclareReservedUnused(IOHIDEventService, 14);
-    OSMetaClassDeclareReservedUnused(IOHIDEventService, 15);
-    OSMetaClassDeclareReservedUnused(IOHIDEventService, 16);
-    OSMetaClassDeclareReservedUnused(IOHIDEventService, 17);
-    OSMetaClassDeclareReservedUnused(IOHIDEventService, 18);
-    OSMetaClassDeclareReservedUnused(IOHIDEventService, 19);
-    OSMetaClassDeclareReservedUnused(IOHIDEventService, 20);
     OSMetaClassDeclareReservedUnused(IOHIDEventService, 21);
 #endif
+
     OSMetaClassDeclareReservedUnused(IOHIDEventService, 22);
     OSMetaClassDeclareReservedUnused(IOHIDEventService, 23);
     OSMetaClassDeclareReservedUnused(IOHIDEventService, 24);
