@@ -31,7 +31,7 @@
 
 #if !__IIG
 #if KERNEL
-#include <IOKit/hidevent/IOHIDEventService.h>
+#include <IOKit/hid/IOHIDEventService.h>
 #endif
 #endif
 
