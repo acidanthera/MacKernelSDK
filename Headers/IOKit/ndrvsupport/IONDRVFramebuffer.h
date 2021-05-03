@@ -38,6 +38,12 @@
 #include <IOKit/ndrvsupport/IOMacOSVideo.h>
 #include <IOKit/ndrvsupport/IONDRVSupport.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 #define kIONDRVDisableKey       "AAPL,disable-ndrv"
 
 class IONDRVFramebuffer : public IOFramebuffer
@@ -265,8 +271,10 @@ public:
 
     //// Gamma
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_13
     virtual IOReturn setGammaTable( UInt32 channelCount, UInt32 dataCount,
                     UInt32 dataWidth, void * data, bool syncToVBL ) APPLE_KEXT_OVERRIDE;
+#endif
 
     virtual IOReturn setGammaTable( UInt32 channelCount, UInt32 dataCount,
                     UInt32 dataWidth, void * data ) APPLE_KEXT_OVERRIDE;

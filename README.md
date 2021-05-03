@@ -92,6 +92,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `assert.h` to avoid kext assertion checking before 10.12
     - In `IOHIDDevice.h` to avoid new virtual methods before 10.14
     - In `IOFramebuffer.h` to avoid new virtual methods before 10.13
+    - In `IONDRVFramebuffer.h` to avoid new virtual methods before 10.13
 - Fixed compiler warnings:
     - In `IOPCIDevice.h` due to missing overrides
     - In `OSMetaClass.h` due to using unsupported memory checking with older clang
