@@ -33,6 +33,11 @@
 #include <IOKit/graphics/IOGraphicsDevice.h>
 #include <IOKit/graphics/IOFramebufferShared.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
 
 #define IOFRAMEBUFFER_REV           7
 
@@ -405,6 +410,8 @@ public:
     virtual IOReturn doI2CRequest( UInt32 bus, struct IOI2CBusTiming * timing, struct IOI2CRequest * request );
     OSMetaClassDeclareReservedUsed(IOFramebuffer, 0);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_13
+
     /*! @function diagnoseReport
      @abstract Provide private diagnostic information.
      @discussion Allow vendor implementations to provide diagnostic information when a catastrophic failure has been encounterd.
@@ -425,6 +432,10 @@ public:
     virtual IOReturn setGammaTable( UInt32 channelCount, UInt32 dataCount,
                                    UInt32 dataWidth, void * data, bool syncToVBL );
     OSMetaClassDeclareReservedUsed(IOFramebuffer, 2);
+#else
+    OSMetaClassDeclareReservedUnused(IOFramebuffer, 1);
+    OSMetaClassDeclareReservedUnused(IOFramebuffer, 2);
+#endif
 
 private:
 
@@ -627,7 +638,7 @@ public:
     @discussion IOFramebuffer subclasses must implement this method to return information in the IOPixelInformation structure for the display mode with the passed ID, depth index and aperture. The aperture utilized by the system is always kIOFBSystemAperture. Drivers may define alternative apertures, being a view of the framebuffer in a different pixel format from the default.
     @param displayMode A display mode ID previously returned by getDisplayModes().
     @param depth An index from zero to the value of the maxDepthIndex field from the IODisplayModeInformation structure (inclusive).
-    @param info Pointer to a structure of type IOPixelInformation to be filled out by the driver. IOPixelInformation is documented in IOGraphicsTypes.h.
+    @param pixelInfo Pointer to a structure of type IOPixelInformation to be filled out by the driver. IOPixelInformation is documented in IOGraphicsTypes.h.
     @result an IOReturn code. A return other than kIOReturnSuccess will prevent the system from using the device.
 */
 

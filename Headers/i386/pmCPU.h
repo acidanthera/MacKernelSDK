@@ -123,7 +123,7 @@ typedef struct {
 } pmCallBacks_t;
 
 extern pmDispatch_t     *pmDispatch;
-
+extern uint32_t         pmInitDone; /* private */
 void power_management_init(void);
 void pmKextRegister(uint32_t version, pmDispatch_t *cpuFuncs,
     pmCallBacks_t *callbacks);
