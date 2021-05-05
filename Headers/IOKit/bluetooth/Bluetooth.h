@@ -42,25 +42,18 @@
 #import <IOKit/IOTypes.h>
 #import <libkern/OSByteOrder.h>
 
-//---------------------------------------------------------------------------------------------------------------------------
-/*!	@header		Bluetooth
-	Bluetooth Wireless Technology
-*/
-
-#if defined(__cplusplus)
+#ifdef __cplusplus
 	#define IOBLUETOOTH_EXPORT extern "C"
 #else
 	#define IOBLUETOOTH_EXPORT extern
 #endif
 
-#ifdef	__cplusplus
+#ifdef __cplusplus
 extern "C"
 {
 #endif
 
-
 #if 0
-
 #pragma mark === Baseband ===
 #endif
 
