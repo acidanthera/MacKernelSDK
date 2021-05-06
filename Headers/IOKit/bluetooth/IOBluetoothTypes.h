@@ -43,7 +43,7 @@
 
 #define kIOBluetoothDeviceResetError              iokit_bluetooth_err(1)	// Device reset interrupted pending operation
 #define kIOBluetoothConnectionAlreadyExists       iokit_bluetooth_err(2)	// Attempting to open a connection that already exists
-#define kIOBluetoothNoHCIController               iokit_bluetooth_err(3)	 // No HCI controller is present
+#define kIOBluetoothNoHCIController               iokit_bluetooth_err(3)	// No HCI controller is present
 #define kIOBluetoothHCIPowerStatesNotSupported    iokit_bluetooth_err(4)	// HCI controller does not support changing power states
 
 
