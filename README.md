@@ -74,6 +74,8 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - `IOHIDUtility.h`
 - Added private headers from IOHIDFamily 1035.70.7:
     - `AppleHIDUsageTables.h` (removed in newer releases)
+- Added private headers for IOBluetoothFamily from 10.6 SDK
+    - `IOBluetoothInternal.h` (removed in newer releases)
 - Added extra compiled and reverse-engineered headers:
     - SMBus (`IOKit/IOSMBusController.h`)
     - Apple Smart Battery (`IOKit/battery/AppleSmartBatteryCommands.h`)
@@ -81,6 +83,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - NKE private APIs (`IOKit/network`)
     - IOUSBFamily from macOS 10.10 SDK
     - IO80211Family from Black80211 originally created by Roman Peshkov
+    - IOBluetoothFamily by cjiang
 - Added kmod targeting earlier macOS kernels:
     - 10.6 or newer (`Library/x86_64/libkmod.a`)
 - Added availability checking when targeting older macOS versions:
