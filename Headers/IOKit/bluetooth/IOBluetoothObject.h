@@ -27,7 +27,7 @@
  * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
  */
 /*!
- *   @header
+ *   @header IOBluetoothObject.h
  *   This header contains the definition of the IOBluetoothObject class, a base for many classes, such as channels, in the IOBluetoothFamily.
  */
 
@@ -73,7 +73,7 @@ public:
  *   @param arg3 Argument to action from run operation.
  *   @result An IOReturn indicating whether the operation was successful. */
     
-    static IOReturn staticPerformTerminate( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
+    static IOReturn staticPerformTerminate( OSObject * owner, void * arg0, void * arg1, void * arg2, void * arg3 );
     
 /*! @function getWorkLoop
  *   @abstract Returns the current work loop.

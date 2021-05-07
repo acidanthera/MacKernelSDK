@@ -26,7 +26,7 @@
  * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
  */
 /*!
- *   @header
+ *   @header IOBluetoothHIDDriver.h
  *   This header contains the definition of the IOBluetoothHIDDriver class, which is the driver for generic Bluetooth HID devices. It is a direct subclass of IOHIDDevice.
  */
 

@@ -26,7 +26,7 @@
  * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
  */
 /*!
- *   @header
+ *   @header IOBluetoothTypes.h
  *   This header defines IOReturn values specific to IOBluetooth.
  */
 

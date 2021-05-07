@@ -75,9 +75,9 @@ enum
 	kBluetoothEncryptionEnableOff					= 0x00,
 	kBluetoothEncryptionEnableOn					= 0x01,
     
-    	kBluetoothEncryptionEnableBREDRE0				= 0x01,
+    kBluetoothEncryptionEnableBREDRE0				= 0x01,
 	kBluetoothEncryptionEnableLEAESCCM				= 0x01,
-    	kBluetoothEncryptionEnableBREDRAESCCM				= 0x02
+    kBluetoothEncryptionEnableBREDRAESCCM			= 0x02
 };
 
 typedef uint8_t  BluetoothKeyFlag;
@@ -97,8 +97,8 @@ enum
 	kBluetoothKeyTypeUnauthenticatedCombination			= 0x04,
 	kBluetoothKeyTypeAuthenticatedCombination			= 0x05,
 	kBluetoothKeyTypeChangedCombination				= 0x06,
-    	kBluetoothKeyTypeUnauthenticatedCombinationP256 		= 0x07,
-    	kBluetoothKeyTypeAuthenticatedCombinationP256   		= 0x08
+    kBluetoothKeyTypeUnauthenticatedCombinationP256 		= 0x07,
+    kBluetoothKeyTypeAuthenticatedCombinationP256   		= 0x08
 };
 
 // Packet types (Bluetooth spec section 7.1.5 - Create Connection)

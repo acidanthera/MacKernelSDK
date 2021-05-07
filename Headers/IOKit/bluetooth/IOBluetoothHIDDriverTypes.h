@@ -26,7 +26,7 @@
  * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
  */
 /*!
- *   @header
+ *   @header IOBluetoothHIDDriverTypes.h
  *   This header contains enumerations for IOBluetoothHIDDriver.
  */
 

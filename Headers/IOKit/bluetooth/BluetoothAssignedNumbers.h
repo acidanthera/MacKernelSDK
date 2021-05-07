@@ -26,7 +26,7 @@
  * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
  */
 /*!
- *   @header
+ *   @header BluetoothAssignedNumbers.h
  *   This header contains assigned numbers for IOBluetooth.
  */
 
