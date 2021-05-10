@@ -37,6 +37,8 @@ class IOBluetoothPacketLogger;
 
 extern const IORegistryPlane *  gIODTPlane;
 
+#define __int64 uint64_t
+
 struct BluetoothHardwareListType
 {
     //0
@@ -135,8 +137,8 @@ public:
     virtual IOReturn DisableBluetoothHostControllerObject(BluetoothHardwareListType *);
     virtual IOReturn EnableBluetoothHostControllerObject(BluetoothHardwareListType *);
     
-    WakeUpDisplay(void);
-    FullWakeTimeOutHandler(void);
+    //WakeUpDisplay(void);
+    //FullWakeTimeOutHandler(void);
     
     virtual IOReturn StartFullWakeTimer();
     virtual IOReturn CancelFullWakeTimer();
@@ -304,10 +306,10 @@ protected:
     {
         void * ptr1;
         void * ptr2;
-    }
+    };
     IOLock * mLock; //66040
     ExpansionData * mExpansionData; //66056
-}
+};
 
 #endif
 

@@ -2350,7 +2350,7 @@ typedef struct BluetoothHCIEventLEConnectionCompleteResults
 	uint16_t							connLatency;
 	uint16_t							supervisionTimeout;
 	uint8_t								masterClockAccuracy;
-} BluetoothHCIEventLEConnectionCompleteResults __attribute__((packed));
+} __attribute__((packed)) BluetoothHCIEventLEConnectionCompleteResults;
 
 typedef struct BluetoothHCIEventLEEnhancedConnectionCompleteResults
 {
@@ -2364,7 +2364,7 @@ typedef struct BluetoothHCIEventLEEnhancedConnectionCompleteResults
     	uint16_t                                   			connLatency;
     	uint16_t                                   			supervisionTimeout;
     	uint8_t                                    			masterClockAccuracy;
-} BluetoothHCIEventLEEnhancedConnectionCompleteResults __attribute__((packed));
+} __attribute__((packed)) BluetoothHCIEventLEEnhancedConnectionCompleteResults;
 
 typedef struct BluetoothHCIEventLEConnectionUpdateCompleteResults
 {
@@ -2372,13 +2372,13 @@ typedef struct BluetoothHCIEventLEConnectionUpdateCompleteResults
     	uint16_t							connInterval;
     	uint16_t							connLatency;
     	uint16_t							supervisionTimeout;
-} BluetoothHCIEventLEConnectionUpdateCompleteResults __attribute__((packed));
+} __attribute__((packed)) BluetoothHCIEventLEConnectionUpdateCompleteResults;
 
 typedef struct BluetoothHCIEventLEReadRemoteUsedFeaturesCompleteResults
 {
     	BluetoothConnectionHandle					connectionHandle;
     	BluetoothHCISupportedFeatures					usedFeatures;
-} BluetoothHCIEventLEReadRemoteUsedFeaturesCompleteResults __attribute__((packed));
+} BluetoothHCIEventLEReadRemoteUsedFeaturesCompleteResults ;
 
 typedef struct BluetoothHCIEventDisconnectionCompleteResults
 {

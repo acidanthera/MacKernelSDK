@@ -37,6 +37,12 @@
 #include <IOKit/IOEventSource.h>
 #include <IOKit/IOWorkLoop.h>
 
+/*!
+ * @class IOBluetoothLocalUtilityEventSource : public IOEventSource
+ * @abstract An event source providing utilities specific to the IOBluetooth family.
+ * @discussion The IOBluetoothLocalUtilityEventSource expands the functionality of its super class, IOEventSource, by implementing the functions closeGateOn() and openGateOn(), as well as a factory member function for organized construction of itself. This event source should be used and only used in the IOBluetooth family.
+*/
+
 class IOBluetoothLocalUtilityEventSource : public IOEventSource
 {
     OSDeclareDefaultStructors(IOBluetoothLocalUtilityEventSource)
@@ -71,6 +77,12 @@ public:
     
     virtual void openGateOn( IOWorkLoop * workLoop );
 };
+
+/*!
+ * @class IOBluetoothWorkLoop : public IOWorkLoop
+ * @abstract A work loop instance providing functions used exclusively by the IOBluetooth family.
+ * @discussion The IOBluetoothWorkLoop provides the functions handoffFrom() and returnTo(), which could help with linking between different work loops, a feature that could be used by the IOBluetoothFamily. This class also contains a factory member function for organized construction of itself. This work loop should be used and only used in the IOBluetooth family.
+*/
 
 class IOBluetoothWorkLoop : public IOWorkLoop
 {
