@@ -40,6 +40,12 @@
 
 class IOBluetoothHCIController;
 
+/*!
+ * @class IOBluetoothObject : public IOService
+ * @abstract An abstract class representing an object in the IOBluetoothFamily.
+ * @discussion The IOBluetoothObject is the base for a lot of IOBluetooth classes due to its abstractness. Each IOBluetoothObject has a specific object ID, which could be obtained from the family. One of its most significant features is to provide handle pending IOs.
+*/
+
 class IOBluetoothObject : public IOService
 {
     OSDeclareAbstractStructors(IOBluetoothObject)

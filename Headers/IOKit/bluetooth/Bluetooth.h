@@ -57,10 +57,6 @@ extern "C"
 #pragma mark === Baseband ===
 #endif
 
-//===========================================================================================================================
-//	Baseband
-//===========================================================================================================================
-
 typedef uint16_t BluetoothConnectionHandle;		// Upper 4 bits are reserved.
 typedef uint8_t  BluetoothLMPHandle;
 enum
