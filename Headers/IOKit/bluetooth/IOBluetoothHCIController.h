@@ -22,6 +22,10 @@
  * @APPLE_LICENSE_HEADER_END@
  */
 
+/*
+ This class is not ready. Please don't use it yet.
+ */
+
 #ifndef _IOKIT_IOBLUETOOTHHCICONTROLLER_H
 #define _IOKIT_IOBLUETOOTHHCICONTROLLER_H
 
