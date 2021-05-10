@@ -49,19 +49,57 @@ public:
     virtual void free() APPLE_KEXT_OVERRIDE;
     virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
     virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
+    
+/*! @function SetBluetoothFamily
+ *   @abstract Sets the mBluetoothFamily member variable.
+ *   @param controller mBluetoothFamily is set to this IOBluetoothHCIController instance. */
+    
     virtual void SetBluetoothFamily( IOBluetoothHCIController * controller );
-    virtual IOReturn CheckSpecialGPIO();
+    
+    virtual void CheckSpecialGPIO();
     virtual IOReturn SetBTRS();
     virtual IOReturn SetBTPU();
     virtual IOReturn SetBTPD();
     virtual IOReturn SetBTRB(bool, bool *);
     virtual IOReturn SetBTLP(bool);
+    
+/*! @function ResetMethodIsAvailable
+ *   @abstract Determines if the Bluetooth ACPI reset method (BTRS) is available.
+ *   @discussion This function is implemented by returning mResetMethodAvailable.
+ *   @result mResetMethodAvailable is returned. */
+    
     virtual bool ResetMethodIsAvailable();
+    
+/*! @function ROMBootMethodIsAvailable
+ *   @abstract Determines if the Bluetooth ACPI ROM boot method (BTRB) is available.
+ *   @discussion This function is implemented by returning mROMBootMethodAvailable.
+ *   @result mROMBootMethodAvailable is returned. */
+    
     virtual bool ROMBootMethodIsAvailable();
+    
+/*! @function PowerUpMethodIsAvailable
+ *   @abstract Determines if the Bluetooth ACPI power up method (BTPU) is available.
+ *   @discussion This function is implemented by returning mPowerUpMethodAvailable.
+ *   @result mPowerUpMethodAvailable is returned. */
+    
     virtual bool PowerUpMethodIsAvailable();
+    
+/*! @function PowerUpMethodIsAvailable
+ *   @abstract Determines if the Bluetooth ACPI power down method (BTPD) is available.
+ *   @discussion This function is implemented by returning mPowerDownMethodAvailable.
+ *   @result mPowerDownMethodAvailable is returned. */
+    
     virtual bool PowerDownMethodIsAvailable();
+    
+/*! @function LowPowerMethodIsAvailable
+ *   @abstract Determines if the Bluetooth ACPI low power method (BTLP) is available.
+ *   @discussion This function is implemented by returning mLowPowerMethodAvailable.
+ *   @result mLowPowerMethodAvailable is returned. */
+    
     virtual bool LowPowerMethodIsAvailable();
-    virtual UInt32 GetCurrentTime( void );
+    
+    virtual UInt32 GetCurrentTime();
+    
     virtual int ConvertErrorCodeToString(int, char *, char *);
 
 protected:
