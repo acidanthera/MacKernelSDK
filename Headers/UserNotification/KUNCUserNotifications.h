@@ -50,7 +50,7 @@ KUNCUserNotificationDisplayNotice(
 	char            *localizationPath,
 	char            *alertHeader,
 	char            *alertMessage,
-	char            *defaultButtonTitle) __attribute__((deprecated));
+	char            *defaultButtonTitle);
 
 /*
  * ***BLOCKING*** alert call, returned int value corresponds to the
@@ -68,7 +68,7 @@ KUNCUserNotificationDisplayAlert(
 	char            *defaultButtonTitle,
 	char            *alternateButtonTitle,
 	char            *otherButtonTitle,
-	unsigned        *responseFlags) __attribute__((deprecated));
+	unsigned        *responseFlags);
 
 
 /*
@@ -87,7 +87,7 @@ kern_return_t
 KUNCExecute(
 	char    *executionPath,
 	int     openAsUser,
-	int     pathExecutionType) __attribute__((deprecated));
+	int     pathExecutionType);
 
 
 /* KUNC User Notification XML Keys
@@ -202,6 +202,25 @@ enum {
 	kKUNCCancelResponse         = 3
 };
 
+/*
+ * Flags for alert levels and buttons
+ *
+ * Check the constants defined in Core Foundation’s
+ * CFUserNotification for the constants to use.
+ */
+
+enum {
+	kKUNCStopAlertLevel         = 0,
+	kKUNCNoteAlertLevel         = 1,
+	kKUNCCautionAlertLevel      = 2,
+	kKUNCPlainAlertLevel        = 3
+};
+
+enum {
+	kKUNCNoDefaultButtonFlag    = (1UL << 5),
+	kKUNCUseRadioButtonsFlag    = (1UL << 6)
+};
+
 #define KUNCCheckBoxChecked(i)  (1 << (8 + i))   /* can be used for radio's too */
 #define KUNCPopUpSelection(n)   (n << 24)
 
@@ -217,7 +236,7 @@ typedef void
 /*
  * Get a notification ID
  */
-KUNCUserNotificationID KUNCGetNotificationID(void) __attribute__((deprecated));
+KUNCUserNotificationID KUNCGetNotificationID(void);
 
 /* This function currently requires a bundle path, which kexts cannot currently get.  In the future, the CFBundleIdentiofier of the kext will be pass in in place of the bundlePath. */
 
@@ -230,12 +249,12 @@ KUNCUserNotificationDisplayFromBundle(
 	char                            *messageKey,
 	char                            *tokenString,
 	KUNCUserNotificationCallBack    callback,
-	int                             contextKey) __attribute__((deprecated));
+	int                             contextKey);
 
 
 kern_return_t
 KUNCUserNotificationCancel(
-	KUNCUserNotificationID  notification) __attribute__((deprecated));
+	KUNCUserNotificationID  notification);
 
 
 __END_DECLS

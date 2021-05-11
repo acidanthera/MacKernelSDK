@@ -51,8 +51,11 @@ class IOBluetoothObject : public IOService
     OSDeclareAbstractStructors(IOBluetoothObject)
     
 public:
+
     virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
+
     virtual void free() APPLE_KEXT_OVERRIDE;
+    
     virtual bool terminate( IOOptionBits options = 0 ) APPLE_KEXT_OVERRIDE;
     
 /*! @function willTerminate
@@ -131,17 +134,17 @@ protected:
     
 /*! @var mTerminateMask
  *   This unsigned char is used to mark if the class has been terminated. The second bit is set to true when termiante() is called.
- *   It's offset is 156. */
+ *   Offset: 156. */
     UInt8 mTerminateMask;
     
 /*! @var mTerminateMask
  *   This integer records the BluetoothObjectID of this class, derived from mBluetoothFamily.
- *   It's offset is 160. */
+ *   Offset: 160. */
     UInt32 mBluetoothObjectID;
     
 /*! @var mBluetoothFamily
  *   A  IOBluetoothHCIController that helps the class with several bluetooth-specific operations.
- *   It's offset is 168. */
+ *   Offset: 168. */
     IOBluetoothHCIController * mBluetoothFamily;
 };
 
