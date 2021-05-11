@@ -100,3 +100,4 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `net`, `netinit`, `network`, `sys` due to NKE KPI deprecation
     - In `hid`, `serial`, `usb` due to missing overrides and KPI deprecation in favor of `DriverKit`
     - In `OSUnserialize.h` due to `OSStringPtr` misuse
+    - In `KUNCUserNotifications.h` due to KPI deprecation
