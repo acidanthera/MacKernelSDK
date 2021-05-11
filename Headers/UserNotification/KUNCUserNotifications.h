@@ -210,15 +210,15 @@ enum {
  */
 
 enum {
-    kKUNCStopAlertLevel         = 0,
-    kKUNCNoteAlertLevel         = 1,
-    kKUNCCautionAlertLevel      = 2,
-    kKUNCPlainAlertLevel        = 3
+	kKUNCStopAlertLevel         = 0,
+	kKUNCNoteAlertLevel         = 1,
+	kKUNCCautionAlertLevel      = 2,
+	kKUNCPlainAlertLevel        = 3
 };
 
 enum {
-    kKUNCNoDefaultButtonFlag    = (1UL << 5),
-    kKUNCUseRadioButtonsFlag    = (1UL << 6)
+	kKUNCNoDefaultButtonFlag    = (1UL << 5),
+	kKUNCUseRadioButtonsFlag    = (1UL << 6)
 };
 
 #define KUNCCheckBoxChecked(i)  (1 << (8 + i))   /* can be used for radio's too */
