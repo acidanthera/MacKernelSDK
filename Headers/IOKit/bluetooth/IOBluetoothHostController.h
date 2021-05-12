@@ -91,10 +91,10 @@ typedef struct HearingDeviceListType
 
 typedef struct LEDeviceListType
 {
-    BluetoothConnectionHandle mConnectionHandle;
+    BluetoothConnectionHandle               mConnectionHandle;
     bool unknown;
-    LEDeviceListType * mNextDevice;
-    LEDeviceListType * mPreviousDevice;
+    LEDeviceListType *                      mNextDevice;
+    LEDeviceListType *                      mPreviousDevice;
 } BluetoothLEDevice;
 
 class IOBluetoothHostController : public IOService
@@ -685,11 +685,10 @@ private:
     OSMetaClassDeclareReservedUnused(IOBluetoothHostController, 23);
 
 protected:
-    //136 bytes
-    OSSet * mReporterSet; //this + 136
+    OSSet * mReporterSet; //136
     IOReportLegend * mReportLegend; //this + 144
     IOStateReporter * mPowerStateReporter; //this + 152
-    UInt8 * mDeviceReporterList; //this + 160
+    BluetoothDeviceReporter ** mDeviceReporterList; //this + 160
     BluetoothDeviceReporter * mDeviceReporter; //this + 168
     IOSimpleReporter * mAppleBTLEAdvertisingReporter; //this + 176
     IOSimpleReporter * mLESetAdvertisingDataReporter; //this + 184
@@ -706,6 +705,43 @@ protected:
     IOBluetoothDevice * mDeviceListHead; //this + 256
     void * u;//264, size is 2048
     void * uSize; //272
+    UInt8 mNumberOfLowPriorityDevice; //280
+    UInt8 mNumberOfMidPriorityDevice; //281
+    UInt8 mNumberOfHighPriorityDevice; //282
+    UInt8 mNumberOfLowPriorityLEDevice; //283
+    UInt8 mNumberOfMidPriorityLEDevice; //284
+    UInt8 mNumberOfHighPriorityLEDevice; //285
+    BluetoothHCIBufferSize mACLSCOBufferSize; //286
+    BluetoothHCILEBufferSize mLEACLBufferSize; //294
+    
+    UInt16 mNumberOfOutstandingLowPriorityACLPackets; //306
+    UInt16 mNumberOfOutstandingMidPriorityACLPackets; //308
+    UInt16 mNumberOfOutstandingHighPriorityACLPackets; //310
+    
+    UInt16 mTotalNumberOfOutstandingACLPackets; //312
+    //314
+    UInt32 mNumberOfLowPriorityACLPacketsInQueue; //316
+    UInt32 mNumberOfMidPriorityACLPacketsInQueue; //320
+    UInt32 mNumberOfHighPriorityACLPacketsInQueue; //324
+    UInt32 mTotalNumberOfACLPacketsInAllQueues; //328
+    UInt16 mNumberOfAllowedLowPriorityACLDataPackets; //332
+    UInt16 mNumberOfAllowedMidPriorityACLDataPackets; //334
+    UInt16 mNumberOfAllowedHighPriorityACLDataPackets; //336
+    
+    UInt16 mNumberOfOutstandingLowPriorityLEACLPackets; //400
+    UInt16 mNumberOfOutstandingMidPriorityLEACLPackets; //402
+    UInt16 mNumberOfOutstandingHighPriorityLEACLPackets; //404
+    UInt16 mTotalNumberOfOutstandingLEACLPackets; //406
+    UInt32 mNumberOfLowPriorityLEACLPacketsInQueue; //408
+    UInt32 mNumberOfMidPriorityLEACLPacketsInQueue; //412
+    UInt32 mNumberOfHighPriorityLEACLPacketsInQueue; //416
+    UInt32 mTotalNumberOfLEACLPacketsInAllQueues; //420
+    
+    UInt16 mNumberOfAllowedLowPriorityLEACLDataPackets; //424
+    UInt16 mNumberOfAllowedMidPriorityLEACLDataPackets; //426
+    UInt16 mNumberOfAllowedHighPriorityLEACLDataPackets; //428
+    
+    
     
     IOBluetoothHCIControllerConfigState mPreviousControllerConfigState; //this + 504
     
@@ -728,10 +764,10 @@ protected:
     OSSet * mHostControllerClients; //this + 800
     LEDeviceListType * mLEDeviceListHead; //this + 808
     LEDeviceListType * mLEDeviceListTail; //this + 816
-    IOBluetoothHCIController * mHCIController; //this + 824 this is just assumed i am not very sure
+    IOBluetoothHCIController * mBluetoothFamily; //this + 824
     IOBluetoothHostControllerTransport * mBluetoothTransport; //this + 832
     IOWorkQueue * mControllerWorkQueue; //this + 840
-    IOWorkQueue * mIOReporterWorkQueue; //this + 848
+    IOWorkQueue * mReporterWorkQueue; //this + 848
     //856
     UInt16 mVendorID; //858
     UInt16 mProductID; //860
@@ -743,15 +779,16 @@ protected:
     
     UInt8 mNumTimedOutHCICommands; //this + 889
     
-    UInt64 mTotalSCOBytesSent; //920
-    UInt16 mActiveConnections; //928
-    
     IOBluetoothHCIControllerPowerOptions mControllerPowerOptions; //this + 900
     IOBluetoothHCIControllerConfigState mControllerConfigState; //this + 904
     IOBluetoothHCIControllerFeatureFlags mControllerFeatureFlags; //this + 908
-    UInt8 mNumberOfCommandsAllowedByHardware; //this + 912
-    UInt8 mNumSCOConnections; //this + 914
+    UInt8 mNumberOfCommandsAllowedByHardware; //912
     
+    UInt8 mNumSCOConnections; //914
+    UInt64 mTotalSCOBytesSent; //920
+    UInt16 mActiveConnections; //928
+    
+    UInt8 mNumConfiguredHIDDevices; //956
     bool unknown; //this + 959
     
     long long mLESetAdvertisingDataCommandSent[15]; //this + 1120 (types 1 - 15)
@@ -765,16 +802,16 @@ protected:
     bool un; //1260
     
     bool n; //1280
-    SInt16 x;//1284
+    SInt16 mControllerOutstandingCalls; //1284
     os_log_t mInternalOSLogObject; //1288
     
     bool mBluetoothdNotFound; //this + 1312
     
     struct ExpansionData
     {
-        
+        void * reserved;
     };
-    ExpansionData * mExpansionData; //this + 1320
+    ExpansionData * mIOBluetoothHostControllerExpansionData; //1320
 };
 
 #endif
