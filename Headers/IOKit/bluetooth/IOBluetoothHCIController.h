@@ -26,8 +26,8 @@
  This class is not ready. Please don't use it yet.
  */
 
-#ifndef _IOKIT_IOBLUETOOTHHCICONTROLLER_H
-#define _IOKIT_IOBLUETOOTHHCICONTROLLER_H
+#ifndef _IOKIT_BLUETOOTH_IOBLUETOOTHHCICONTROLLER_H
+#define _IOKIT_BLUETOOTH_IOBLUETOOTHHCICONTROLLER_H
 
 #include <IOKit/IOService.h>
 #include <IOKit/bluetooth/Bluetooth.h>

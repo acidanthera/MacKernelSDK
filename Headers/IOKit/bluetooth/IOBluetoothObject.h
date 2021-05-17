@@ -31,8 +31,8 @@
  *   This header contains the definition of the IOBluetoothObject class, a base for many classes, such as channels, in the IOBluetoothFamily.
  */
 
-#ifndef _IOBLUETOOTH_OBJECT_H
-#define _IOBLUETOOTH_OBJECT_H
+#ifndef _IOKIT_BLUETOOTH_IOBLUETOOTHOBJECT_H
+#define _IOKIT_BLUETOOTH_IOBLUETOOTHOBJECT_H
 
 #include <IOKit/IOService.h>
 #include <IOKit/IOWorkLoop.h>

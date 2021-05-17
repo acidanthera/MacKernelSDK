@@ -31,8 +31,8 @@
  *   This header contains the definition of the IOBluetoothMemoryBlockQueue instance.
  */
 
-#ifndef _IOBLUETOOTH_MEMORYBLOCKQUEUE_H
-#define _IOBLUETOOTH_MEMORYBLOCKQUEUE_H
+#ifndef _IOKIT_BLUETOOTH_IOBLUETOOTHMEMORYBLOCKQUEUE_H
+#define _IOKIT_BLUETOOTH_IOBLUETOOTHMEMORYBLOCKQUEUE_H
 
 class IOBluetoothMemoryBlock;
 

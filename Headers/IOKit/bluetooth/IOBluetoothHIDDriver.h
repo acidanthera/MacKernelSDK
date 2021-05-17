@@ -30,8 +30,8 @@
  *   This header contains the definition of the IOBluetoothHIDDriver class, which is the driver for generic Bluetooth HID devices. It is a direct subclass of IOHIDDevice.
  */
 
-#ifndef _IOBLUETOOTH_HID_DRIVER_H
-#define _IOBLUETOOTH_HID_DRIVER_H
+#ifndef _IOKIT_BLUETOOTH_IOBLUETOOTHHIDDRIVER_H
+#define _IOKIT_BLUETOOTH_IOBLUETOOTHHIDDRIVER_H
 
 #import <IOKit/hid/IOHIDDevice.h>
 #import <IOKit/bluetooth/Bluetooth.h>
@@ -52,35 +52,35 @@ class IOBluetoothHIDDriver : public IOHIDDevice
     OSDeclareDefaultStructors( IOBluetoothHIDDriver )
 
 protected:
-    IOWorkLoop *				_workLoop;
-    IOCommandGate *				_commandGate;
+    IOWorkLoop *                _workLoop;
+    IOCommandGate *             _commandGate;
 	
-    IOWorkQueue *				_desyncWorkQueue;
+    IOWorkQueue *               _desyncWorkQueue;
 	
-    IOBluetoothL2CAPChannel *	_controlChannel;
-    IOBluetoothL2CAPChannel *	_interruptChannel;
+    IOBluetoothL2CAPChannel *   _controlChannel;
+    IOBluetoothL2CAPChannel *   _interruptChannel;
 
-    IOBluetoothDevice *			_device;
+    IOBluetoothDevice *         _device;
 
-    IOMemoryDescriptor *		_memDescriptor;
-    IOMemoryDescriptor *		_getReportDescriptor;
-    IONotifier *				_interruptOpenNotification;
-    IOTimerEventSource *		_timer;
-    IONotifier *				_sleepWakeNotifier;
+    IOMemoryDescriptor *        _memDescriptor;
+    IOMemoryDescriptor *        _getReportDescriptor;
+    IONotifier *                _interruptOpenNotification;
+    IOTimerEventSource *        _timer;
+    IONotifier *                _sleepWakeNotifier;
 
-    bool						_deviceReady;
+    bool                        _deviceReady;
 
-    UInt8						_expectedReportID;
-    UInt8						_expectedReportType;
-    UInt8						_handshake;
+    UInt8                       _expectedReportID;
+    UInt8                       _expectedReportType;
+    UInt8                       _handshake;
 	
-    OSDictionary *				_deviceProperties;
+    OSDictionary *              _deviceProperties;
 
-    UInt16						_vendorIDSource;
-    UInt16						_vendorID;
-    UInt16						_productID;
-    UInt16						_deviceVersion;
-    uint32_t					_classOfDevice;
+    UInt16                      _vendorIDSource;
+    UInt16                      _vendorID;
+    UInt16                      _productID;
+    UInt16                      _deviceVersion;
+    uint32_t                    _classOfDevice;
     UInt16                      _countryCode;
 	
     BluetoothDeviceAddress		_deviceAddress;

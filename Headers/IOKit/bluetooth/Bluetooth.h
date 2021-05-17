@@ -317,10 +317,10 @@ enum
     kBluetoothDeviceNameMaxLength       = 248
 };
 
-typedef uint8_t  BluetoothDeviceName[ kBluetoothDeviceNameMaxLength ];		// Max 248 bytes of UTF-8 encoded Unicode.
-typedef uint16_t BluetoothClockOffset;										// Bits 14-0 come from bits 16-2 of CLKslav-CLKmaster.
-typedef uint8_t  BluetoothRole;												//
-typedef uint8_t  BluetoothAllowRoleSwitch;									// 0x00-0x01 valid, 0x02-0xFF reserved.
+typedef uint8_t  BluetoothDeviceName[ kBluetoothDeviceNameMaxLength ];      // Max 248 bytes of UTF-8 encoded Unicode.
+typedef uint16_t BluetoothClockOffset;                                      // Bits 14-0 come from bits 16-2 of CLKslav-CLKmaster.
+typedef uint8_t  BluetoothRole;                                             //
+typedef uint8_t  BluetoothAllowRoleSwitch;                                  // 0x00-0x01 valid, 0x02-0xFF reserved.
 enum
 {
     kBluetoothDontAllowRoleSwitch       = 0x00,
@@ -354,12 +354,12 @@ typedef uint8_t	 BluetoothPINType;
 
 enum
 {
-    kBluetoothL2CAPMaxPacketSize                    = 65535,	// Max number of data bytes in an L2CAP packet.
+    kBluetoothL2CAPMaxPacketSize                    = 65535,    // Max number of data bytes in an L2CAP packet.
 
-    kBluetoothACLLogicalChannelReserved             = 0, 		// [00] Reserved for future use
-    kBluetoothACLLogicalChannelL2CAPContinue        = 1, 		// [01] Continuation of L2CAP packet.
-    kBluetoothACLLogicalChannelL2CAPStart           = 2, 		// [10] Start of L2CAP packet.
-    kBluetoothACLLogicalChannelLMP                  = 3			// [11] Link Manager Protocol packet.
+    kBluetoothACLLogicalChannelReserved             = 0,        // [00] Reserved for future use
+    kBluetoothACLLogicalChannelL2CAPContinue        = 1,        // [01] Continuation of L2CAP packet.
+    kBluetoothACLLogicalChannelL2CAPStart           = 2,        // [10] Start of L2CAP packet.
+    kBluetoothACLLogicalChannelLMP                  = 3         // [11] Link Manager Protocol packet.
 };
 
 // Channel Identifiers (Bluetooth L2CAP spec section 2.1).
@@ -367,10 +367,10 @@ enum
 typedef uint16_t BluetoothL2CAPChannelID;
 enum
 {
-    kBluetoothL2CAPChannelNull                      = 0x0000, 	// Illegal, should not be used
-    kBluetoothL2CAPChannelSignalling                = 0x0001, 	// L2CAP signalling channel
-    kBluetoothL2CAPChannelConnectionLessData        = 0x0002, 	// L2CAP connection less data
-    kBluetoothL2CAPChannelAMPManagerProtocol        = 0x0003,	// AMP Manager Protocol
+    kBluetoothL2CAPChannelNull                      = 0x0000,   // Illegal, should not be used
+    kBluetoothL2CAPChannelSignalling                = 0x0001,   // L2CAP signalling channel
+    kBluetoothL2CAPChannelConnectionLessData        = 0x0002,   // L2CAP connection less data
+    kBluetoothL2CAPChannelAMPManagerProtocol        = 0x0003,   // AMP Manager Protocol
     kBluetoothL2CAPChannelAttributeProtocol         = 0x0004,
     kBluetoothL2CAPChannelLESignalling              = 0x0005,
     kBluetoothL2CAPChannelSecurityManager           = 0x0006,
@@ -551,15 +551,15 @@ typedef enum
 
 typedef enum
 {
-    kBluetoothL2CAPInformationTypeConnectionlessMTU				        = 0x0001,
-    kBluetoothL2CAPInformationTypeExtendedFeatures				        = 0x0002,
-    kBluetoothL2CAPInformationTypeFixedChannelsSupported			    = 0x0003
+    kBluetoothL2CAPInformationTypeConnectionlessMTU                     = 0x0001,
+    kBluetoothL2CAPInformationTypeExtendedFeatures                      = 0x0002,
+    kBluetoothL2CAPInformationTypeFixedChannelsSupported                = 0x0003
 } BluetoothL2CAPInformationType;
 
 typedef enum
 {
-    kBluetoothL2CAPInformationResultSuccess					            = 0x0000,
-    kBluetoothL2CAPInformationResultNotSupported				        = 0x0001
+    kBluetoothL2CAPInformationResultSuccess                             = 0x0000,
+    kBluetoothL2CAPInformationResultNotSupported                        = 0x0001
 } BluetoothL2CAPInformationResult;
 
 typedef enum
