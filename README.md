@@ -1,7 +1,7 @@
 MacKernelSDK
 ============
 
-This project lets your kernel extensions (kexts) target a broad range of XNU kernels when using the latest Xcode version right from the interface. In addition it also includes several headers only available in other projects or older Xcode releases.
+This project lets your kernel extensions (kexts) target a broad range of XNU kernels when using the latest Xcode version right from the interface. In addition, it also includes several headers only available in other projects or older Xcode releases.
 
 ## Quick start
 
@@ -33,10 +33,16 @@ To start using **MacKernelSDK** do the following steps:
     ```
 
     Otherwise Xcode will link to the original libkmod.
+    
+5. Add the Headers folder to the **Header Search Paths**.
 
-4. Optionally add `/MacKernelSDK` to `.gitignore`.
+    ```
+    Headers Search Paths = $(PROJECT_DIR)/MacKernelSDK/Headers
+    ```
 
-5. To make sure that you use the right SDK check for `__ACIDANTHERA_MAC_SDK` macro in `Availability.h`.
+6. Optionally add `/MacKernelSDK` to `.gitignore`.
+
+7. To make sure that you use the right SDK check for `__ACIDANTHERA_MAC_SDK` macro in `Availability.h`.
 
 ## Targeting `i386`
 
@@ -83,7 +89,8 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - NKE private APIs (`IOKit/network`)
     - IOUSBFamily from macOS 10.10 SDK
     - IO80211Family from Black80211 originally created by Roman Peshkov
-    - IOBluetoothFamily by cjiang
+    - IOBluetoothFamily by cjiang (`IOKit/bluetooth`)
+    - IOWorkQueue analyzed from IOBluetoothFamily by cjiang (`IOKit/IOWorkQueue.h`)
 - Added kmod targeting earlier macOS kernels:
     - 10.6 or newer (`Library/x86_64/libkmod.a`)
 - Added availability checking when targeting older macOS versions:
