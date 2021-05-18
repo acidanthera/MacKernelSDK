@@ -564,72 +564,72 @@ typedef enum
 
 typedef enum
 {
-    kBluetoothL2CAPInformationNoExtendedFeatures				        = 0x00000000,
-    kBluetoothL2CAPInformationFlowControlMode				            = 0x00000001,
-    kBluetoothL2CAPInformationRetransmissionMode				        = 0x00000002,
-    kBluetoothL2CAPInformationBidirectionalQoS				            = 0x00000004,
-    kBluetoothL2CAPInformationEnhancedRetransmissionMode			    = 0x00000008,
-    kBluetoothL2CAPInformationStreamingMode					            = 0x00000010,
-    kBluetoothL2CAPInformationFCSOption					                = 0x00000020,
-    kBluetoothL2CAPInformationExtendedFlowSpecification			        = 0x00000040,
-    kBluetoothL2CAPInformationFixedChannels					            = 0x00000080,
-    kBluetoothL2CAPInformationExtendedWindowSize				        = 0x00000100,
-    kBluetoothL2CAPUnicastConnectionlessDataReception			        = 0x00000200
+    kBluetoothL2CAPInformationNoExtendedFeatures                        = 0x00000000,
+    kBluetoothL2CAPInformationFlowControlMode                           = 0x00000001,
+    kBluetoothL2CAPInformationRetransmissionMode                        = 0x00000002,
+    kBluetoothL2CAPInformationBidirectionalQoS                          = 0x00000004,
+    kBluetoothL2CAPInformationEnhancedRetransmissionMode                = 0x00000008,
+    kBluetoothL2CAPInformationStreamingMode                             = 0x00000010,
+    kBluetoothL2CAPInformationFCSOption                                 = 0x00000020,
+    kBluetoothL2CAPInformationExtendedFlowSpecification                 = 0x00000040,
+    kBluetoothL2CAPInformationFixedChannels                             = 0x00000080,
+    kBluetoothL2CAPInformationExtendedWindowSize                        = 0x00000100,
+    kBluetoothL2CAPUnicastConnectionlessDataReception                   = 0x00000200
 } BluetoothL2CAPInformationExtendedFeaturesMask;
 
 typedef enum BluetoothL2CAPQoSType
 {
-    kBluetoothL2CAPQoSTypeNoTraffic     					            = 0x00,
-    kBluetoothL2CAPQoSTypeBestEffort					                = 0x01,
-    kBluetoothL2CAPQoSTypeGuaranteed					                = 0x02
+    kBluetoothL2CAPQoSTypeNoTraffic                                     = 0x00,
+    kBluetoothL2CAPQoSTypeBestEffort                                    = 0x01,
+    kBluetoothL2CAPQoSTypeGuaranteed                                    = 0x02
 } BluetoothL2CAPQoSType;
 
 typedef enum BluetoothL2CAPSupervisoryFuctionType
 {
-    kBluetoothL2CAPSupervisoryFuctionTypeReceiverReady			        = 0x0,
-    kBluetoothL2CAPSupervisoryFuctionTypeReject				            = 0x1,
-    kBluetoothL2CAPSupervisoryFuctionTypeReceiverNotReady			    = 0x2,
-    kBluetoothL2CAPSupervisoryFuctionTypeSelectiveReject			    = 0x3
+    kBluetoothL2CAPSupervisoryFuctionTypeReceiverReady                  = 0x0,
+    kBluetoothL2CAPSupervisoryFuctionTypeReject                         = 0x1,
+    kBluetoothL2CAPSupervisoryFuctionTypeReceiverNotReady               = 0x2,
+    kBluetoothL2CAPSupervisoryFuctionTypeSelectiveReject                = 0x3
 } BluetoothL2CAPSupervisoryFuctionType;
         
 enum
 {
     kBluetoothLETXTimeMin                       = 0x0148,   // 328 us / 41 octets / 27 (0x1B) byte PDU
-    kBluetoothLETXTimeDefault		            = 0x0148,   // 328 us
-    kBluetoothLETXTimeMax			            = 0x0848,   // 2120 us / 265 octets / 251 (0xFB) byte PDU
-    kBluetoothLETXOctetsMin			            = 0x001b,   // 27 bytes pre-LE DPLE size
-    kBluetoothLETXOctetsDefault		            = 0x001b,   // 27 bytes
-    kBluetoothLETXOctetsMax			            = 0x00fb,   // 251 bytes 4.2 LE DPLE feature
+    kBluetoothLETXTimeDefault                   = 0x0148,   // 328 us
+    kBluetoothLETXTimeMax                       = 0x0848,   // 2120 us / 265 octets / 251 (0xFB) byte PDU
+    kBluetoothLETXOctetsMin                     = 0x001b,   // 27 bytes pre-LE DPLE size
+    kBluetoothLETXOctetsDefault                 = 0x001b,   // 27 bytes
+    kBluetoothLETXOctetsMax                     = 0x00fb,   // 251 bytes 4.2 LE DPLE feature
 };
 
 enum
 {
-//	kBluetoothL2CAPMTULowEnergyDefault		    = 0x0080,				    // 128 bytes - DPLE feature
-    kBluetoothL2CAPMTULowEnergyDefault		    = kBluetoothLETXOctetsMin,	// 27 bytes
-    kBluetoothL2CAPMTULowEnergyMax              = kBluetoothLETXOctetsMax,	// 251 bytes
-    kBluetoothL2CAPMTUMinimum				    = 0x0030,				    // 48 bytes
-    kBluetoothL2CAPMTUDefault				    = 0x03F9,				    // 11.10.08 - dropped back to 1017 from 1021 (don't aggravate the 3DH5 problem between CSR<->BRCM just yet)
-    kBluetoothL2CAPMTUMaximum				    = 0xffff,
-    kBluetoothL2CAPMTUStart					    = 0x7fff,
-    kBluetoothL2CAPMTUSIG					    = 0x0030,				    // 48 bytes
-    kBluetoothL2CAPFlushTimeoutDefault		    = kBluetoothL2CAPFlushTimeoutForever,   // 0xffff
-    kBluetoothL2CAPQoSFlagsDefault			    = 0,
-    kBluetoothL2CAPQoSTypeDefault			    = kBluetoothL2CAPQoSTypeBestEffort,	    // 0x01
-    kBluetoothL2CAPQoSTokenRateDefault		    = 0x00000000,
-    kBluetoothL2CAPQoSTokenBucketSizeDefault	= 0x00000000,
-    kBluetoothL2CAPQoSPeakBandwidthDefault		= 0x00000000,
-    kBluetoothL2CAPQoSLatencyDefault			= 0xffffffff,
-    kBluetoothL2CAPQoSDelayVariationDefault		= 0xffffffff
+//	kBluetoothL2CAPMTULowEnergyDefault          = 0x0080,                   // 128 bytes - DPLE feature
+    kBluetoothL2CAPMTULowEnergyDefault          = kBluetoothLETXOctetsMin,  // 27 bytes
+    kBluetoothL2CAPMTULowEnergyMax              = kBluetoothLETXOctetsMax,  // 251 bytes
+    kBluetoothL2CAPMTUMinimum                   = 0x0030,                   // 48 bytes
+    kBluetoothL2CAPMTUDefault                   = 0x03F9,                   // 11.10.08 - dropped back to 1017 from 1021 (don't aggravate the 3DH5 problem between CSR<->BRCM just yet)
+    kBluetoothL2CAPMTUMaximum                   = 0xffff,
+    kBluetoothL2CAPMTUStart                     = 0x7fff,
+    kBluetoothL2CAPMTUSIG                       = 0x0030,                   // 48 bytes
+    kBluetoothL2CAPFlushTimeoutDefault          = kBluetoothL2CAPFlushTimeoutForever,   // 0xffff
+    kBluetoothL2CAPQoSFlagsDefault              = 0,
+    kBluetoothL2CAPQoSTypeDefault               = kBluetoothL2CAPQoSTypeBestEffort,     // 0x01
+    kBluetoothL2CAPQoSTokenRateDefault          = 0x00000000,
+    kBluetoothL2CAPQoSTokenBucketSizeDefault    = 0x00000000,
+    kBluetoothL2CAPQoSPeakBandwidthDefault      = 0x00000000,
+    kBluetoothL2CAPQoSLatencyDefault            = 0xffffffff,
+    kBluetoothL2CAPQoSDelayVariationDefault     = 0xffffffff
 };
 
 enum
 {
-    kBluetoothLEMaxTXTimeMin 				    = 0x0148,
-    kBluetoothLEMaxTXTimeDefault 				= kBluetoothL2CAPMTULowEnergyDefault,
-    kBluetoothLEMaxTXTimeMax 				    = 0x0848,
-    kBluetoothLEMaxTXOctetsMin              	= 0x001b,	// 27 bytes
-    kBluetoothLEMaxTXOctetsDefault				= 0x0080,	// 128 bytes - DPLE feature
-    kBluetoothLEMaxTXOctetsMax             		= 0x00fb	// 251 bytes - DPLE feature
+    kBluetoothLEMaxTXTimeMin                    = 0x0148,
+    kBluetoothLEMaxTXTimeDefault                = kBluetoothL2CAPMTULowEnergyDefault,
+    kBluetoothLEMaxTXTimeMax                    = 0x0848,
+    kBluetoothLEMaxTXOctetsMin                  = 0x001b,   // 27 bytes
+    kBluetoothLEMaxTXOctetsDefault              = 0x0080,   // 128 bytes - DPLE feature
+    kBluetoothLEMaxTXOctetsMax                  = 0x00fb    // 251 bytes - DPLE feature
 };
         
 
@@ -642,77 +642,77 @@ enum
 		
 enum BluetoothLESecurityManagerKeyDistributionFormat
 {
-    kBluetoothLESecurityManagerEncryptionKey		= (1 << 0L), // LTK, EDIV, RAND
-    kBluetoothLESecurityManagerIDKey				= (1 << 1L), // IRK
-    kBluetoothLESecurityManagerSignKey				= (1 << 2L), // CSRK
-    kBluetoothLESecurityManagerLinkKey				= (1 << 3L), // LinkKey
+    kBluetoothLESecurityManagerEncryptionKey        = (1 << 0L),    // LTK, EDIV, RAND
+    kBluetoothLESecurityManagerIDKey                = (1 << 1L),    // IRK
+    kBluetoothLESecurityManagerSignKey              = (1 << 2L),    // CSRK
+    kBluetoothLESecurityManagerLinkKey              = (1 << 3L),    // LinkKey
 };				
 		
 typedef enum BluetoothLESecurityManagerCommandCode
 {
-    kBluetoothLESecurityManagerCommandCodeReserved                 		= 0x00,
-    kBluetoothLESecurityManagerCommandCodePairingRequest            	= 0x01,
-    kBluetoothLESecurityManagerCommandCodePairingResponse           	= 0x02,
-    kBluetoothLESecurityManagerCommandCodePairingConfirm            	= 0x03,
-    kBluetoothLESecurityManagerCommandCodePairingRandom             	= 0x04,
-    kBluetoothLESecurityManagerCommandCodePairingFailed             	= 0x05,
-    kBluetoothLESecurityManagerCommandCodeEncryptionInfo            	= 0x06,
-    kBluetoothLESecurityManagerCommandCodeMasterIdentification      	= 0x07,
-    kBluetoothLESecurityManagerCommandCodeIdentityInfo              	= 0x08,
-    kBluetoothLESecurityManagerCommandCodeIdentityAddressInfo       	= 0x09,
-    kBluetoothLESecurityManagerCommandCodeSigningInfo               	= 0x0A,
-    kBluetoothLESecurityManagerCommandCodeSecurityRequest           	= 0x0B,
-    kBluetoothLESecurityManagerCommandCodePairingPublicKey          	= 0x0C,
-    kBluetoothLESecurityManagerCommandCodePairingDHKeyCheck         	= 0x0D,
-    kBluetoothLESecurityManagerCommandCodePairingKeypressNotification	= 0x0E,
+    kBluetoothLESecurityManagerCommandCodeReserved                      = 0x00,
+    kBluetoothLESecurityManagerCommandCodePairingRequest                = 0x01,
+    kBluetoothLESecurityManagerCommandCodePairingResponse               = 0x02,
+    kBluetoothLESecurityManagerCommandCodePairingConfirm                = 0x03,
+    kBluetoothLESecurityManagerCommandCodePairingRandom                 = 0x04,
+    kBluetoothLESecurityManagerCommandCodePairingFailed                 = 0x05,
+    kBluetoothLESecurityManagerCommandCodeEncryptionInfo                = 0x06,
+    kBluetoothLESecurityManagerCommandCodeMasterIdentification          = 0x07,
+    kBluetoothLESecurityManagerCommandCodeIdentityInfo                  = 0x08,
+    kBluetoothLESecurityManagerCommandCodeIdentityAddressInfo           = 0x09,
+    kBluetoothLESecurityManagerCommandCodeSigningInfo                   = 0x0A,
+    kBluetoothLESecurityManagerCommandCodeSecurityRequest               = 0x0B,
+    kBluetoothLESecurityManagerCommandCodePairingPublicKey              = 0x0C,
+    kBluetoothLESecurityManagerCommandCodePairingDHKeyCheck             = 0x0D,
+    kBluetoothLESecurityManagerCommandCodePairingKeypressNotification   = 0x0E,
 
     // 0x0F - 0xFF reserved
     kBluetoothLESecurityManagerCommandCodeReservedStart                 = 0x0F,
-    kBluetoothLESecurityManagerCommandCodeReservedEnd                  	= 0xFF
+    kBluetoothLESecurityManagerCommandCodeReservedEnd                   = 0xFF
 } BluetoothLESecurityManagerCommandCode;
 
 typedef enum BluetoothLESecurityManagerUserInputCapability
 {
-    kBluetoothLESecurityManagerUserInputCapabilityNoInput			    = 0x01,
-    kBluetoothLESecurityManagerUserInputCapabilityYesNo			        = 0x02,
-    kBluetoothLESecurityManagerUserInputCapabilityKeyboard			    = 0x03
+    kBluetoothLESecurityManagerUserInputCapabilityNoInput               = 0x01,
+    kBluetoothLESecurityManagerUserInputCapabilityYesNo                 = 0x02,
+    kBluetoothLESecurityManagerUserInputCapabilityKeyboard              = 0x03
 } BluetoothLESecurityManagerUserInputCapability;
 
 typedef enum BluetoothLESecurityManagerUserOutputCapability
 {
-    kBluetoothLESecurityManagerUserOutputCapabilityNoOutput			    = 0x01,
-    kBluetoothLESecurityManagerUserOutputCapabilityNumericOutput		= 0x02
+    kBluetoothLESecurityManagerUserOutputCapabilityNoOutput             = 0x01,
+    kBluetoothLESecurityManagerUserOutputCapabilityNumericOutput        = 0x02
 } BluetoothLESecurityManagerUserOutputCapability;
 
 typedef enum BluetoothLESecurityManagerIOCapability
 {
-    kBluetoothLESecurityManagerIOCapabilityDisplayOnly			        = 0x00,
-    kBluetoothLESecurityManagerIOCapabilityDisplayYesNo			        = 0x01,
-    kBluetoothLESecurityManagerIOCapabilityKeyboardOnly			        = 0x02,
-    kBluetoothLESecurityManagerIOCapabilityNoInputNoOutput          	= 0x03,
-    kBluetoothLESecurityManagerIOCapabilityKeyboardDisplay          	= 0x04,
+    kBluetoothLESecurityManagerIOCapabilityDisplayOnly                  = 0x00,
+    kBluetoothLESecurityManagerIOCapabilityDisplayYesNo                 = 0x01,
+    kBluetoothLESecurityManagerIOCapabilityKeyboardOnly                 = 0x02,
+    kBluetoothLESecurityManagerIOCapabilityNoInputNoOutput              = 0x03,
+    kBluetoothLESecurityManagerIOCapabilityKeyboardDisplay              = 0x04,
 
     // 0x05 - 0xFF reserved
-    kBluetoothLESecurityManagerIOCapabilityReservedStart            	= 0x05,
-    kBluetoothLESecurityManagerIOCapabilityReservedEnd			        = 0xFF
+    kBluetoothLESecurityManagerIOCapabilityReservedStart                = 0x05,
+    kBluetoothLESecurityManagerIOCapabilityReservedEnd                  = 0xFF
 } BluetoothLESecurityManagerIOCapability;
 
 typedef enum BluetoothLESecurityManagerOOBData
 {
-    kBluetoothLESecurityManagerOOBAuthenticationDataNotPresent      	= 0x00,
-    kBluetoothLESecurityManagerOOBAuthenticationDataPresent         	= 0x01,
+    kBluetoothLESecurityManagerOOBAuthenticationDataNotPresent          = 0x00,
+    kBluetoothLESecurityManagerOOBAuthenticationDataPresent             = 0x01,
 
     // 0x02 - 0xFF reserved
-    kBluetoothLESecurityManagerOOBDataReservedStart				        = 0x02,
-    kBluetoothLESecurityManagerOOBDataReservedEnd				        = 0xFF
+    kBluetoothLESecurityManagerOOBDataReservedStart                     = 0x02,
+    kBluetoothLESecurityManagerOOBDataReservedEnd                       = 0xFF
 } BluetoothLESecurityManagerOOBData;
 
 enum
 {
-    kBluetoothLESecurityManagerNoBonding					            = 0,    // [00]
-    kBluetoothLESecurityManagerBonding					                = 1,    // [01]
-    kBluetoothLESecurityManagerReservedStart				            = 2,    // [10]
-    kBluetoothLESecurityManagerReservedEnd					            = 3     // [11]
+    kBluetoothLESecurityManagerNoBonding                                = 0,    // [00]
+    kBluetoothLESecurityManagerBonding                                  = 1,    // [01]
+    kBluetoothLESecurityManagerReservedStart                            = 2,    // [10]
+    kBluetoothLESecurityManagerReservedEnd                              = 3     // [11]
 };
 
 typedef enum BluetoothLESecurityManagerPairingFailedReasonCode
@@ -739,80 +739,80 @@ typedef enum BluetoothLESecurityManagerPairingFailedReasonCode
         
 typedef enum BluetoothLESecurityManagerKeypressNotificationType
 {
-    kBluetoothLESecurityManagerNotificationTypePasskeyEntryStarted      			        = 0,
-    kBluetoothLESecurityManagerNotificationTypePasskeyDigitEntered      			        = 1,
-    kBluetoothLESecurityManagerNotificationTypePasskeyDigitErased       			        = 2,
-    kBluetoothLESecurityManagerNotificationTypePasskeyCleared           			        = 3,
-    kBluetoothLESecurityManagerNotificationTypePasskeyEntryCompleted    			        = 4,
+    kBluetoothLESecurityManagerNotificationTypePasskeyEntryStarted                          = 0,
+    kBluetoothLESecurityManagerNotificationTypePasskeyDigitEntered                          = 1,
+    kBluetoothLESecurityManagerNotificationTypePasskeyDigitErased                           = 2,
+    kBluetoothLESecurityManagerNotificationTypePasskeyCleared                               = 3,
+    kBluetoothLESecurityManagerNotificationTypePasskeyEntryCompleted                        = 4,
 
-    kBluetoothLESecurityManagerNotificationTypeReservedStart            			        = 5,
-    kBluetoothLESecurityManagerNotificationTypeReservedEnd              			        = 255
+    kBluetoothLESecurityManagerNotificationTypeReservedStart                                = 5,
+    kBluetoothLESecurityManagerNotificationTypeReservedEnd                                  = 255
 } BluetoothLESecurityManagerKeypressNotificationType;
 
 
 #pragma mark === AMP Manager ===
 typedef enum BluetoothAMPManagerCode
 {
-    kBluetoothAMPManagerCodeReserved							                            = 0x00,
-    kBluetoothAMPManagerCodeAMPCommandReject						                        = 0x01,
-    kBluetoothAMPManagerCodeAMPDiscoverRequest						                        = 0x02,
-    kBluetoothAMPManagerCodeAMPDiscoverResponse						                        = 0x03,
-    kBluetoothAMPManagerCodeAMPChangeNotify							                        = 0x04,
-    kBluetoothAMPManagerCodeAMPChangeResponse						                        = 0x05,
-    kBluetoothAMPManagerCodeAMPGetInfoRequest						                        = 0x06,
-    kBluetoothAMPManagerCodeAMPGetInfoResponse						                        = 0x07,
-    kBluetoothAMPManagerCodeAMPGetAssocRequest						                        = 0x08,
-    kBluetoothAMPManagerCodeAMPGetAssocResponse						                        = 0x09,
-    kBluetoothAMPManagerCodeAMPCreatePhysicalLinkRequest					                = 0x0A,
-    kBluetoothAMPManagerCodeAMPCreatePhysicalLinkResponse					                = 0x0B,
-    kBluetoothAMPManagerCodeAMPDisconnectPhysicalLinkRequest				                = 0x0C,
-    kBluetoothAMPManagerCodeAMPDisconnectPhysicalLinkResponse				                = 0x0D
+    kBluetoothAMPManagerCodeReserved                                                        = 0x00,
+    kBluetoothAMPManagerCodeAMPCommandReject                                                = 0x01,
+    kBluetoothAMPManagerCodeAMPDiscoverRequest                                              = 0x02,
+    kBluetoothAMPManagerCodeAMPDiscoverResponse                                             = 0x03,
+    kBluetoothAMPManagerCodeAMPChangeNotify                                                 = 0x04,
+    kBluetoothAMPManagerCodeAMPChangeResponse                                               = 0x05,
+    kBluetoothAMPManagerCodeAMPGetInfoRequest                                               = 0x06,
+    kBluetoothAMPManagerCodeAMPGetInfoResponse                                              = 0x07,
+    kBluetoothAMPManagerCodeAMPGetAssocRequest                                              = 0x08,
+    kBluetoothAMPManagerCodeAMPGetAssocResponse                                             = 0x09,
+    kBluetoothAMPManagerCodeAMPCreatePhysicalLinkRequest                                    = 0x0A,
+    kBluetoothAMPManagerCodeAMPCreatePhysicalLinkResponse                                   = 0x0B,
+    kBluetoothAMPManagerCodeAMPDisconnectPhysicalLinkRequest                                = 0x0C,
+    kBluetoothAMPManagerCodeAMPDisconnectPhysicalLinkResponse                               = 0x0D
 } BluetoothAMPManagerCode;
 		
 typedef enum BluetoothAMPCommandRejectReason
 {
-    kBluetoothAMPManagerCommandRejectReasonCommandNotRecognized				    = 0x0000
+    kBluetoothAMPManagerCommandRejectReasonCommandNotRecognized                 = 0x0000
 } BluetoothAMPCommandRejectReason;
 		
 typedef enum BluetoothAMPDiscoverResponseControllerStatus
 {
-    kBluetoothAMPManagerDiscoverResponseControllerStatusPoweredDown				= 0x00,
-    kBluetoothAMPManagerDiscoverResponseControllerStatusBluetoothOnly			= 0x01,
-    kBluetoothAMPManagerDiscoverResponseControllerStatusNoCapacity				= 0x02,
-    kBluetoothAMPManagerDiscoverResponseControllerStatusLowCapacity				= 0x03,
-    kBluetoothAMPManagerDiscoverResponseControllerStatusMediumCapacity			= 0x04,
-    kBluetoothAMPManagerDiscoverResponseControllerStatusHighCapacity			= 0x05,
-    kBluetoothAMPManagerDiscoverResponseControllerStatusFullCapacity			= 0x06
+    kBluetoothAMPManagerDiscoverResponseControllerStatusPoweredDown             = 0x00,
+    kBluetoothAMPManagerDiscoverResponseControllerStatusBluetoothOnly           = 0x01,
+    kBluetoothAMPManagerDiscoverResponseControllerStatusNoCapacity              = 0x02,
+    kBluetoothAMPManagerDiscoverResponseControllerStatusLowCapacity             = 0x03,
+    kBluetoothAMPManagerDiscoverResponseControllerStatusMediumCapacity          = 0x04,
+    kBluetoothAMPManagerDiscoverResponseControllerStatusHighCapacity            = 0x05,
+    kBluetoothAMPManagerDiscoverResponseControllerStatusFullCapacity            = 0x06
 } BluetoothAMPDiscoverResponseControllerStatus;
 		
 typedef enum BluetoothAMPGetInfoResponseStatus
 {
-    kBluetoothAMPManagerGetInfoResponseSuccess						            = 0x00,
-    kBluetoothAMPManagerGetInfoResponseInvalidControllerID					    = 0x01
+    kBluetoothAMPManagerGetInfoResponseSuccess                                  = 0x00,
+    kBluetoothAMPManagerGetInfoResponseInvalidControllerID                      = 0x01
 } BluetoothAMPGetInfoResponseStatus;
 		
 typedef enum BluetoothAMPGetAssocResponseStatus
 {
-    kBluetoothAMPManagerGetAssocResponseSuccess						            = 0x00,
-    kBluetoothAMPManagerGetAssocResponseInvalidControllerID					    = 0x01
+    kBluetoothAMPManagerGetAssocResponseSuccess                                 = 0x00,
+    kBluetoothAMPManagerGetAssocResponseInvalidControllerID                     = 0x01
 } BluetoothAMPGetAssocResponseStatus;
 		
 typedef enum BluetoothAMPCreatePhysicalLinkResponseStatus
 {
-    kBluetoothAMPManagerCreatePhysicalLinkResponseSuccess						                = 0x00,
-    kBluetoothAMPManagerCreatePhysicalLinkResponseInvalidControllerID				            = 0x01,
-    kBluetoothAMPManagerCreatePhysicalLinkResponseUnableToStartLinkCreation				        = 0x02,
-    kBluetoothAMPManagerCreatePhysicalLinkResponseCollisionOccurred					            = 0x03,
-    kBluetoothAMPManagerCreatePhysicalLinkResponseAMPDisconnectedPhysicalLinkRequestReceived	= 0x04,
-    kBluetoothAMPManagerCreatePhysicalLinkResponsePhysicalLinkAlreadyExists				        = 0x05,
-    kBluetoothAMPManagerCreatePhysicalLinkResponseSecurityViolation					            = 0x06
+    kBluetoothAMPManagerCreatePhysicalLinkResponseSuccess                                       = 0x00,
+    kBluetoothAMPManagerCreatePhysicalLinkResponseInvalidControllerID                           = 0x01,
+    kBluetoothAMPManagerCreatePhysicalLinkResponseUnableToStartLinkCreation                     = 0x02,
+    kBluetoothAMPManagerCreatePhysicalLinkResponseCollisionOccurred                             = 0x03,
+    kBluetoothAMPManagerCreatePhysicalLinkResponseAMPDisconnectedPhysicalLinkRequestReceived    = 0x04,
+    kBluetoothAMPManagerCreatePhysicalLinkResponsePhysicalLinkAlreadyExists                     = 0x05,
+    kBluetoothAMPManagerCreatePhysicalLinkResponseSecurityViolation                             = 0x06
 } BluetoothAMPCreatePhysicalLinkResponseStatus;
 		
 typedef enum BluetoothAMPDisconnectPhysicalLinkResponseStatus
 {
-    kBluetoothAMPManagerDisconnectPhysicalLinkResponseSuccess				    = 0x00,
-    kBluetoothAMPManagerDisconnectPhysicalLinkResponseInvalidControllerID		= 0x01,
-    kBluetoothAMPManagerDisconnectPhysicalLinkResponseNoPhysicalLink			= 0x02
+    kBluetoothAMPManagerDisconnectPhysicalLinkResponseSuccess                   = 0x00,
+    kBluetoothAMPManagerDisconnectPhysicalLinkResponseInvalidControllerID       = 0x01,
+    kBluetoothAMPManagerDisconnectPhysicalLinkResponseNoPhysicalLink            = 0x02
 } BluetoothAMPDisconnectPhysicalLinkResponseStatus;
 
 #if 0
@@ -846,330 +846,330 @@ typedef uint16_t BluetoothHCICommandOpCodeCommand;
 typedef uint16_t BluetoothHCICommandOpCode;
 typedef	uint32_t BluetoothHCIVendorCommandSelector;
 
-#define	BluetoothHCIMakeCommandOpCode( GROUP, CMD )		( ( ( ( GROUP ) & 0x003F ) << 10 ) | ( ( CMD ) & 0x03FF ) )
-#define	BluetoothHCIMakeCommandOpCodeEndianSwap( GROUP, CMD )	( CFSwapInt16HostToLittle ( BluetoothHCIMakeCommandOpCode( GROUP, CMD ) ) )
-#define	BluetoothHCIExtractCommandOpCodeGroup( OPCODE )		( ( ( OPCODE ) >> 10 ) & 0x003F )
-#define	BluetoothHCIExtractCommandOpCodeCommand( OPCODE )	( ( OPCODE ) & 0x03FF )
+#define	BluetoothHCIMakeCommandOpCode( GROUP, CMD )                     ( ( ( ( GROUP ) & 0x003F ) << 10) | ( ( CMD ) & 0x03FF ) )
+#define	BluetoothHCIMakeCommandOpCodeEndianSwap( GROUP, CMD )           CFSwapInt16HostToLittle( BluetoothHCIMakeCommandOpCode( GROUP, CMD ) )
+#define BluetoothHCIMakeCommandOpCodeHostOrder( GROUP, CMD )            OSSwapLittleToHostConstInt16( ( ( ( GROUP ) & 0x003F ) << 10 ) | ( ( CMD ) & 0x03FF ) )
 
-#define BluetoothHCIMakeCommandOpCodeHostOrder( GROUP, CMD )	OSSwapLittleToHostConstInt16( ( ( ( GROUP ) & 0x003F ) << 10 ) | ( ( CMD ) & 0x03FF ) )
+#define	BluetoothHCIExtractCommandOpCodeGroup( OPCODE )                 ( ( ( OPCODE ) >> 10 ) & 0x003F )
+#define	BluetoothHCIExtractCommandOpCodeCommand( OPCODE )               ( ( OPCODE ) & 0x03FF )
 
 enum
 {
     // Command Group: NoOp
 
-    kBluetoothHCIOpCodeNoOp											        = 0,
-    kBluetoothHCICommandGroupNoOp										    = 0x00,
-    kBluetoothHCICommandNoOp										        = 0x0000,
+    kBluetoothHCIOpCodeNoOp                                                 = 0,
+    kBluetoothHCICommandGroupNoOp                                           = 0x00,
+    kBluetoothHCICommandNoOp                                                = 0x0000,
 
     // Command Group: Link Control
     
-    kBluetoothHCICommandGroupLinkControl									= 0x01,
-        kBluetoothHCICommandInquiry									        = 0x0001,
-        kBluetoothHCICommandInquiryCancel								    = 0x0002,
-        kBluetoothHCICommandPeriodicInquiryMode								= 0x0003,
-        kBluetoothHCICommandExitPeriodicInquiryMode							= 0x0004,
-        kBluetoothHCICommandCreateConnection								= 0x0005,
-        kBluetoothHCICommandDisconnect									    = 0x0006,
-        kBluetoothHCICommandAddSCOConnection								= 0x0007,	// DEPRECATED
-        kBluetoothHCICommandCreateConnectionCancel							= 0x0008,
-        kBluetoothHCICommandAcceptConnectionRequest							= 0x0009,
-        kBluetoothHCICommandRejectConnectionRequest							= 0x000A,
-        kBluetoothHCICommandLinkKeyRequestReply								= 0x000B,
-        kBluetoothHCICommandLinkKeyRequestNegativeReply						= 0x000C,
-        kBluetoothHCICommandPINCodeRequestReply								= 0x000D,
-        kBluetoothHCICommandPINCodeRequestNegativeReply						= 0x000E,
-        kBluetoothHCICommandChangeConnectionPacketType						= 0x000F,
-        kBluetoothHCICommandAuthenticationRequested							= 0x0011,
-        kBluetoothHCICommandSetConnectionEncryption							= 0x0013,
-        kBluetoothHCICommandChangeConnectionLinkKey							= 0x0015,
-        kBluetoothHCICommandMasterLinkKey							    	= 0x0017,
-        kBluetoothHCICommandRemoteNameRequest								= 0x0019,
-        kBluetoothHCICommandReadRemoteSupportedFeatures						= 0x001B,
-        kBluetoothHCICommandReadRemoteExtendedFeatures						= 0x001C,
-        kBluetoothHCICommandReadRemoteVersionInformation					= 0x001D,
-        kBluetoothHCICommandReadClockOffset					    			= 0x001F,
-        kBluetoothHCICommandRemoteNameRequestCancel							= 0x001A,
-        kBluetoothHCICommandReadLMPHandle						    		= 0x0020,
-        kBluetoothHCICommandSetupSynchronousConnection						= 0x0028,
-        kBluetoothHCICommandAcceptSynchronousConnectionRequest				= 0x0029,
-        kBluetoothHCICommandRejectSynchronousConnectionRequest				= 0x002A,
-        kBluetoothHCICommandIOCapabilityRequestReply						= 0x002B,
-        kBluetoothHCICommandUserConfirmationRequestReply					= 0x002C,
-        kBluetoothHCICommandUserConfirmationRequestNegativeReply			= 0x002D,
-        kBluetoothHCICommandUserPasskeyRequestReply							= 0x002E,
-        kBluetoothHCICommandUserPasskeyRequestNegativeReply					= 0x002F,
-        kBluetoothHCICommandRemoteOOBDataRequestReply						= 0x0030,
-        kBluetoothHCICommandRemoteOOBDataRequestNegativeReply				= 0x0033,
-        kBluetoothHCICommandIOCapabilityRequestNegativeReply				= 0x0034,
-        kBluetoothHCICommandEnhancedSetupSynchronousConnection	    		= 0x003D,
-        kBluetoothHCICommandEnhancedAcceptSynchronousConnectionRequest		= 0x003E,
-        kBluetoothHCICommandTruncatedPage								    = 0x003F,
-        kBluetoothHCICommandTruncatedPageCancel								= 0x0040,
-        kBluetoothHCICommandSetConnectionlessSlaveBroadcast					= 0x0041,
-        kBluetoothHCICommandSetConnectionlessSlaveBroadcastReceive			= 0x0042,
-        kBluetoothHCICommandStartSynchronizationTrain						= 0x0043,
-        kBluetoothHCICommandReceiveSynchronizationTrain						= 0x0044,
-        kBluetoothHCICommandRemoteOOBExtendedDataRequestReply				= 0x0045,
+    kBluetoothHCICommandGroupLinkControl                                    = 0x01,
+        kBluetoothHCICommandInquiry                                         = 0x0001,
+        kBluetoothHCICommandInquiryCancel                                   = 0x0002,
+        kBluetoothHCICommandPeriodicInquiryMode                             = 0x0003,
+        kBluetoothHCICommandExitPeriodicInquiryMode                         = 0x0004,
+        kBluetoothHCICommandCreateConnection                                = 0x0005,
+        kBluetoothHCICommandDisconnect                                      = 0x0006,
+        kBluetoothHCICommandAddSCOConnection                                = 0x0007,   // DEPRECATED
+        kBluetoothHCICommandCreateConnectionCancel                          = 0x0008,
+        kBluetoothHCICommandAcceptConnectionRequest                         = 0x0009,
+        kBluetoothHCICommandRejectConnectionRequest                         = 0x000A,
+        kBluetoothHCICommandLinkKeyRequestReply                             = 0x000B,
+        kBluetoothHCICommandLinkKeyRequestNegativeReply                     = 0x000C,
+        kBluetoothHCICommandPINCodeRequestReply                             = 0x000D,
+        kBluetoothHCICommandPINCodeRequestNegativeReply                     = 0x000E,
+        kBluetoothHCICommandChangeConnectionPacketType                      = 0x000F,
+        kBluetoothHCICommandAuthenticationRequested                         = 0x0011,
+        kBluetoothHCICommandSetConnectionEncryption                         = 0x0013,
+        kBluetoothHCICommandChangeConnectionLinkKey                         = 0x0015,
+        kBluetoothHCICommandMasterLinkKey                                   = 0x0017,
+        kBluetoothHCICommandRemoteNameRequest                               = 0x0019,
+        kBluetoothHCICommandReadRemoteSupportedFeatures                     = 0x001B,
+        kBluetoothHCICommandReadRemoteExtendedFeatures                      = 0x001C,
+        kBluetoothHCICommandReadRemoteVersionInformation                    = 0x001D,
+        kBluetoothHCICommandReadClockOffset                                 = 0x001F,
+        kBluetoothHCICommandRemoteNameRequestCancel                         = 0x001A,
+        kBluetoothHCICommandReadLMPHandle                                   = 0x0020,
+        kBluetoothHCICommandSetupSynchronousConnection                      = 0x0028,
+        kBluetoothHCICommandAcceptSynchronousConnectionRequest              = 0x0029,
+        kBluetoothHCICommandRejectSynchronousConnectionRequest              = 0x002A,
+        kBluetoothHCICommandIOCapabilityRequestReply                        = 0x002B,
+        kBluetoothHCICommandUserConfirmationRequestReply                    = 0x002C,
+        kBluetoothHCICommandUserConfirmationRequestNegativeReply            = 0x002D,
+        kBluetoothHCICommandUserPasskeyRequestReply                         = 0x002E,
+        kBluetoothHCICommandUserPasskeyRequestNegativeReply                 = 0x002F,
+        kBluetoothHCICommandRemoteOOBDataRequestReply                       = 0x0030,
+        kBluetoothHCICommandRemoteOOBDataRequestNegativeReply               = 0x0033,
+        kBluetoothHCICommandIOCapabilityRequestNegativeReply                = 0x0034,
+        kBluetoothHCICommandEnhancedSetupSynchronousConnection              = 0x003D,
+        kBluetoothHCICommandEnhancedAcceptSynchronousConnectionRequest      = 0x003E,
+        kBluetoothHCICommandTruncatedPage                                   = 0x003F,
+        kBluetoothHCICommandTruncatedPageCancel                             = 0x0040,
+        kBluetoothHCICommandSetConnectionlessSlaveBroadcast                 = 0x0041,
+        kBluetoothHCICommandSetConnectionlessSlaveBroadcastReceive          = 0x0042,
+        kBluetoothHCICommandStartSynchronizationTrain                       = 0x0043,
+        kBluetoothHCICommandReceiveSynchronizationTrain                     = 0x0044,
+        kBluetoothHCICommandRemoteOOBExtendedDataRequestReply               = 0x0045,
 
     // Command Group: Link Policy
     
-    kBluetoothHCICommandGroupLinkPolicy									    = 0x02,
-        kBluetoothHCICommandHoldMode									    = 0x0001,
-        kBluetoothHCICommandSniffMode									    = 0x0003,
-        kBluetoothHCICommandExitSniffMode								    = 0x0004,
-        kBluetoothHCICommandParkMode									    = 0x0005,
-        kBluetoothHCICommandExitParkMode								    = 0x0006,
-        kBluetoothHCICommandQoSSetup									    = 0x0007,
-        kBluetoothHCICommandRoleDiscovery								    = 0x0009,
-        kBluetoothHCICommandSwitchRole									    = 0x000B,
-        kBluetoothHCICommandReadLinkPolicySettings							= 0x000C,
-        kBluetoothHCICommandWriteLinkPolicySettings							= 0x000D,
-        kBluetoothHCICommandReadDefaultLinkPolicySettings					= 0x000E,
-        kBluetoothHCICommandWriteDefaultLinkPolicySettings					= 0x000F,
-        kBluetoothHCICommandFlowSpecification								= 0x0010,
-        kBluetoothHCICommandSniffSubrating							    	= 0x0011,
-        kBluetoothHCICommandAcceptSniffRequest								= 0x0031,
-        kBluetoothHCICommandRejectSniffRequest								= 0x0032,
+    kBluetoothHCICommandGroupLinkPolicy                                     = 0x02,
+        kBluetoothHCICommandHoldMode                                        = 0x0001,
+        kBluetoothHCICommandSniffMode                                       = 0x0003,
+        kBluetoothHCICommandExitSniffMode                                   = 0x0004,
+        kBluetoothHCICommandParkMode                                        = 0x0005,
+        kBluetoothHCICommandExitParkMode                                    = 0x0006,
+        kBluetoothHCICommandQoSSetup                                        = 0x0007,
+        kBluetoothHCICommandRoleDiscovery                                   = 0x0009,
+        kBluetoothHCICommandSwitchRole                                      = 0x000B,
+        kBluetoothHCICommandReadLinkPolicySettings                          = 0x000C,
+        kBluetoothHCICommandWriteLinkPolicySettings                         = 0x000D,
+        kBluetoothHCICommandReadDefaultLinkPolicySettings                   = 0x000E,
+        kBluetoothHCICommandWriteDefaultLinkPolicySettings                  = 0x000F,
+        kBluetoothHCICommandFlowSpecification                               = 0x0010,
+        kBluetoothHCICommandSniffSubrating                                  = 0x0011,
+        kBluetoothHCICommandAcceptSniffRequest                              = 0x0031,
+        kBluetoothHCICommandRejectSniffRequest                              = 0x0032,
 	
     // Command Group: Host Controller & Baseband
 	
-    kBluetoothHCICommandGroupHostController									= 0x03,
-        kBluetoothHCICommandSetEventMask								    = 0x0001,
-        kBluetoothHCICommandReset									        = 0x0003,
-        kBluetoothHCICommandSetEventFilter								    = 0x0005,
-        kBluetoothHCICommandFlush									        = 0x0008,
-        kBluetoothHCICommandReadPINType									    = 0x0009,
-        kBluetoothHCICommandWritePINType								    = 0x000A,
-        kBluetoothHCICommandCreateNewUnitKey								= 0x000B,
-        kBluetoothHCICommandReadStoredLinkKey								= 0x000D,
-        kBluetoothHCICommandWriteStoredLinkKey								= 0x0011,
-        kBluetoothHCICommandDeleteStoredLinkKey								= 0x0012,
-        kBluetoothHCICommandChangeLocalName								    = 0x0013,
-        kBluetoothHCICommandReadLocalName								    = 0x0014,
-        kBluetoothHCICommandReadConnectionAcceptTimeout						= 0x0015,
-        kBluetoothHCICommandWriteConnectionAcceptTimeout					= 0x0016,
-        kBluetoothHCICommandReadPageTimeout							    	= 0x0017,
-        kBluetoothHCICommandWritePageTimeout								= 0x0018,
-        kBluetoothHCICommandReadScanEnable								    = 0x0019,
-        kBluetoothHCICommandWriteScanEnable								    = 0x001A,
-        kBluetoothHCICommandReadPageScanActivity							= 0x001B,
-        kBluetoothHCICommandWritePageScanActivity							= 0x001C,
-        kBluetoothHCICommandReadInquiryScanActivity							= 0x001D,
-        kBluetoothHCICommandWriteInquiryScanActivity						= 0x001E,
-        kBluetoothHCICommandReadAuthenticationEnable						= 0x001F,
-        kBluetoothHCICommandWriteAuthenticationEnable						= 0x0020,
-        kBluetoothHCICommandReadEncryptionMode								= 0x0021,	// DEPRECATED
-        kBluetoothHCICommandWriteEncryptionMode								= 0x0022,	// DEPRECATED
-        kBluetoothHCICommandReadClassOfDevice								= 0x0023,
-        kBluetoothHCICommandWriteClassOfDevice								= 0x0024,
-        kBluetoothHCICommandReadVoiceSetting								= 0x0025,
-        kBluetoothHCICommandWriteVoiceSetting								= 0x0026,
-        kBluetoothHCICommandReadAutomaticFlushTimeout						= 0x0027,
-        kBluetoothHCICommandWriteAutomaticFlushTimeout						= 0x0028,
-        kBluetoothHCICommandReadNumberOfBroadcastRetransmissions			= 0x0029,
-        kBluetoothHCICommandWriteNumberOfBroadcastRetransmissions			= 0x002A,
-        kBluetoothHCICommandReadHoldModeActivity							= 0x002B,
-        kBluetoothHCICommandWriteHoldModeActivity							= 0x002C,
-        kBluetoothHCICommandReadTransmitPowerLevel							= 0x002D,
-        kBluetoothHCICommandReadSCOFlowControlEnable						= 0x002E,
-        kBluetoothHCICommandWriteSCOFlowControlEnable						= 0x002F,
-        kBluetoothHCICommandSetHostControllerToHostFlowControl				= 0x0031,
-        kBluetoothHCICommandHostBufferSize								    = 0x0033,
-        kBluetoothHCICommandHostNumberOfCompletedPackets					= 0x0035,
-        kBluetoothHCICommandReadLinkSupervisionTimeout						= 0x0036,
-        kBluetoothHCICommandWriteLinkSupervisionTimeout						= 0x0037,
-        kBluetoothHCICommandReadNumberOfSupportedIAC						= 0x0038,
-        kBluetoothHCICommandReadCurrentIACLAP								= 0x0039,
-        kBluetoothHCICommandWriteCurrentIACLAP								= 0x003A,
-        kBluetoothHCICommandReadPageScanPeriodMode							= 0x003B,	// DEPRECATED
-        kBluetoothHCICommandWritePageScanPeriodMode							= 0x003C,	// DEPRECATED
-        kBluetoothHCICommandReadPageScanMode								= 0x003D,	// DEPRECATED
-        kBluetoothHCICommandWritePageScanMode								= 0x003E,	// DEPRECATED
-        kBluetoothHCICommandSetAFHClassification							= 0x003F,
-        kBluetoothHCICommandReadInquiryScanType								= 0x0042,
-        kBluetoothHCICommandWriteInquiryScanType							= 0x0043,
-        kBluetoothHCICommandReadInquiryMode							    	= 0x0044,
-        kBluetoothHCICommandWriteInquiryMode								= 0x0045,
-        kBluetoothHCICommandReadPageScanType								= 0x0046,
-        kBluetoothHCICommandWritePageScanType								= 0x0047,
-        kBluetoothHCICommandReadAFHChannelAssessmentMode					= 0x0048,
-        kBluetoothHCICommandWriteAFHChannelAssessmentMode					= 0x0049,
-        kBluetoothHCICommandReadExtendedInquiryResponse						= 0x0051,
-        kBluetoothHCICommandWriteExtendedInquiryResponse					= 0x0052,
-        kBluetoothHCICommandRefreshEncryptionKey							= 0x0053,
-        kBluetoothHCICommandReadSimplePairingMode							= 0x0055,
-        kBluetoothHCICommandWriteSimplePairingMode							= 0x0056,
-        kBluetoothHCICommandReadLocalOOBData								= 0x0057,
-        kBluetoothHCICommandReadInquiryResponseTransmitPower				= 0x0058,
-        kBluetoothHCICommandWriteInquiryResponseTransmitPower				= 0x0059,
-        kBluetoothHCICommandSendKeypressNotification						= 0x0060,
-        kBluetoothHCICommandReadDefaultErroneousDataReporting				= 0x005A,
-        kBluetoothHCICommandWriteDefaultErroneousDataReporting				= 0x005B,
-        kBluetoothHCICommandEnhancedFlush								    = 0x005F,
-        kBluetoothHCICommandReadLogicalLinkAcceptTimeout					= 0x0061,
-        kBluetoothHCICommandWriteLogicalLinkAcceptTimeout					= 0x0062,
-        kBluetoothHCICommandSetEventMaskPageTwo								= 0x0063,
-        kBluetoothHCICommandReadLocationData								= 0x0064,
-        kBluetoothHCICommandWriteLocationData								= 0x0065,
-        kBluetoothHCICommandReadFlowControlMode								= 0x0066,
-        kBluetoothHCICommandWriteFlowControlMode							= 0x0067,
-        kBluetoothHCICommandReadEnhancedTransmitPowerLevel					= 0x0068,
-        kBluetoothHCICommandReadBestEffortFlushTimeout						= 0x0069,
-        kBluetoothHCICommandWriteBestEffortFlushTimeout						= 0x006A,
-        kBluetoothHCICommandShortRangeMode								    = 0x006B,
-        kBluetoothHCICommandReadLEHostSupported								= 0x006C,
-        kBluetoothHCICommandWriteLEHostSupported							= 0x006D,
-        kBluetoothHCICommandSetMWSChannelParameters							= 0x006E,
-        kBluetoothHCICommandSetExternalFrameConfiguration					= 0x006F,
-        kBluetoothHCICommandSetMWSSignaling								    = 0x0070,
-        kBluetoothHCICommandSetMWSTransportLayer							= 0x0071,
-        kBluetoothHCICommandSetMWSScanFrequencyTable						= 0x0072,
-        kBluetoothHCICommandSetMWSPATTERNConfiguration						= 0x0073,
-        kBluetoothHCICommandSetReservedLTADDR								= 0x0074,
-        kBluetoothHCICommandDeleteReservedLTADDR							= 0x0075,
-        kBluetoothHCICommandSetConnectionlessSlaveBroadcastData				= 0x0076,
-        kBluetoothHCICommandReadSynchronizationTrainParameters				= 0x0077,
-        kBluetoothHCICommandWriteSynchronizationTrainParameters				= 0x0078,
-        kBluetoothHCICommandReadSecureConnectionsHostSupport				= 0x0079,
-        kBluetoothHCICommandWriteSecureConnectionsHostSupport				= 0x007A,
-        kBluetoothHCICommandReadAuthenticatedPayloadTimeout					= 0x007B,
-        kBluetoothHCICommandWriteAuthenticatedPayloadTimeout				= 0x007C,
-        kBluetoothHCICommandReadLocalOOBExtendedData						= 0x007D,
-        kBluetoothHCICommandReadExtendedPageTimeout							= 0x007E,
-        kBluetoothHCICommandWriteExtendedPageTimeout						= 0x007F,
-        kBluetoothHCICommandReadExtendedInquiryLength						= 0x0080,
-        kBluetoothHCICommandWriteExtendedInquiryLength						= 0x0081,
+    kBluetoothHCICommandGroupHostController                                 = 0x03,
+        kBluetoothHCICommandSetEventMask                                    = 0x0001,
+        kBluetoothHCICommandReset                                           = 0x0003,
+        kBluetoothHCICommandSetEventFilter                                  = 0x0005,
+        kBluetoothHCICommandFlush                                           = 0x0008,
+        kBluetoothHCICommandReadPINType                                     = 0x0009,
+        kBluetoothHCICommandWritePINType                                    = 0x000A,
+        kBluetoothHCICommandCreateNewUnitKey                                = 0x000B,
+        kBluetoothHCICommandReadStoredLinkKey                               = 0x000D,
+        kBluetoothHCICommandWriteStoredLinkKey                              = 0x0011,
+        kBluetoothHCICommandDeleteStoredLinkKey                             = 0x0012,
+        kBluetoothHCICommandChangeLocalName                                 = 0x0013,
+        kBluetoothHCICommandReadLocalName                                   = 0x0014,
+        kBluetoothHCICommandReadConnectionAcceptTimeout                     = 0x0015,
+        kBluetoothHCICommandWriteConnectionAcceptTimeout                    = 0x0016,
+        kBluetoothHCICommandReadPageTimeout                                 = 0x0017,
+        kBluetoothHCICommandWritePageTimeout                                = 0x0018,
+        kBluetoothHCICommandReadScanEnable                                  = 0x0019,
+        kBluetoothHCICommandWriteScanEnable                                 = 0x001A,
+        kBluetoothHCICommandReadPageScanActivity                            = 0x001B,
+        kBluetoothHCICommandWritePageScanActivity                           = 0x001C,
+        kBluetoothHCICommandReadInquiryScanActivity                         = 0x001D,
+        kBluetoothHCICommandWriteInquiryScanActivity                        = 0x001E,
+        kBluetoothHCICommandReadAuthenticationEnable                        = 0x001F,
+        kBluetoothHCICommandWriteAuthenticationEnable                       = 0x0020,
+        kBluetoothHCICommandReadEncryptionMode                              = 0x0021,   // DEPRECATED
+        kBluetoothHCICommandWriteEncryptionMode                             = 0x0022,   // DEPRECATED
+        kBluetoothHCICommandReadClassOfDevice                               = 0x0023,
+        kBluetoothHCICommandWriteClassOfDevice                              = 0x0024,
+        kBluetoothHCICommandReadVoiceSetting                                = 0x0025,
+        kBluetoothHCICommandWriteVoiceSetting                               = 0x0026,
+        kBluetoothHCICommandReadAutomaticFlushTimeout                       = 0x0027,
+        kBluetoothHCICommandWriteAutomaticFlushTimeout                      = 0x0028,
+        kBluetoothHCICommandReadNumberOfBroadcastRetransmissions            = 0x0029,
+        kBluetoothHCICommandWriteNumberOfBroadcastRetransmissions           = 0x002A,
+        kBluetoothHCICommandReadHoldModeActivity                            = 0x002B,
+        kBluetoothHCICommandWriteHoldModeActivity                           = 0x002C,
+        kBluetoothHCICommandReadTransmitPowerLevel                          = 0x002D,
+        kBluetoothHCICommandReadSCOFlowControlEnable                        = 0x002E,
+        kBluetoothHCICommandWriteSCOFlowControlEnable                       = 0x002F,
+        kBluetoothHCICommandSetHostControllerToHostFlowControl              = 0x0031,
+        kBluetoothHCICommandHostBufferSize                                  = 0x0033,
+        kBluetoothHCICommandHostNumberOfCompletedPackets                    = 0x0035,
+        kBluetoothHCICommandReadLinkSupervisionTimeout                      = 0x0036,
+        kBluetoothHCICommandWriteLinkSupervisionTimeout                     = 0x0037,
+        kBluetoothHCICommandReadNumberOfSupportedIAC                        = 0x0038,
+        kBluetoothHCICommandReadCurrentIACLAP                               = 0x0039,
+        kBluetoothHCICommandWriteCurrentIACLAP                              = 0x003A,
+        kBluetoothHCICommandReadPageScanPeriodMode                          = 0x003B,   // DEPRECATED
+        kBluetoothHCICommandWritePageScanPeriodMode                         = 0x003C,   // DEPRECATED
+        kBluetoothHCICommandReadPageScanMode                                = 0x003D,   // DEPRECATED
+        kBluetoothHCICommandWritePageScanMode                               = 0x003E,   // DEPRECATED
+        kBluetoothHCICommandSetAFHClassification                            = 0x003F,
+        kBluetoothHCICommandReadInquiryScanType                             = 0x0042,
+        kBluetoothHCICommandWriteInquiryScanType                            = 0x0043,
+        kBluetoothHCICommandReadInquiryMode                                 = 0x0044,
+        kBluetoothHCICommandWriteInquiryMode                                = 0x0045,
+        kBluetoothHCICommandReadPageScanType                                = 0x0046,
+        kBluetoothHCICommandWritePageScanType                               = 0x0047,
+        kBluetoothHCICommandReadAFHChannelAssessmentMode                    = 0x0048,
+        kBluetoothHCICommandWriteAFHChannelAssessmentMode                   = 0x0049,
+        kBluetoothHCICommandReadExtendedInquiryResponse                     = 0x0051,
+        kBluetoothHCICommandWriteExtendedInquiryResponse                    = 0x0052,
+        kBluetoothHCICommandRefreshEncryptionKey                            = 0x0053,
+        kBluetoothHCICommandReadSimplePairingMode                           = 0x0055,
+        kBluetoothHCICommandWriteSimplePairingMode                          = 0x0056,
+        kBluetoothHCICommandReadLocalOOBData                                = 0x0057,
+        kBluetoothHCICommandReadInquiryResponseTransmitPower                = 0x0058,
+        kBluetoothHCICommandWriteInquiryResponseTransmitPower               = 0x0059,
+        kBluetoothHCICommandSendKeypressNotification                        = 0x0060,
+        kBluetoothHCICommandReadDefaultErroneousDataReporting               = 0x005A,
+        kBluetoothHCICommandWriteDefaultErroneousDataReporting              = 0x005B,
+        kBluetoothHCICommandEnhancedFlush                                   = 0x005F,
+        kBluetoothHCICommandReadLogicalLinkAcceptTimeout                    = 0x0061,
+        kBluetoothHCICommandWriteLogicalLinkAcceptTimeout                   = 0x0062,
+        kBluetoothHCICommandSetEventMaskPageTwo                             = 0x0063,
+        kBluetoothHCICommandReadLocationData                                = 0x0064,
+        kBluetoothHCICommandWriteLocationData                               = 0x0065,
+        kBluetoothHCICommandReadFlowControlMode                             = 0x0066,
+        kBluetoothHCICommandWriteFlowControlMode                            = 0x0067,
+        kBluetoothHCICommandReadEnhancedTransmitPowerLevel                  = 0x0068,
+        kBluetoothHCICommandReadBestEffortFlushTimeout                      = 0x0069,
+        kBluetoothHCICommandWriteBestEffortFlushTimeout                     = 0x006A,
+        kBluetoothHCICommandShortRangeMode                                  = 0x006B,
+        kBluetoothHCICommandReadLEHostSupported                             = 0x006C,
+        kBluetoothHCICommandWriteLEHostSupported                            = 0x006D,
+        kBluetoothHCICommandSetMWSChannelParameters                         = 0x006E,
+        kBluetoothHCICommandSetExternalFrameConfiguration                   = 0x006F,
+        kBluetoothHCICommandSetMWSSignaling                                 = 0x0070,
+        kBluetoothHCICommandSetMWSTransportLayer                            = 0x0071,
+        kBluetoothHCICommandSetMWSScanFrequencyTable                        = 0x0072,
+        kBluetoothHCICommandSetMWSPATTERNConfiguration                      = 0x0073,
+        kBluetoothHCICommandSetReservedLTADDR                               = 0x0074,
+        kBluetoothHCICommandDeleteReservedLTADDR                            = 0x0075,
+        kBluetoothHCICommandSetConnectionlessSlaveBroadcastData             = 0x0076,
+        kBluetoothHCICommandReadSynchronizationTrainParameters              = 0x0077,
+        kBluetoothHCICommandWriteSynchronizationTrainParameters             = 0x0078,
+        kBluetoothHCICommandReadSecureConnectionsHostSupport                = 0x0079,
+        kBluetoothHCICommandWriteSecureConnectionsHostSupport               = 0x007A,
+        kBluetoothHCICommandReadAuthenticatedPayloadTimeout                 = 0x007B,
+        kBluetoothHCICommandWriteAuthenticatedPayloadTimeout                = 0x007C,
+        kBluetoothHCICommandReadLocalOOBExtendedData                        = 0x007D,
+        kBluetoothHCICommandReadExtendedPageTimeout                         = 0x007E,
+        kBluetoothHCICommandWriteExtendedPageTimeout                        = 0x007F,
+        kBluetoothHCICommandReadExtendedInquiryLength                       = 0x0080,
+        kBluetoothHCICommandWriteExtendedInquiryLength                      = 0x0081,
 
     // Command Group: Informational
 	
-    kBluetoothHCICommandGroupInformational									= 0x04,
-        kBluetoothHCICommandReadLocalVersionInformation						= 0x0001,
-        kBluetoothHCICommandReadLocalSupportedCommands						= 0x0002,
-        kBluetoothHCICommandReadLocalSupportedFeatures						= 0x0003,
-        kBluetoothHCICommandReadLocalExtendedFeatures						= 0x0004,
-        kBluetoothHCICommandReadBufferSize						    		= 0x0005,
-        kBluetoothHCICommandReadCountryCode							    	= 0x0007,	// DEPRECATED
-        kBluetoothHCICommandReadDeviceAddress								= 0x0009,
-        kBluetoothHCICommandReadDataBlockSize								= 0x000A,
-        kBluetoothHCICommandReadLocalSupportedCodecs						= 0x000B,
+    kBluetoothHCICommandGroupInformational                                  = 0x04,
+        kBluetoothHCICommandReadLocalVersionInformation                     = 0x0001,
+        kBluetoothHCICommandReadLocalSupportedCommands                      = 0x0002,
+        kBluetoothHCICommandReadLocalSupportedFeatures                      = 0x0003,
+        kBluetoothHCICommandReadLocalExtendedFeatures                       = 0x0004,
+        kBluetoothHCICommandReadBufferSize                                  = 0x0005,
+        kBluetoothHCICommandReadCountryCode                                 = 0x0007,   // DEPRECATED
+        kBluetoothHCICommandReadDeviceAddress                               = 0x0009,
+        kBluetoothHCICommandReadDataBlockSize                               = 0x000A,
+        kBluetoothHCICommandReadLocalSupportedCodecs                        = 0x000B,
 	
     // Command Group: Status
 	
-    kBluetoothHCICommandGroupStatus										    = 0x05,
-        kBluetoothHCICommandReadFailedContactCounter						= 0x0001,
-        kBluetoothHCICommandResetFailedContactCounter						= 0x0002,
-        kBluetoothHCICommandGetLinkQuality							    	= 0x0003,
-        kBluetoothHCICommandReadRSSI									    = 0x0005,
-        kBluetoothHCICommandReadAFHMappings								    = 0x0006,
-        kBluetoothHCICommandReadClock									    = 0x0007,
-        kBluetoothHCICommandReadEncryptionKeySize							= 0x0008,
-        kBluetoothHCICommandReadLocalAMPInfo								= 0x0009,
-        kBluetoothHCICommandReadLocalAMPASSOC								= 0x000A,
-        kBluetoothHCICommandWriteRemoteAMPASSOC								= 0x000B,
-        kBluetoothHCICommandGetMWSTransportLayerConfiguration				= 0x000C,
-        kBluetoothHCICommandSetTriggeredClockCapture						= 0x000D,
+    kBluetoothHCICommandGroupStatus                                         = 0x05,
+        kBluetoothHCICommandReadFailedContactCounter                        = 0x0001,
+        kBluetoothHCICommandResetFailedContactCounter                       = 0x0002,
+        kBluetoothHCICommandGetLinkQuality                                  = 0x0003,
+        kBluetoothHCICommandReadRSSI                                        = 0x0005,
+        kBluetoothHCICommandReadAFHMappings                                 = 0x0006,
+        kBluetoothHCICommandReadClock                                       = 0x0007,
+        kBluetoothHCICommandReadEncryptionKeySize                           = 0x0008,
+        kBluetoothHCICommandReadLocalAMPInfo                                = 0x0009,
+        kBluetoothHCICommandReadLocalAMPASSOC                               = 0x000A,
+        kBluetoothHCICommandWriteRemoteAMPASSOC                             = 0x000B,
+        kBluetoothHCICommandGetMWSTransportLayerConfiguration               = 0x000C,
+        kBluetoothHCICommandSetTriggeredClockCapture                        = 0x000D,
 
     // Command Group: Testing
 	
-    kBluetoothHCICommandGroupTesting									    = 0x06,
-        kBluetoothHCICommandReadLoopbackMode								= 0x0001,
-        kBluetoothHCICommandWriteLoopbackMode								= 0x0002,
-        kBluetoothHCICommandEnableDeviceUnderTestMode						= 0x0003,
-        kBluetoothHCICommandWriteSimplePairingDebugMode						= 0x0004,
-        kBluetoothHCICommandEnableAMPReceiverReports						= 0x0007,
-        kBluetoothHCICommandAMPTestEnd									    = 0x0008,
-        kBluetoothHCICommandAMPTest								        	= 0x0009,
+    kBluetoothHCICommandGroupTesting                                        = 0x06,
+        kBluetoothHCICommandReadLoopbackMode                                = 0x0001,
+        kBluetoothHCICommandWriteLoopbackMode                               = 0x0002,
+        kBluetoothHCICommandEnableDeviceUnderTestMode                       = 0x0003,
+        kBluetoothHCICommandWriteSimplePairingDebugMode                     = 0x0004,
+        kBluetoothHCICommandEnableAMPReceiverReports                        = 0x0007,
+        kBluetoothHCICommandAMPTestEnd                                      = 0x0008,
+        kBluetoothHCICommandAMPTest                                         = 0x0009,
 
     // Command Group: Low Energy
 	
-    kBluetoothHCICommandGroupLowEnergy									    = 0x08,
-        kBluetoothHCICommandLESetEventMask								    = 0x0001,
-        kBluetoothHCICommandLEReadBufferSize								= 0x0002,
-        kBluetoothHCICommandLEReadLocalSupportedFeatures					= 0x0003,
-        kBluetoothHCICommandLESetRandomAddress								= 0x0005,
-        kBluetoothHCICommandLESetAdvertisingParameters						= 0x0006,
-        kBluetoothHCICommandLEReadAdvertisingChannelTxPower					= 0x0007,
-        kBluetoothHCICommandLESetAdvertisingData							= 0x0008,
-        kBluetoothHCICommandLESetScanResponseData							= 0x0009,
-        kBluetoothHCICommandLESetAdvertiseEnable							= 0x000A,
-        kBluetoothHCICommandLESetScanParameters								= 0x000B,
-        kBluetoothHCICommandLESetScanEnable						    		= 0x000C,
-        kBluetoothHCICommandLECreateConnection								= 0x000D,
-        kBluetoothHCICommandLECreateConnectionCancel						= 0x000E,
-        kBluetoothHCICommandLEReadWhiteListSize								= 0x000F,
-        kBluetoothHCICommandLEClearWhiteList								= 0x0010,
-        kBluetoothHCICommandLEAddDeviceToWhiteList							= 0x0011,
-        kBluetoothHCICommandLERemoveDeviceFromWhiteList						= 0x0012,
-        kBluetoothHCICommandLEConnectionUpdate								= 0x0013,
-        kBluetoothHCICommandLESetHostChannelClassification					= 0x0014,
-        kBluetoothHCICommandLEReadChannelMap								= 0x0015,
-        kBluetoothHCICommandLEReadRemoteUsedFeatures						= 0x0016,
-        kBluetoothHCICommandLEEncrypt						    			= 0x0017,
-        kBluetoothHCICommandLERand								        	= 0x0018,
-        kBluetoothHCICommandLEStartEncryption								= 0x0019,
-        kBluetoothHCICommandLELongTermKeyRequestReply						= 0x001A,
-        kBluetoothHCICommandLELongTermKeyRequestNegativeReply				= 0x001B,
-        kBluetoothHCICommandLEReadSupportedStates							= 0x001C,
-        kBluetoothHCICommandLEReceiverTest								    = 0x001D,
-        kBluetoothHCICommandLETransmitterTest								= 0x001E,
-        kBluetoothHCICommandLETestEnd									    = 0x001F,
-        kBluetoothHCICommandLERemoteConnectionParameterRequestReply			= 0x0020,
-        kBluetoothHCICommandLERemoteConnectionParameterRequestNegativeReply	= 0x0021,
-        kBluetoothHCICommandLESetDataLength								    = 0x0022,
-        kBluetoothHCICommandLEReadSuggestedDefaultDataLength				= 0x0023,
-        kBluetoothHCICommandLEWriteSuggestedDefaultDataLength				= 0x0024,
-        kBluetoothHCICommandLEReadLocalP256PublicKey						= 0x0025,
-        kBluetoothHCICommandLEGenerateDHKey							    	= 0x0026,
-        kBluetoothHCICommandLEAddDeviceToResolvingList						= 0x0027,
-        kBluetoothHCICommandLERemoveDeviceFromResolvingList					= 0x0028,
-        kBluetoothHCICommandLEClearResolvingList							= 0x0029,
-        kBluetoothHCICommandLEReadResolvingListSize							= 0x002A,
-        kBluetoothHCICommandLEReadPeerResolvableAddress			  			= 0x002B,
-        kBluetoothHCICommandLEReadLocalResolvableAddress					= 0x002C,
-        kBluetoothHCICommandLESetAddressResolutionEnable					= 0x002D,
-        kBluetoothHCICommandLESetResolvablePrivateAddressTimeout			= 0x002E,
-        kBluetoothHCICommandLEReadMaximumDataLength							= 0x002F,
+    kBluetoothHCICommandGroupLowEnergy                                      = 0x08,
+        kBluetoothHCICommandLESetEventMask                                  = 0x0001,
+        kBluetoothHCICommandLEReadBufferSize                                = 0x0002,
+        kBluetoothHCICommandLEReadLocalSupportedFeatures                    = 0x0003,
+        kBluetoothHCICommandLESetRandomAddress                              = 0x0005,
+        kBluetoothHCICommandLESetAdvertisingParameters                      = 0x0006,
+        kBluetoothHCICommandLEReadAdvertisingChannelTxPower                 = 0x0007,
+        kBluetoothHCICommandLESetAdvertisingData                            = 0x0008,
+        kBluetoothHCICommandLESetScanResponseData                           = 0x0009,
+        kBluetoothHCICommandLESetAdvertiseEnable                            = 0x000A,
+        kBluetoothHCICommandLESetScanParameters                             = 0x000B,
+        kBluetoothHCICommandLESetScanEnable                                 = 0x000C,
+        kBluetoothHCICommandLECreateConnection                              = 0x000D,
+        kBluetoothHCICommandLECreateConnectionCancel                        = 0x000E,
+        kBluetoothHCICommandLEReadWhiteListSize                             = 0x000F,
+        kBluetoothHCICommandLEClearWhiteList                                = 0x0010,
+        kBluetoothHCICommandLEAddDeviceToWhiteList                          = 0x0011,
+        kBluetoothHCICommandLERemoveDeviceFromWhiteList                     = 0x0012,
+        kBluetoothHCICommandLEConnectionUpdate                              = 0x0013,
+        kBluetoothHCICommandLESetHostChannelClassification                  = 0x0014,
+        kBluetoothHCICommandLEReadChannelMap                                = 0x0015,
+        kBluetoothHCICommandLEReadRemoteUsedFeatures                        = 0x0016,
+        kBluetoothHCICommandLEEncrypt                                       = 0x0017,
+        kBluetoothHCICommandLERand                                          = 0x0018,
+        kBluetoothHCICommandLEStartEncryption                               = 0x0019,
+        kBluetoothHCICommandLELongTermKeyRequestReply                       = 0x001A,
+        kBluetoothHCICommandLELongTermKeyRequestNegativeReply               = 0x001B,
+        kBluetoothHCICommandLEReadSupportedStates                           = 0x001C,
+        kBluetoothHCICommandLEReceiverTest                                  = 0x001D,
+        kBluetoothHCICommandLETransmitterTest                               = 0x001E,
+        kBluetoothHCICommandLETestEnd                                       = 0x001F,
+        kBluetoothHCICommandLERemoteConnectionParameterRequestReply         = 0x0020,
+        kBluetoothHCICommandLERemoteConnectionParameterRequestNegativeReply = 0x0021,
+        kBluetoothHCICommandLESetDataLength                                 = 0x0022,
+        kBluetoothHCICommandLEReadSuggestedDefaultDataLength                = 0x0023,
+        kBluetoothHCICommandLEWriteSuggestedDefaultDataLength               = 0x0024,
+        kBluetoothHCICommandLEReadLocalP256PublicKey                        = 0x0025,
+        kBluetoothHCICommandLEGenerateDHKey                                 = 0x0026,
+        kBluetoothHCICommandLEAddDeviceToResolvingList                      = 0x0027,
+        kBluetoothHCICommandLERemoveDeviceFromResolvingList                 = 0x0028,
+        kBluetoothHCICommandLEClearResolvingList                            = 0x0029,
+        kBluetoothHCICommandLEReadResolvingListSize                         = 0x002A,
+        kBluetoothHCICommandLEReadPeerResolvableAddress                     = 0x002B,
+        kBluetoothHCICommandLEReadLocalResolvableAddress                    = 0x002C,
+        kBluetoothHCICommandLESetAddressResolutionEnable                    = 0x002D,
+        kBluetoothHCICommandLESetResolvablePrivateAddressTimeout            = 0x002E,
+        kBluetoothHCICommandLEReadMaximumDataLength                         = 0x002F,
         kBluetoothHCICommandLEReadPhy                                       = 0x0030,
-        kBluetoothHCICommandLESetDefaultPhy                                	= 0x0031,
+        kBluetoothHCICommandLESetDefaultPhy                                 = 0x0031,
         kBluetoothHCICommandLESetPhy                                        = 0x0032,
-        kBluetoothHCICommandLEEnhancedReceiverTest							= 0x0033,
-        kBluetoothHCICommandLEEnhancedTransmitterTest						= 0x0034,
-        kBluetoothHCICommandLESetAdvertisingSetRandomAddress				= 0x0035,
-        kBluetoothHCICommandLESetExtendedAdvertisingParameters				= 0x0036,
-        kBluetoothHCICommandLESetExtendedAdvertisingData					= 0x0037,
-        kBluetoothHCICommandLESetExtendedScanResponseData					= 0x0038,
-        kBluetoothHCICommandLESetExtendedAdvertisingEnableCommand			= 0x0039,
-        kBluetoothHCICommandLEReadMaximumAdvertisingDataLength				= 0x003A,
-        kBluetoothHCICommandLEReadNumberofSupportedAdvertisingSets			= 0x003B,
-        kBluetoothHCICommandLERemoveAdvertisingSet							= 0x003C,
-        kBluetoothHCICommandLEClearAdvertisingSets							= 0x003D,
-        kBluetoothHCICommandLESetPeriodicAdvertisingParameters				= 0x003E,
-        kBluetoothHCICommandLESetPeriodicAdvertisingData					= 0x003F,
-        kBluetoothHCICommandLESetPeriodicAdvertisingEnable					= 0x0040,
-        kBluetoothHCICommandLESetExtendedScanParameters						= 0x0041,
-        kBluetoothHCICommandLESetExtendedScanEnable							= 0x0042,
-        kBluetoothHCICommandLEExtendedCreateConnection						= 0x0043,
-        kBluetoothHCICommandLEPeriodicAdvertisingCreateSync					= 0x0044,
-        kBluetoothHCICommandLEPeriodicAdvertisingCreateSyncCancel			= 0x0045,
-        kBluetoothHCICommandLEPeriodicAdvertisingTerminateSync				= 0x0046,
-        kBluetoothHCICommandLEAddDeviceToPeriodicAdvertiserList				= 0x0047,
-        kBluetoothHCICommandLERemoveDeviceFromPeriodicAdvertiserList		= 0x0048,
-        kBluetoothHCICommandLEClearPeriodicAdvertiserList					= 0x0049,
-        kBluetoothHCICommandLEReadPeriodicAdvertiserListSize				= 0x004A,
-        kBluetoothHCICommandLEReadTransmitPower								= 0x004B,
-        kBluetoothHCICommandLEReadRFPathCompensation						= 0x004C,
-        kBluetoothHCICommandLEWriteRFPathCompensation						= 0x004D,
-        kBluetoothHCICommandLESetPrivacyMode								= 0x004E,
+        kBluetoothHCICommandLEEnhancedReceiverTest                          = 0x0033,
+        kBluetoothHCICommandLEEnhancedTransmitterTest                       = 0x0034,
+        kBluetoothHCICommandLESetAdvertisingSetRandomAddress                = 0x0035,
+        kBluetoothHCICommandLESetExtendedAdvertisingParameters              = 0x0036,
+        kBluetoothHCICommandLESetExtendedAdvertisingData                    = 0x0037,
+        kBluetoothHCICommandLESetExtendedScanResponseData                   = 0x0038,
+        kBluetoothHCICommandLESetExtendedAdvertisingEnableCommand           = 0x0039,
+        kBluetoothHCICommandLEReadMaximumAdvertisingDataLength              = 0x003A,
+        kBluetoothHCICommandLEReadNumberofSupportedAdvertisingSets          = 0x003B,
+        kBluetoothHCICommandLERemoveAdvertisingSet                          = 0x003C,
+        kBluetoothHCICommandLEClearAdvertisingSets                          = 0x003D,
+        kBluetoothHCICommandLESetPeriodicAdvertisingParameters              = 0x003E,
+        kBluetoothHCICommandLESetPeriodicAdvertisingData                    = 0x003F,
+        kBluetoothHCICommandLESetPeriodicAdvertisingEnable                  = 0x0040,
+        kBluetoothHCICommandLESetExtendedScanParameters                     = 0x0041,
+        kBluetoothHCICommandLESetExtendedScanEnable                         = 0x0042,
+        kBluetoothHCICommandLEExtendedCreateConnection                      = 0x0043,
+        kBluetoothHCICommandLEPeriodicAdvertisingCreateSync                 = 0x0044,
+        kBluetoothHCICommandLEPeriodicAdvertisingCreateSyncCancel           = 0x0045,
+        kBluetoothHCICommandLEPeriodicAdvertisingTerminateSync              = 0x0046,
+        kBluetoothHCICommandLEAddDeviceToPeriodicAdvertiserList             = 0x0047,
+        kBluetoothHCICommandLERemoveDeviceFromPeriodicAdvertiserList        = 0x0048,
+        kBluetoothHCICommandLEClearPeriodicAdvertiserList                   = 0x0049,
+        kBluetoothHCICommandLEReadPeriodicAdvertiserListSize                = 0x004A,
+        kBluetoothHCICommandLEReadTransmitPower                             = 0x004B,
+        kBluetoothHCICommandLEReadRFPathCompensation                        = 0x004C,
+        kBluetoothHCICommandLEWriteRFPathCompensation                       = 0x004D,
+        kBluetoothHCICommandLESetPrivacyMode                                = 0x004E,
 
     // Command Group: Logo Testing (no commands yet)
 	
-    kBluetoothHCICommandGroupLogoTesting 									= 0x3E,
+    kBluetoothHCICommandGroupLogoTesting                                    = 0x3E,
 	
     // Command Group: Vendor Specific
-    kBluetoothHCICommandGroupVendorSpecific									= 0x3F,
+    kBluetoothHCICommandGroupVendorSpecific                                 = 0x3F,
 	
-    kBluetoothHCICommandGroupMax										    = 0x40,
-        kBluetoothHCICommandMax											    = 0x03FF
+    kBluetoothHCICommandGroupMax                                            = 0x40,
+        kBluetoothHCICommandMax                                             = 0x03FF
 };
 
 // HCI Data Types
