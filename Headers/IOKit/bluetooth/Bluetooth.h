@@ -604,7 +604,7 @@ enum
 
 enum
 {
-//	kBluetoothL2CAPMTULowEnergyDefault          = 0x0080,                   // 128 bytes - DPLE feature
+//  kBluetoothL2CAPMTULowEnergyDefault          = 0x0080,                   // 128 bytes - DPLE feature
     kBluetoothL2CAPMTULowEnergyDefault          = kBluetoothLETXOctetsMin,  // 27 bytes
     kBluetoothL2CAPMTULowEnergyMax              = kBluetoothLETXOctetsMax,  // 251 bytes
     kBluetoothL2CAPMTUMinimum                   = 0x0030,                   // 48 bytes
@@ -1194,21 +1194,21 @@ typedef uint16_t BluetoothLMPSubversion;
 typedef uint8_t  BluetoothHCIConnectionMode;
 enum BluetoothHCIConnectionModes
 {
-    kConnectionActiveMode					= 0,
-    kConnectionHoldMode					    = 1,
-    kConnectionSniffMode					= 2,
-    kConnectionParkMode					    = 3,
-    kConnectionModeReservedForFutureUse		= 4
+    kConnectionActiveMode                   = 0,
+    kConnectionHoldMode                     = 1,
+    kConnectionSniffMode                    = 2,
+    kConnectionParkMode                     = 3,
+    kConnectionModeReservedForFutureUse     = 4
 };
 
 typedef struct BluetoothHCISupportedCommands
 {
-    uint8_t	data[ 64 ];
+    uint8_t data[ 64 ];
 } BluetoothHCISupportedCommands;
 
 typedef struct BluetoothHCISupportedFeatures
 {
-    uint8_t	data[ 8 ];
+    uint8_t data[ 8 ];
 } BluetoothHCISupportedFeatures;
 
 typedef struct BluetoothHCISupportedFeatures BluetoothHCILESupportedFeatures;
@@ -1218,9 +1218,9 @@ typedef uint8_t  BluetoothHCIPageNumber;
 
 typedef struct BluetoothHCIExtendedFeaturesInfo
 {
-    BluetoothHCIPageNumber	page;
-    BluetoothHCIPageNumber	maxPage;
-    uint8_t			        data[ 8 ];
+    BluetoothHCIPageNumber  page;
+    BluetoothHCIPageNumber  maxPage;
+    uint8_t                 data[ 8 ];
 } BluetoothHCIExtendedFeaturesInfo;
 
 enum BluetoothLEFeatureBits
@@ -1240,99 +1240,99 @@ enum BluetoothFeatureBits
 {
     // Byte 0 of the support features data structure.
 
-    kBluetoothFeatureThreeSlotPackets					    = (1 << 0L),
-    kBluetoothFeatureFiveSlotPackets					    = (1 << 1L),
-    kBluetoothFeatureEncryption						        = (1 << 2L),
-    kBluetoothFeatureSlotOffset						        = (1 << 3L),
-    kBluetoothFeatureTimingAccuracy						    = (1 << 4L),
-    kBluetoothFeatureSwitchRoles						    = (1 << 5L),
-    kBluetoothFeatureHoldMode						        = (1 << 6L),
-    kBluetoothFeatureSniffMode						        = (1 << 7L),
+    kBluetoothFeatureThreeSlotPackets                       = (1 << 0L),
+    kBluetoothFeatureFiveSlotPackets                        = (1 << 1L),
+    kBluetoothFeatureEncryption                             = (1 << 2L),
+    kBluetoothFeatureSlotOffset                             = (1 << 3L),
+    kBluetoothFeatureTimingAccuracy                         = (1 << 4L),
+    kBluetoothFeatureSwitchRoles                            = (1 << 5L),
+    kBluetoothFeatureHoldMode                               = (1 << 6L),
+    kBluetoothFeatureSniffMode                              = (1 << 7L),
 
     // Byte 1 of the support features data structure.
 
-    kBluetoothFeatureParkMode						        = (1 << 0L),
-    kBluetoothFeatureRSSI							        = (1 << 1L),
-    kBluetoothFeaturePowerControlRequests					= (1 << 1L),
-    kBluetoothFeatureChannelQuality						    = (1 << 2L),
-    kBluetoothFeatureSCOLink						        = (1 << 3L),
-    kBluetoothFeatureHV2Packets						        = (1 << 4L),
-    kBluetoothFeatureHV3Packets						        = (1 << 5L),
-    kBluetoothFeatureULawLog						        = (1 << 6L),
-    kBluetoothFeatureALawLog						        = (1 << 7L),
+    kBluetoothFeatureParkMode                               = (1 << 0L),
+    kBluetoothFeatureRSSI                                   = (1 << 1L),
+    kBluetoothFeaturePowerControlRequests                   = (1 << 1L),
+    kBluetoothFeatureChannelQuality                         = (1 << 2L),
+    kBluetoothFeatureSCOLink                                = (1 << 3L),
+    kBluetoothFeatureHV2Packets                             = (1 << 4L),
+    kBluetoothFeatureHV3Packets                             = (1 << 5L),
+    kBluetoothFeatureULawLog                                = (1 << 6L),
+    kBluetoothFeatureALawLog                                = (1 << 7L),
 
     // Byte 2 of the support features data structure.
 
-    kBluetoothFeatureCVSD							        = (1 << 0L),
-    kBluetoothFeaturePagingScheme						    = (1 << 1L),
-    kBluetoothFeaturePowerControl						    = (1 << 2L),
-    kBluetoothFeatureTransparentSCOData					    = (1 << 3L),
-    kBluetoothFeatureFlowControlLagBit0					    = (1 << 4L),
-    kBluetoothFeatureFlowControlLagBit1					    = (1 << 5L),
-    kBluetoothFeatureFlowControlLagBit2					    = (1 << 6L),
-    kBluetoothFeatureBroadcastEncryption					= (1 << 7L),
+    kBluetoothFeatureCVSD                                   = (1 << 0L),
+    kBluetoothFeaturePagingScheme                           = (1 << 1L),
+    kBluetoothFeaturePowerControl                           = (1 << 2L),
+    kBluetoothFeatureTransparentSCOData                     = (1 << 3L),
+    kBluetoothFeatureFlowControlLagBit0                     = (1 << 4L),
+    kBluetoothFeatureFlowControlLagBit1                     = (1 << 5L),
+    kBluetoothFeatureFlowControlLagBit2                     = (1 << 6L),
+    kBluetoothFeatureBroadcastEncryption                    = (1 << 7L),
 
     // Byte 3 of the support features data structure.
 
-    kBluetoothFeatureScatterMode						    = (1 << 0L),
-    kBluetoothFeatureEnhancedDataRateACL2MbpsMode			= (1 << 1L),
-    kBluetoothFeatureEnhancedDataRateACL3MbpsMode			= (1 << 2L),
-    kBluetoothFeatureEnhancedInquiryScan					= (1 << 3L),
-    kBluetoothFeatureInterlacedInquiryScan					= (1 << 4L),
-    kBluetoothFeatureInterlacedPageScan				    	= (1 << 5L),
-    kBluetoothFeatureRSSIWithInquiryResult					= (1 << 6L),
-    kBluetoothFeatureExtendedSCOLink					    = (1 << 7L),
+    kBluetoothFeatureScatterMode                            = (1 << 0L),
+    kBluetoothFeatureEnhancedDataRateACL2MbpsMode           = (1 << 1L),
+    kBluetoothFeatureEnhancedDataRateACL3MbpsMode           = (1 << 2L),
+    kBluetoothFeatureEnhancedInquiryScan                    = (1 << 3L),
+    kBluetoothFeatureInterlacedInquiryScan                  = (1 << 4L),
+    kBluetoothFeatureInterlacedPageScan                     = (1 << 5L),
+    kBluetoothFeatureRSSIWithInquiryResult                  = (1 << 6L),
+    kBluetoothFeatureExtendedSCOLink                        = (1 << 7L),
 
     // Byte 4 of the support features data structure.
 
-    kBluetoothFeatureEV4Packets						        = (1 << 0L),
-    kBluetoothFeatureEV5Packets						        = (1 << 1L),
-    kBluetoothFeatureAbsenceMasks						    = (1 << 2L),
-    kBluetoothFeatureAFHCapableSlave					    = (1 << 3L),
-    kBluetoothFeatureAFHClassificationSlave					= (1 << 4L),
-    kBluetoothFeatureAliasAuhentication					    = (1 << 5L),
-    kBluetoothFeatureLESupportedController					= (1 << 6L),
-    kBluetoothFeature3SlotEnhancedDataRateACLPackets		= (1 << 7L),
+    kBluetoothFeatureEV4Packets                             = (1 << 0L),
+    kBluetoothFeatureEV5Packets                             = (1 << 1L),
+    kBluetoothFeatureAbsenceMasks                           = (1 << 2L),
+    kBluetoothFeatureAFHCapableSlave                        = (1 << 3L),
+    kBluetoothFeatureAFHClassificationSlave                 = (1 << 4L),
+    kBluetoothFeatureAliasAuhentication                     = (1 << 5L),
+    kBluetoothFeatureLESupportedController                  = (1 << 6L),
+    kBluetoothFeature3SlotEnhancedDataRateACLPackets        = (1 << 7L),
 
     // Byte 5 of the support features data structure.
 
-    kBluetoothFeature5SlotEnhancedDataRateACLPackets		= (1 << 0L), // 2.0 version of this header had this at the wrong bit location
-    kBluetoothFeatureSniffSubrating						    = (1 << 1L),
-    kBluetoothFeaturePauseEncryption					    = (1 << 2L),
-    kBluetoothFeatureAFHCapableMaster					    = (1 << 3L),
-    kBluetoothFeatureAFHClassificationMaster				= (1 << 4L),
-    kBluetoothFeatureEnhancedDataRateeSCO2MbpsMode			= (1 << 5L),
-    kBluetoothFeatureEnhancedDataRateeSCO3MbpsMode			= (1 << 6L),
-    kBluetoothFeature3SlotEnhancedDataRateeSCOPackets		= (1 << 7L),
+    kBluetoothFeature5SlotEnhancedDataRateACLPackets        = (1 << 0L),    // 2.0 version of this header had this at the wrong bit location
+    kBluetoothFeatureSniffSubrating                         = (1 << 1L),
+    kBluetoothFeaturePauseEncryption                        = (1 << 2L),
+    kBluetoothFeatureAFHCapableMaster                       = (1 << 3L),
+    kBluetoothFeatureAFHClassificationMaster                = (1 << 4L),
+    kBluetoothFeatureEnhancedDataRateeSCO2MbpsMode          = (1 << 5L),
+    kBluetoothFeatureEnhancedDataRateeSCO3MbpsMode          = (1 << 6L),
+    kBluetoothFeature3SlotEnhancedDataRateeSCOPackets       = (1 << 7L),
 
     // Byte 6 of the support features data structure.
 
-    kBluetoothFeatureExtendedInquiryResponse				= (1 << 0L),
-    kBluetoothFeatureSecureSimplePairing					= (1 << 3L),
-    kBluetoothFeatureEncapsulatedPDU					    = (1 << 4L),
-    kBluetoothFeatureErroneousDataReporting					= (1 << 5L),
-    kBluetoothFeatureNonFlushablePacketBoundaryFlag			= (1 << 6L),
+    kBluetoothFeatureExtendedInquiryResponse                = (1 << 0L),
+    kBluetoothFeatureSecureSimplePairing                    = (1 << 3L),
+    kBluetoothFeatureEncapsulatedPDU                        = (1 << 4L),
+    kBluetoothFeatureErroneousDataReporting                 = (1 << 5L),
+    kBluetoothFeatureNonFlushablePacketBoundaryFlag         = (1 << 6L),
 
     // Byte 7 of the support features data structure.
 
-    kBluetoothFeatureLinkSupervisionTimeoutChangedEvent		= (1 << 0L),
-    kBluetoothFeatureInquiryTransmissionPowerLevel			= (1 << 1L),
-    kBluetoothFeatureExtendedFeatures					    = (1 << 7L),
+    kBluetoothFeatureLinkSupervisionTimeoutChangedEvent     = (1 << 0L),
+    kBluetoothFeatureInquiryTransmissionPowerLevel          = (1 << 1L),
+    kBluetoothFeatureExtendedFeatures                       = (1 << 7L),
 
     // Byte 8 of the support features data structure (extended) page 1
 
-    kBluetoothExtendedFeatureSimpleSecurePairingHostMode	    = (1 << 0L),
+    kBluetoothExtendedFeatureSimpleSecurePairingHostMode        = (1 << 0L),
     kBluetoothExtendedFeatureLESupportedHostMode                = (1 << 1L),
     kBluetoothExtendedFeatureLEAndBREDRToSameDeviceHostMode     = (1 << 2L),
     KBluetoothExtendedFeatureSecureConnectionsHostMode          = (1 << 3L),
 
     // Byte 16 of supported features data structure (extended) page 2
 
-    kBluetoothExtendedFeatureSecureConnectionsControllerSupport  = (1 << 0L),
-    kBluetoothExtendedFeaturePing                                = (1 << 1L),
-    kBluetoothExtendedFeatureReserved                            = (1 << 2L),
-    kBluetoothExtendedFeatureTrainNudging                        = (1 << 3L),
-    kBluetoothExtendedFeatureSlotAvailabilityMask                = (1 << 4L)
+    kBluetoothExtendedFeatureSecureConnectionsControllerSupport     = (1 << 0L),
+    kBluetoothExtendedFeaturePing                                   = (1 << 1L),
+    kBluetoothExtendedFeatureReserved                               = (1 << 2L),
+    kBluetoothExtendedFeatureTrainNudging                           = (1 << 3L),
+    kBluetoothExtendedFeatureSlotAvailabilityMask                   = (1 << 4L)
 };
 
 typedef struct BluetoothEventFilterCondition
@@ -1343,96 +1343,96 @@ typedef struct BluetoothEventFilterCondition
 typedef uint16_t BluetoothHCIFailedContactCount;
 typedef struct BluetoothHCIFailedContactInfo
 {
-    BluetoothHCIFailedContactCount 	count;
-    BluetoothConnectionHandle 		handle;
+    BluetoothHCIFailedContactCount  count;
+    BluetoothConnectionHandle       handle;
 } BluetoothHCIFailedContactInfo;
 
-typedef SInt8 BluetoothHCIRSSIValue;	/* Valid Range: -127 to +20 */
+typedef SInt8 BluetoothHCIRSSIValue;    /* Valid Range: -127 to +20 */
 typedef struct BluetoothHCIRSSIInfo
 {
-    BluetoothConnectionHandle 		handle;
-    BluetoothHCIRSSIValue 			RSSIValue;
+    BluetoothConnectionHandle       handle;
+    BluetoothHCIRSSIValue           RSSIValue;
 } BluetoothHCIRSSIInfo;
 
 typedef	uint8_t  BluetoothHCILinkQuality;
 typedef struct BluetoothHCILinkQualityInfo
 {
-    BluetoothConnectionHandle 		handle;
-    BluetoothHCILinkQuality 		qualityValue;
+    BluetoothConnectionHandle       handle;
+    BluetoothHCILinkQuality         qualityValue;
 } BluetoothHCILinkQualityInfo;
 
 typedef	uint8_t  BluetoothHCIEncryptionKeySize;
 typedef struct BluetoothHCIEncryptionKeySizeInfo
 {
-    BluetoothConnectionHandle 		handle;
-    BluetoothHCIEncryptionKeySize 	keySize;
+    BluetoothConnectionHandle       handle;
+    BluetoothHCIEncryptionKeySize   keySize;
 } BluetoothHCIEncryptionKeySizeInfo;
         
 typedef uint8_t	 BluetoothHCIRole;
 typedef struct BluetoothHCIRoleInfo
 {
-    uint8_t					        role;
-    BluetoothConnectionHandle 		handle;
+    uint8_t                         role;
+    BluetoothConnectionHandle       handle;
 } BluetoothHCIRoleInfo;
 
 enum BluetoothHCIRoles
 {
-    kBluetoothHCIMasterRole			= 0x00,
-    kBluetoothHCISlaveRole			= 0x01
+    kBluetoothHCIMasterRole         = 0x00,
+    kBluetoothHCISlaveRole          = 0x01
 };
 
 typedef uint16_t BluetoothHCILinkPolicySettings;
 enum BluetoothHCILinkPolicySettingsValues
 {
-    kDisableAllLMModes			    = 0x0000,
-    kEnableMasterSlaveSwitch		= 0x0001,
-    kEnableHoldMode				    = 0x0002,
-    kEnableSniffMode			    = 0x0004,
-    kEnableParkMode				    = 0x0008,
-    kReservedForFutureUse			= 0x0010
+    kDisableAllLMModes              = 0x0000,
+    kEnableMasterSlaveSwitch        = 0x0001,
+    kEnableHoldMode                 = 0x0002,
+    kEnableSniffMode                = 0x0004,
+    kEnableParkMode                 = 0x0008,
+    kReservedForFutureUse           = 0x0010
 };
 
 typedef struct BluetoothHCILinkPolicySettingsInfo
 {
-    BluetoothHCILinkPolicySettings	settings;
-    BluetoothConnectionHandle		handle;
+    BluetoothHCILinkPolicySettings  settings;
+    BluetoothConnectionHandle       handle;
 } BluetoothHCILinkPolicySettingsInfo;
 
 typedef struct BluetoothHCIQualityOfServiceSetupParams
 {
-    uint8_t			flags;
-    uint8_t			serviceType;
-    uint32_t		tokenRate;
-    uint32_t		peakBandwidth;
-    uint32_t		latency;
-    uint32_t		delayVariation;
+    uint8_t         flags;
+    uint8_t         serviceType;
+    uint32_t        tokenRate;
+    uint32_t        peakBandwidth;
+    uint32_t        latency;
+    uint32_t        delayVariation;
 } BluetoothHCIQualityOfServiceSetupParams;
 
 typedef struct BluetoothHCISetupSynchronousConnectionParams
 {
-    uint32_t		transmitBandwidth;
-    uint32_t		receiveBandwidth;
-    uint16_t		maxLatency;
-    uint16_t		voiceSetting;
-    uint8_t			retransmissionEffort;
-    uint16_t		packetType;
+    uint32_t        transmitBandwidth;
+    uint32_t        receiveBandwidth;
+    uint16_t        maxLatency;
+    uint16_t        voiceSetting;
+    uint8_t         retransmissionEffort;
+    uint16_t        packetType;
 } BluetoothHCISetupSynchronousConnectionParams;
 
 typedef struct BluetoothHCIAcceptSynchronousConnectionRequestParams
 {
-    uint32_t		transmitBandwidth;
-    uint32_t		receiveBandwidth;
-    uint16_t		maxLatency;
-    uint16_t		contentFormat;
-    uint8_t			retransmissionEffort;
-    uint16_t		packetType;
+    uint32_t        transmitBandwidth;
+    uint32_t        receiveBandwidth;
+    uint16_t        maxLatency;
+    uint16_t        contentFormat;
+    uint8_t         retransmissionEffort;
+    uint16_t        packetType;
 } BluetoothHCIAcceptSynchronousConnectionRequestParams;
 
 // Add for EnhancedSetup
 typedef struct BluetoothHCIEnhancedSetupSynchronousConnectionParams
 {
-    uint32_t		transmitBandwidth;
-    uint32_t		receiveBandwidth;
+    uint32_t        transmitBandwidth;
+    uint32_t        receiveBandwidth;
     uint64_t        transmitCodingFormat;
     uint64_t        receiveCodingFormat;
     uint16_t        transmitCodecFrameSize;
@@ -1451,52 +1451,52 @@ typedef struct BluetoothHCIEnhancedSetupSynchronousConnectionParams
     uint8_t         outputDataPath;
     uint8_t         inputTransportUnitSize;
     uint8_t         outputTransportUnitSize;
-    uint16_t		maxLatency;
-    uint16_t		packetType;
-    uint8_t			retransmissionEffort;
+    uint16_t        maxLatency;
+    uint16_t        packetType;
+    uint8_t         retransmissionEffort;
 } BluetoothHCIEnhancedSetupSynchronousConnectionParams;
 
 // Add for EnhancedAccept
 typedef struct BluetoothHCIEnhancedAcceptSynchronousConnectionRequestParams
 {
-    uint32_t		transmitBandwidth;
-    uint32_t		receiveBandwidth;
+    uint32_t        transmitBandwidth;
+    uint32_t        receiveBandwidth;
     uint64_t        transmitCodingFormat;
     uint64_t        receiveCodingFormat;
-    uint16_t       	transmitCodecFrameSize;
+    uint16_t        transmitCodecFrameSize;
     uint16_t        receiveCodecFrameSize;
-    uint32_t       	inputBandwidth;
-    uint32_t       	outputBandwidth;
+    uint32_t        inputBandwidth;
+    uint32_t        outputBandwidth;
     uint64_t        inputCodingFormat;
     uint64_t        outputCodingFormat;
-    uint16_t       	inputCodedDataSize;
-    uint16_t       	outputCodedDataSize;
-    uint8_t        	inputPCMDataFormat;
-    uint8_t        	outputPCMDataFormat;
-    uint8_t        	inputPCMSamplePayloadMSBPosition;
-    uint8_t        	outputPCMSamplePayloadMSBPosition;
-    uint8_t        	inputDataPath;
-    uint8_t        	outputDataPath;
-    uint8_t        	inputTransportUnitSize;
-    uint8_t        	outputTransportUnitSize;
-    uint16_t		maxLatency;
-    uint16_t		packetType;
-    uint8_t			retransmissionEffort;
+    uint16_t        inputCodedDataSize;
+    uint16_t        outputCodedDataSize;
+    uint8_t         inputPCMDataFormat;
+    uint8_t         outputPCMDataFormat;
+    uint8_t         inputPCMSamplePayloadMSBPosition;
+    uint8_t         outputPCMSamplePayloadMSBPosition;
+    uint8_t         inputDataPath;
+    uint8_t         outputDataPath;
+    uint8_t         inputTransportUnitSize;
+    uint8_t         outputTransportUnitSize;
+    uint16_t        maxLatency;
+    uint16_t        packetType;
+    uint8_t         retransmissionEffort;
 } BluetoothHCIEnhancedAcceptSynchronousConnectionRequestParams;
 
 typedef uint8_t  BluetoothHCILoopbackMode;
 enum
 {
-    kBluetoothHCILoopbackModeOff		= 0x00,
-    kBluetoothHCILoopbackModeLocal		= 0x01,
-    kBluetoothHCILoopbackModeRemote		= 0x02
+    kBluetoothHCILoopbackModeOff        = 0x00,
+    kBluetoothHCILoopbackModeLocal      = 0x01,
+    kBluetoothHCILoopbackModeRemote     = 0x02
 };
 
 typedef struct BluetoothReadClockInfo
 {
-    BluetoothConnectionHandle	handle;
-    uint32_t			        clock;
-    uint16_t			        accuracy;
+    BluetoothConnectionHandle   handle;
+    uint32_t                    clock;
+    uint16_t                    accuracy;
 } BluetoothReadClockInfo;
 
 typedef struct BluetoothHCIEventFlowSpecificationData
