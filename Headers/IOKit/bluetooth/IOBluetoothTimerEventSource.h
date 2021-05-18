@@ -58,7 +58,7 @@ public:
     virtual IOReturn setTimeoutMS(UInt32, UInt32, void *);
     virtual IOReturn setTimeoutUS(UInt32, UInt32, void *);
     virtual IOReturn setTimeout(UInt32, UInt32, UInt32, void *);
-    virtual IOReturn setTimeout(UInt64, UInt32, void *);
+    virtual IOReturn setTimeout(AbsoluteTime abstime, UInt32, void *);
     virtual void cancelTimeout(UInt32);
     virtual void cancelTimeout() APPLE_KEXT_OVERRIDE;
     
