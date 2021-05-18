@@ -44,8 +44,18 @@ public:
     static IOBluetoothInactivityTimerEventSource * createWithTimeoutIntervalMS( UInt32 ms, OSObject * owner, Action action = NULL );
     static IOBluetoothInactivityTimerEventSource * createWithTimeoutIntervalUS( UInt32 us, OSObject * owner, Action action = NULL );
     
+/*! @function init
+ *   @abstract Initializes the timer with an owner, and a handler to call when the timeout expires.
+ *   @discussion This functions starts by calling IOTimerEventSource::init() with IOBluetoothInactivityTimerEventSource::timerFired as its timeout handler. Afterwards, it initializes mActivityCount to 0 and sets mTimeoutHandler to the parameter action.
+ *   @param owner The owner of the timer.
+ *   @param action A handler to call when the timeout expires.
+ *   @result A true is returned on success and a false is returned on failure.
+ */
+    
     virtual bool init( OSObject * owner, Action action = NULL ) APPLE_KEXT_OVERRIDE;
-    static void timerFired( Action action );
+    
+    
+    static void timerFired( OSObject * owner, IOTimerEventSource * sender );
     virtual bool initWithTimeoutInterval( AbsoluteTime interval, OSObject * owner, Action action = NULL );
     virtual bool initWithTimeoutIntervalMS( UInt32 ms, OSObject * owner, Action action = NULL );
     virtual bool initWithTimeoutIntervalUS( UInt32 us, OSObject * owner, Action action = NULL );
@@ -62,14 +72,14 @@ public:
     
     virtual void incrementActivityCount();
     virtual void decrementActivityCount();
-    virtual int getActivityCount();
+    virtual UInt32 getActivityCount();
     
     virtual IOReturn resetTimer();
     
 protected:
     AbsoluteTime mTimeoutInterval; //96
-    int mActivityCount; //104
-    Action mAction; //112
+    UInt32 mActivityCount; //104
+    Action mTimeoutHandler; //112
 };
 
 #endif
