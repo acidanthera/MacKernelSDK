@@ -55,6 +55,12 @@
 #include <IOKit/scsi/SCSICmds_REQUEST_SENSE_Defs.h>
 #include <IOKit/scsi/SCSIPort.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 //-----------------------------------------------------------------------------
 //	Constants
 //-----------------------------------------------------------------------------
@@ -403,7 +409,9 @@ public:
 	OSMetaClassDeclareReservedUsed ( IOSCSIParallelInterfaceController, 2 );
 	
 	virtual void	ReportHBAConstraints ( OSDictionary * constraints );
-	
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_7
+
 	/*!
 		@function DoesHBASupportMultiPathing
 		@abstract Queries the HBA child class to determine if it supports
@@ -415,7 +423,12 @@ public:
 	OSMetaClassDeclareReservedUsed ( IOSCSIParallelInterfaceController, 3 );
 
 	virtual bool	DoesHBASupportMultiPathing ( void );
-							
+
+#else
+
+	OSMetaClassDeclareReservedUnused ( IOSCSIParallelInterfaceController, 3 );
+
+#endif
 	
 	// Padding for the Client API
 	OSMetaClassDeclareReservedUnused ( IOSCSIParallelInterfaceController, 4 );
