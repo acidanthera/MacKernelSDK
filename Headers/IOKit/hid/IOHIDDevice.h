@@ -674,6 +674,8 @@ public:
     OSMetaClassDeclareReservedUsed(IOHIDDevice,  9);
     virtual OSNumber * newReportIntervalNumber() const;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_8
+
     OSMetaClassDeclareReservedUsed(IOHIDDevice, 10);
     virtual IOReturn handleReportWithTimeAsync(
                                   AbsoluteTime         timeStamp,
@@ -682,6 +684,12 @@ public:
                                   IOOptionBits         options,
                                   UInt32               completionTimeout,
                                   IOHIDCompletion *    completion);
+
+#else
+
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 10);
+
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
 
