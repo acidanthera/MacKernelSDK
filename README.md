@@ -7,7 +7,7 @@ This project lets your kernel extensions (kexts) target a broad range of XNU ker
 
 To start using **MacKernelSDK** do the following steps:
 
-1. Clone MacKernelSDK to your your project directory:
+1. Clone MacKernelSDK to your project directory:
 
     ```sh
     git clone https://github.com/acidanthera/MacKernelSDK
