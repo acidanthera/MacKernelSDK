@@ -55,6 +55,12 @@
 #include <IOKit/scsi/SCSICmds_REQUEST_SENSE_Defs.h>
 #include <IOKit/scsi/SCSIPort.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 //-----------------------------------------------------------------------------
 //	Constants
 //-----------------------------------------------------------------------------
@@ -403,7 +409,9 @@ public:
 	OSMetaClassDeclareReservedUsed ( IOSCSIParallelInterfaceController, 2 );
 	
 	virtual void	ReportHBAConstraints ( OSDictionary * constraints );
-	
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_7
+
 	/*!
 		@function DoesHBASupportMultiPathing
 		@abstract Queries the HBA child class to determine if it supports
@@ -415,7 +423,12 @@ public:
 	OSMetaClassDeclareReservedUsed ( IOSCSIParallelInterfaceController, 3 );
 
 	virtual bool	DoesHBASupportMultiPathing ( void );
-							
+
+#else
+
+	OSMetaClassDeclareReservedUnused ( IOSCSIParallelInterfaceController, 3 );
+
+#endif
 	
 	// Padding for the Client API
 	OSMetaClassDeclareReservedUnused ( IOSCSIParallelInterfaceController, 4 );
@@ -1529,7 +1542,7 @@ private:
 	bool						AllocateSCSIParallelTasks ( void );
 	void						DeallocateSCSIParallelTasks ( void );
 	
-	IOWorkLoop *				getWorkLoop ( void ) const;
+	IOWorkLoop *				getWorkLoop ( void ) const APPLE_KEXT_OVERRIDE;
 	bool 						CreateWorkLoop ( IOService * provider );
 	void 						ReleaseWorkLoop ( void );
 	
@@ -1573,8 +1586,8 @@ private:
 	
 	// IOService support methods
 	// These shall not be overridden by the HBA child classes.
-	bool			start ( IOService * 				provider );
-	void			stop ( 	IOService *  				provider );
+	bool			start ( IOService * 				provider ) APPLE_KEXT_OVERRIDE;
+	void			stop ( 	IOService *  				provider ) APPLE_KEXT_OVERRIDE;
 	
 	
 protected:
@@ -1584,18 +1597,18 @@ protected:
 	virtual bool	handleOpen ( 
 							IOService * 				client, 
 							IOOptionBits 				options, 
-							void * 						arg );
+							void * 						arg ) APPLE_KEXT_OVERRIDE;
 
 	virtual void	handleClose ( 
 							IOService * 				client, 
-							IOOptionBits 				options );
+							IOOptionBits 				options ) APPLE_KEXT_OVERRIDE;
 
 	virtual bool	handleIsOpen ( 
-							const IOService * 			client ) const;
+							const IOService * 			client ) const APPLE_KEXT_OVERRIDE;
 	
-	virtual bool	willTerminate ( IOService * provider, IOOptionBits options );
-	virtual bool	didTerminate ( IOService * provider, IOOptionBits options, bool * defer );
-    virtual void	free ( void );
+	virtual bool	willTerminate ( IOService * provider, IOOptionBits options ) APPLE_KEXT_OVERRIDE;
+	virtual bool	didTerminate ( IOService * provider, IOOptionBits options, bool * defer ) APPLE_KEXT_OVERRIDE;
+    virtual void	free ( void ) APPLE_KEXT_OVERRIDE;
 
 	
 };

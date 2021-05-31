@@ -7,7 +7,7 @@ This project lets your kernel extensions (kexts) target a broad range of XNU ker
 
 To start using **MacKernelSDK** do the following steps:
 
-1. Clone MacKernelSDK to your your project directory:
+1. Clone MacKernelSDK to your project directory:
 
     ```sh
     git clone https://github.com/acidanthera/MacKernelSDK
@@ -103,6 +103,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `IOHIDDevice.h` to avoid new virtual methods before 10.14
     - In `IOFramebuffer.h` to avoid new virtual methods before 10.13
     - In `IONDRVFramebuffer.h` to avoid new virtual methods before 10.13
+    - In `IOSCSIParallelInterfaceController.h` to avoid new virtual methods before 10.7
 - Fixed compiler warnings:
     - In `IOPCIDevice.h` due to missing overrides
     - In `OSMetaClass.h` due to using unsupported memory checking with older clang
