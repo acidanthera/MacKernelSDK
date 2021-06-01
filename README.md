@@ -94,6 +94,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `IOFramebuffer.h` to avoid new virtual methods before 10.13
     - In `IONDRVFramebuffer.h` to avoid new virtual methods before 10.13
     - In `IOSCSIParallelInterfaceController.h` to avoid new virtual methods before 10.7
+    - In `IOPCIBridge.h` to avoid new virtual methods before 10.10
 - Fixed compiler warnings:
     - In `IOPCIDevice.h` due to missing overrides
     - In `OSMetaClass.h` due to using unsupported memory checking with older clang
@@ -102,3 +103,5 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `hid`, `serial`, `usb` due to missing overrides and KPI deprecation in favor of `DriverKit`
     - In `OSUnserialize.h` due to `OSStringPtr` misuse
     - In `KUNCUserNotifications.h` due to KPI deprecation
+    - In `IOSCSIParallelInterfaceController.h` due to missing overrides
+    - In `IOPCIBridge.h` due to missing overrides
