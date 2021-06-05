@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2021 Apple Inc. All rights reserved.
- * Copyright (c) 2021 cjiang.
+ * Copyright (c) 2021 cjiang. All rights reserved.
  *
  * @APPLE_OSREFERENCE_LICENSE_HEADER_START@
  *
@@ -26,44 +26,100 @@
  *
  * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
  */
+/*!
+ *   @header
+ *   This header contains the definition of the IOBluetoothHostControllerTransport class, a subclass of IOService that serves as the base class for all the various transports in the IOBluetoothFamily.
+ *
+ */
 
-#ifndef _IOKIT_BLUETOOTH_TRANSPORT_IOBLUETOOTHHOSTCONTROLLERTRANSPORT_H
-#define _IOKIT_BLUETOOTH_TRANSPORT_IOBLUETOOTHHOSTCONTROLLERTRANSPORT_H
+#ifndef _IOBLUETOOTH_HOSTCONTROLLER_TRANSPORT_H
+#define _IOBLUETOOTH_HOSTCONTROLLER_TRANSPORT_H
 
+#include <Availability.h>
 #include <IOKit/IOService.h>
 #include <IOKit/IOWorkLoop.h>
 #include <IOKit/IOCommandGate.h>
 #include <IOKit/IOTimerEventSource.h>
-
 #include <IOKit/bluetooth/Bluetooth.h>
-#include <IOKit/bluetooth/IOBluetoothHostController.h>
-#include <IOKit/bluetooth/IOBluetoothACPIMethods.h>
-
-#include <Availability.h>
+#include "IOBluetoothHostController.h"
 
 #ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
 #error "Missing macOS target version"
 #endif
 
 extern const IORegistryPlane * gIODTPlane;
+
 extern void BluetoothSleepTimeOutOccurred( OSObject * owner, IOTimerEventSource * sender );
 
 class IOBluetoothHCIController;
+class IOBluetoothACPIMethods;
+
+const char * gInternalPowerStateString[7] = { "OFF", "ON", "SLEEP", "IDLE", "OFF", "IDLE", "ON" };
+const char * gOrdinalPowerStateString[3] = { "OFF", "IDLE", "ON" };
+const char * gPowerManagerSleepTypeString[9] =
+{
+  "kIOPMSleepTypeInvalid",
+  "kIOPMSleepTypeAbortedSleep",
+  "kIOPMSleepTypeNormalSleep",
+  "kIOPMSleepTypeSafeSleep",
+  "kIOPMSleepTypeHibernate",
+  "kIOPMSleepTypeStandby",
+  "kIOPMSleepTypePowerOff",
+  "kIOPMSleepTypeDeepIdle",
+  "kIOPMSleepTypeLast"
+};
+const char * gPowerManagerSleepTypeShortString[9] =
+{
+  "SleepTypeInvalid",
+  "SleepTypeAbortedSleep",
+  "SleepTypeNormalSleep",
+  "SleepTypeSafeSleep",
+  "SleepTypeHibernate",
+  "SleepTypeStandby",
+  "SleepTypePowerOff",
+  "SleepTypeDeepIdle",
+  "SleepTypeLast"
+};
+
+/*! @class IOBluetoothHostControllerTransport
+ *   @abstract The base class for IOBluetoothFamily transports.
+ *   @discussion ???
+ *
+ */
 
 class IOBluetoothHostControllerTransport : public IOService
 {
     OSDeclareAbstractStructors(IOBluetoothHostControllerTransport)
     
 public:
+/*! @function init
+ *   @abstract Initializes member variables of IOBluetoothHostControllerTransport.
+     @discussion This function calls CreateOSLogObject() to create mInternalOSLogObject, sets the initial value for various members of the class, calls GetNVRAMSettingForSwitchBehavior() to set up mSwitchBehavior, and creates the ExpansionData. It calls super::init() at the end to initialize its inherited members.
+ *   @result Result of IOService::init(). */
+    
     virtual bool init( OSDictionary * dictionary = NULL ) APPLE_KEXT_OVERRIDE;
+    
+/*! @function free
+ *   @abstract Frees data structures that were allocated the class was initialized. */
+    
     virtual void free() APPLE_KEXT_OVERRIDE;
+    
+/*! @function probe
+ *   @abstract Probes a matched device to see if it can be used.
+ *   @discussion Aside from running probe() of the super class, this function would check the SkipIOBluetoothHostControllerUSBTransport property in the gIODTPlane. If it exists, the function will terminate returning NULL as Bluetooth USB Transport should be skipped.
+ *   @param provider The registered IOService object that matches a driver personality's matching dictionary.
+ *   @param score The driver's probe score.
+ *   @result If SkipIOBluetoothHostControllerUSBTransport does not exist, the result of IOService::probe() would be returned. Otherwise, the result would be NULL. */
+    
     virtual IOService * probe( IOService * provider, SInt32 * score ) APPLE_KEXT_OVERRIDE;
+    
+    
     virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
     virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
     
-    virtual IOCommandGate * getCommandGate() const;
+    virtual IOCommandGate * getCommandGate() const; //2128
     virtual IOWorkLoop * getWorkLoop() const APPLE_KEXT_OVERRIDE;
-    virtual bool setTransportWorkLoop( void * refCon, IOWorkLoop * inWorkLoop );
+    virtual bool setTransportWorkLoop( void *, IOWorkLoop * inWorkLoop );
     
     virtual bool terminate( IOOptionBits options = 0 ) APPLE_KEXT_OVERRIDE;
     static IOReturn terminateAction( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
@@ -79,6 +135,7 @@ public:
     
     virtual IOReturn SetRemoteWakeUp( bool );
     virtual IOReturn DoDeviceReset( UInt16 );
+    
     virtual void AbortPipesAndClose( bool, bool );
     virtual bool HostSupportsSleepOnUSB();
     
@@ -99,7 +156,10 @@ public:
     virtual IOReturn ToggleLMPLogging( UInt8 * );
     
     virtual IOReturn CallConfigPM();
-    virtual bool ConfigurePM( IOService * provider );
+    virtual bool ConfigurePM( IOService * policyMaker );
+    
+    virtual unsigned long maxCapabilityForDomainState( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
+    virtual unsigned long initialPowerStateForDomainState( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
     
     virtual IOReturn setPowerState( unsigned long powerStateOrdinal, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
     static IOReturn setPowerStateAction( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
@@ -113,19 +173,16 @@ public:
     
     virtual IOReturn setAggressiveness( unsigned long type, unsigned long newLevel ) APPLE_KEXT_OVERRIDE;
     static IOReturn setAggressivenessAction( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
-    virtual IOReturn setAggressivenessWL( unsigned long type, unsigned long newLevel );
+    virtual bool setAggressivenessWL( unsigned long type, unsigned long newLevel );
     
     virtual IOReturn powerStateWillChangeTo( IOPMPowerFlags capabilities, unsigned long stateNumber, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
     static IOReturn powerStateWillChangeToAction( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
-    virtual IOReturn powerStateWillChangeToWL( UInt32, void * );
+    virtual IOReturn powerStateWillChangeToWL( IOOptionBits options, void * );
     
     virtual void systemWillShutdown( IOOptionBits specifier ) APPLE_KEXT_OVERRIDE;
     static IOReturn systemWillShutdownAction( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
-    virtual void systemWillShutdownWL( UInt32, void * );
-    
-    virtual unsigned long maxCapabilityForDomainState( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
-    virtual unsigned long initialPowerStateForDomainState( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
-    
+    virtual void systemWillShutdownWL( IOOptionBits options, void * );
+
     virtual IOBluetoothHCIControllerInternalPowerState GetCurrentPowerState();
     virtual IOBluetoothHCIControllerInternalPowerState GetPendingPowerState();
     
@@ -135,10 +192,8 @@ public:
     
     virtual IOReturn WakeupSleepingPowerStateThread();
     virtual bool ControllerSupportWoBT();
-    
     virtual UInt16 GetControllerVendorID();
     virtual UInt16 GetControllerProductID();
-    
     virtual BluetoothHCIPowerState GetRadioPowerState();
     virtual void SetRadioPowerState( BluetoothHCIPowerState );
     virtual bool GetNVRAMSettingForSwitchBehavior();
@@ -149,7 +204,6 @@ public:
     virtual UInt32 GetHardwareStatus();
     virtual void ResetHardwareStatus();
     virtual UInt32 ConvertAddressToUInt32(void * address);
-    
     virtual void SetActiveController(bool);
     virtual IOReturn ResetBluetoothDevice();
     virtual IOReturn TransportCommandSleep(void *, UInt32, char *, bool);
@@ -159,17 +213,21 @@ public:
     virtual IOReturn CallPowerManagerChangePowerStateTo(unsigned long ordinal, char *);
     virtual UInt16 GetControllerTransportType();
     virtual bool SupportNewIdlePolicy();
+    
     virtual IOReturn CheckACPIMethodsAvailabilities();
     virtual IOReturn SetBTRS();
     virtual IOReturn SetBTPU();
     virtual IOReturn SetBTPD();
     virtual IOReturn SetBTRB(bool);
     virtual IOReturn SetBTLP(bool);
+    
     virtual void NewSCOConnection();
+    
     virtual void retain() const APPLE_KEXT_OVERRIDE;
     virtual void release() const APPLE_KEXT_OVERRIDE;
     virtual void RetainTransport(char *);
     virtual void ReleaseTransport(char *);
+    
     virtual IOReturn SetIdlePolicyValue(UInt32);
     virtual bool TransportWillReEnumerate();
     virtual void ConvertPowerFlagsToString(IOPMPowerFlags, char *);
@@ -179,16 +237,17 @@ public:
     virtual IOReturn StartBluetoothSleepTimer();
     virtual IOReturn CancelBluetoothSleepTimer();
     virtual os_log_t CreateOSLogObject();
+    
     virtual IOReturn setProperties( OSObject * properties ) APPLE_KEXT_OVERRIDE;
     static IOReturn setPropertiesAction( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
     virtual IOReturn setPropertiesWL( OSObject * properties );
-    virtual IOReturn HardReset();
     
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
-    virtual IOReturn DumpTransportProviderState();
+    virtual IOReturn HardReset(); //2792
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
+    virtual void DumpTransportProviderState(); //not necessarily void
 #endif
     
-private:
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerTransport, 0);
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerTransport, 1);
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerTransport, 2);
