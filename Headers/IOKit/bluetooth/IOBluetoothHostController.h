@@ -483,7 +483,7 @@ public:
     virtual IOReturn BluetoothHCIChangeConnectionLinkKey(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle);
     virtual IOReturn BluetoothHCIMasterLinkKey(BluetoothHCIRequestID inID, BluetoothKeyFlag inKeyFlag);
     virtual IOReturn BluetoothHCIRemoteNameRequest(BluetoothHCIRequestID inID, const BluetoothDeviceAddress * inAddressPtr, BluetoothPageScanRepetitionMode inPageScanRepetitionMode, BluetoothPageScanMode inPageScanMode, BluetoothClockOffset inClockOffset, BluetoothHCIEventRemoteNameRequestResults * outName);
-    virtual IOReturn BluetoothHCIReadRemoteSupportedFeatures(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothHCISupportedFeatures * outFeatures);
+    virtual IOReturn BluetoothHCIReadRemoteSupportedFeatures(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothHCIEventReadRemoteSupportedFeaturesResults * outFeatures);
     virtual IOReturn BluetoothHCIReadRemoteExtendedFeatures(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothHCIExtendedInquiryResponseDataType inDataType, BluetoothHCIEventReadRemoteExtendedFeaturesResults * outFeatures);
     virtual IOReturn BluetoothHCIReadRemoteVersionInformation(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothHCIVersionInfo * outVersionInfo);
     virtual IOReturn BluetoothHCIReadClockOffset(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothClockOffset * outClockOffset);
