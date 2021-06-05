@@ -674,6 +674,8 @@ public:
     OSMetaClassDeclareReservedUsed(IOHIDDevice,  9);
     virtual OSNumber * newReportIntervalNumber() const;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_8
+
     OSMetaClassDeclareReservedUsed(IOHIDDevice, 10);
     virtual IOReturn handleReportWithTimeAsync(
                                   AbsoluteTime         timeStamp,
@@ -683,6 +685,14 @@ public:
                                   UInt32               completionTimeout,
                                   IOHIDCompletion *    completion);
 
+#else
+
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 10);
+
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
+
 /*! @function newDeviceUsagePairs
     @abstract Returns an array of usage dictionaries. IOHIDDevice creates
     create this from the actual report descriptor, and that should be the base
@@ -691,6 +701,12 @@ public:
     on the object returned. */
     OSMetaClassDeclareReservedUsed(IOHIDDevice, 11);
     virtual OSArray * newDeviceUsagePairs();
+
+#else
+
+    OSMetaClassDeclareReservedUnused(IOHIDDevice, 11);
+
+#endif
     
 protected:
 

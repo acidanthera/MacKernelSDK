@@ -179,28 +179,28 @@ private:
     virtual IOReturn getDTNubAddressing( IOPCIDevice * nub );
 
 public:
-    virtual void free( void );
+    virtual void free( void ) APPLE_KEXT_OVERRIDE;
 
-    virtual bool start( IOService * provider );
+    virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
 
-    virtual void stop( IOService * provider );
+    virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
 
     virtual bool configure( IOService * provider );
 
-	virtual IOReturn setProperties(OSObject * properties);
+	virtual IOReturn setProperties(OSObject * properties) APPLE_KEXT_OVERRIDE;
 
     virtual IOReturn newUserClient(task_t owningTask, void * securityID,
                                    UInt32 type,  OSDictionary * properties,
-                                   IOUserClient ** handler);
+                                   IOUserClient ** handler) APPLE_KEXT_OVERRIDE;
 
-	virtual unsigned long maxCapabilityForDomainState ( IOPMPowerFlags domainState );
-	virtual unsigned long initialPowerStateForDomainState ( IOPMPowerFlags domainState );
-	virtual unsigned long powerStateForDomainState ( IOPMPowerFlags domainState );
+	virtual unsigned long maxCapabilityForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
+	virtual unsigned long initialPowerStateForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
+	virtual unsigned long powerStateForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
 
     virtual IOReturn callPlatformFunction(const OSSymbol * functionName,
                                           bool waitForFunction,
                                           void * param1, void * param2,
-                                          void * param3, void * param4);
+                                          void * param3, void * param4) APPLE_KEXT_OVERRIDE;
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -370,66 +370,66 @@ private:
 
 public:
 
-    virtual UInt8 firstBusNum( void );
-    virtual UInt8 lastBusNum( void );
+    virtual UInt8 firstBusNum( void ) APPLE_KEXT_OVERRIDE;
+    virtual UInt8 lastBusNum( void ) APPLE_KEXT_OVERRIDE;
 
 public:
-    virtual void free();
+    virtual void free() APPLE_KEXT_OVERRIDE;
 
-    virtual bool serializeProperties( OSSerialize * serialize ) const;
+    virtual bool serializeProperties( OSSerialize * serialize ) const APPLE_KEXT_OVERRIDE;
 
     virtual IOService * probe(  IOService *     provider,
-                                SInt32 *        score );
+                                SInt32 *        score ) APPLE_KEXT_OVERRIDE;
 
-    virtual bool start( IOService * provider );
+    virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
 
-    virtual void stop( IOService * provider );
+    virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
 
-    virtual bool configure( IOService * provider );
+    virtual bool configure( IOService * provider ) APPLE_KEXT_OVERRIDE;
 
-    virtual void probeBus( IOService * provider, UInt8 busNum );
+    virtual void probeBus( IOService * provider, UInt8 busNum ) APPLE_KEXT_OVERRIDE;
 
-    virtual IOReturn requestProbe( IOOptionBits options );
+    virtual IOReturn requestProbe( IOOptionBits options ) APPLE_KEXT_OVERRIDE;
 
-    virtual void systemWillShutdown(IOOptionBits specifier);
+    virtual void systemWillShutdown(IOOptionBits specifier) APPLE_KEXT_OVERRIDE;
 
     virtual void saveBridgeState( void );
 
     virtual void restoreBridgeState( void );
 
     IOReturn setPowerState( unsigned long powerState,
-                            IOService * whatDevice );
+                            IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
 
 	void adjustPowerState(unsigned long state);
 
     virtual IOReturn saveDeviceState( IOPCIDevice * device,
-                                      IOOptionBits options = 0 );
+                                      IOOptionBits options = 0 ) APPLE_KEXT_OVERRIDE;
 
-    virtual bool publishNub( IOPCIDevice * nub, UInt32 index );
+    virtual bool publishNub( IOPCIDevice * nub, UInt32 index ) APPLE_KEXT_OVERRIDE;
 
-    virtual IODeviceMemory * ioDeviceMemory( void );
+    virtual IODeviceMemory * ioDeviceMemory( void ) APPLE_KEXT_OVERRIDE;
 
-    virtual IOPCIAddressSpace getBridgeSpace( void );
+    virtual IOPCIAddressSpace getBridgeSpace( void ) APPLE_KEXT_OVERRIDE;
 
-    virtual UInt32 configRead32( IOPCIAddressSpace space, UInt8 offset );
+    virtual UInt32 configRead32( IOPCIAddressSpace space, UInt8 offset ) APPLE_KEXT_OVERRIDE;
     virtual void configWrite32( IOPCIAddressSpace space,
-                                        UInt8 offset, UInt32 data );
-    virtual UInt16 configRead16( IOPCIAddressSpace space, UInt8 offset );
+                                        UInt8 offset, UInt32 data ) APPLE_KEXT_OVERRIDE;
+    virtual UInt16 configRead16( IOPCIAddressSpace space, UInt8 offset ) APPLE_KEXT_OVERRIDE;
     virtual void configWrite16( IOPCIAddressSpace space,
-                                        UInt8 offset, UInt16 data );
-    virtual UInt8 configRead8( IOPCIAddressSpace space, UInt8 offset );
+                                        UInt8 offset, UInt16 data ) APPLE_KEXT_OVERRIDE;
+    virtual UInt8 configRead8( IOPCIAddressSpace space, UInt8 offset ) APPLE_KEXT_OVERRIDE;
     virtual void configWrite8( IOPCIAddressSpace space,
-                                        UInt8 offset, UInt8 data );
+                                        UInt8 offset, UInt8 data ) APPLE_KEXT_OVERRIDE;
 
     virtual IOReturn setDeviceASPMState(IOPCIDevice * device,
-                                IOService * client, IOOptionBits state);
+                                IOService * client, IOOptionBits state) APPLE_KEXT_OVERRIDE;
 
-	virtual IOReturn checkLink(uint32_t options = 0);
+	virtual IOReturn checkLink(uint32_t options = 0) APPLE_KEXT_OVERRIDE;
 
-	virtual IOReturn enableLTR(IOPCIDevice * device, bool enable);
+	virtual IOReturn enableLTR(IOPCIDevice * device, bool enable) APPLE_KEXT_OVERRIDE;
 
     virtual IOPCIEventSource * createEventSource(IOPCIDevice * device,
-			OSObject * owner, IOPCIEventSource::Action action, uint32_t options);
+			OSObject * owner, IOPCIEventSource::Action action, uint32_t options) APPLE_KEXT_OVERRIDE;
 
     // Unused Padding
     OSMetaClassDeclareReservedUnused(IOPCI2PCIBridge,  0);
