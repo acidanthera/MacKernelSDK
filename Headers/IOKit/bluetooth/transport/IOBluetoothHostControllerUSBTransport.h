@@ -32,6 +32,7 @@
 
 #include <IOKit/bluetooth/transport/IOBluetoothHostControllerTransport.h>
 #include <IOKit/usb/IOUSBHostDevice.h>
+#include <IOKit/usb/IOUSBHostInterface.h>
 
 extern const IORegistryPlane * gIODTPlane;
 extern const IORegistryPlane * gIOServicePlane;
@@ -51,87 +52,105 @@ public:
     virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
     virtual bool terminateWL( IOOptionBits options = 0 ) APPLE_KEXT_OVERRIDE;
     virtual bool InitializeTransportWL( IOService * provider ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn ProcessG3StandByWake();
     
-    virtual IOReturn MessageReceiver(void * target, void * refCon, UInt32 messageType, IOService * provider, void * messageArgument, vm_size_t argSize);
-    virtual void AbortPipesAndClose(bool, bool) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn SetRemoteWakeUp( bool ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn DoDeviceReset( UInt16 ) APPLE_KEXT_OVERRIDE;
+    
+    virtual void AbortPipesAndClose(bool stop, bool release) APPLE_KEXT_OVERRIDE;
+    virtual bool HostSupportsSleepOnUSB() APPLE_KEXT_OVERRIDE;
+    
+    virtual bool ConfigurePM( IOService * provider ) APPLE_KEXT_OVERRIDE;
     virtual unsigned long maxCapabilityForDomainState( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
     virtual unsigned long initialPowerStateForDomainState( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
-    virtual bool ConfigurePM( IOService * provider ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn setPowerStateWL( unsigned long powerStateOrdinal, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn RequestTransportPowerStateChange( IOBluetoothHCIControllerInternalPowerState powerState, char * ) APPLE_KEXT_OVERRIDE;
-    virtual bool NeedToTurnOnUSBDebug();
     virtual void CompletePowerStateChange( char * ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn ProcessPowerStateChangeAfterResumed( char * ) APPLE_KEXT_OVERRIDE;
-    
-    virtual IOReturn setPowerStateWL( unsigned long powerStateOrdinal, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn powerStateWillChangeTo( IOPMPowerFlags capabilities, unsigned long stateNumber, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn powerStateWillChangeToWL( UInt32, void * ) APPLE_KEXT_OVERRIDE;
-    virtual bool SystemGoingToSleep();
-    virtual bool PrepareControllerForSleep();
-    virtual bool PrepareControllerWakeFromSleep();
-    virtual bool PrepareControllerForPowerOff(bool);
-    virtual bool PrepareControllerForPowerOn();
-    virtual bool SystemWakeCausedByBluetooth();
     virtual void systemWillShutdownWL( UInt32, void * ) APPLE_KEXT_OVERRIDE;
-    virtual bool ConfigureDevice();
-    virtual UInt8 GetInterfaceNumber(IOUSBHostInterface * interface);
-    virtual IOUSBHostInterface * FindNextInterface(IOUSBHostInterface *, UInt16, UInt16, UInt16, UInt16);
-    virtual IOUSBHostPipe * FindNextPipe(IOUSBHostInterface *, UInt8, UInt8, Descriptor *);
-    virtual bool FindInterfaces();
-    virtual bool StartInterruptPipeRead() APPLE_KEXT_OVERRIDE;
-    virtual void InterruptReadHandler(void * owner, void * parameter, IOReturn status, uint32_t bytesTransferred);
-    virtual bool StopInterruptPipeRead() APPLE_KEXT_OVERRIDE;
-    virtual bool StartBulkPipeRead() APPLE_KEXT_OVERRIDE;
-    virtual void BulkInReadHandler(void * owner, void * parameter, IOReturn status, uint32_t bytesTransferred);
-    virtual bool StopBulkPipeRead() APPLE_KEXT_OVERRIDE;
-    virtual bool StartIsochPipeRead();
-    virtual void IsochInReadHandler(void * owner, void * parameter, IOReturn status, IOUSBHostIsochronousFrame * frameList);
-    virtual bool StopIsochPipeRead();
-    virtual void ResetIsocFrames(IOUSBHostIsochronousFrame *, UInt32);
-    virtual bool StopAllPipes();
-    virtual bool StartAllPipes();
-    virtual void WaitForAllIOsToBeAborted();
-    virtual bool ReceiveInterruptData(void *, UInt32, bool);
-    virtual IOReturn TransportBulkOutWrite(void *) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn BulkOutWrite(IOMemoryDescriptor *);
-    static void BulkOutWriteTimerFired(OSObject * target, IOTimerEventSource * sender);
-    virtual void BulkOutWriteCompleteHandler(void * owner, void * parameter, IOReturn status, uint32_t bytesTransferred);
-    static IOReturn BulkOutWriteCompleteAction(OSObject * onwer, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5,void * arg6);
-    virtual void HandleBulkOutWriteTimeout(IOBluetoothMemoryDescriptorRetainer *);
-    virtual void HandleIsochData(void *, int, IOUSBHostIsochronousFrame *);
-    virtual IOReturn TransportIsochOutWrite(void * memDescriptor, void *, int) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn IsochOutWrite(IOMemoryDescriptor * memDescriptor, IOBluetoothSCOMemoryDescriptorRetainer *, int);
-    virtual void IsochOutWriteCompleteHandler(void * owner, void * parameter, IOReturn status, IOUSBHostIsochronousFrame * frameList);
-    virtual IOReturn SendHCIRequest(UInt8 *, UInt64) APPLE_KEXT_OVERRIDE;
-    virtual void DeviceRequestCompleteHandler(void * owner, void * parameter, IOReturn status, uint32_t bytesTransferred);
-    static IOReturn DeviceRequestCompleteAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5, void * arg6);
-    static IOReturn HandleMessageAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5, void * arg6);
-    virtual IOReturn HandleMessage(UInt32, IOService *, void *, unsigned long);
-    virtual IOReturn DoDeviceReset( UInt16 ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn HardReset() APPLE_KEXT_OVERRIDE;
-    virtual void UpdateSCOConnections(UInt8, UInt32) APPLE_KEXT_OVERRIDE;
-    virtual void * SetupTransportSCOParameters() APPLE_KEXT_OVERRIDE;
-    virtual void DestroyTransportSCOParameters() APPLE_KEXT_OVERRIDE;
-    virtual void LogData(void *, UInt64, UInt64);
-    virtual bool HostSupportsSleepOnUSB() APPLE_KEXT_OVERRIDE;
-    virtual bool USBControllerSupportsSuspend();
-    virtual IOReturn SetRemoteWakeUp( bool ) APPLE_KEXT_OVERRIDE;
-    virtual bool StartLMPLogging() APPLE_KEXT_OVERRIDE;
-    virtual bool StartLMPLoggingBulkPipeRead() APPLE_KEXT_OVERRIDE;
-    virtual IOReturn ToggleLMPLogging( UInt8 * ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn TransportLMPLoggingBulkOutWrite( UInt8, UInt8 ) APPLE_KEXT_OVERRIDE;
+    
     virtual bool ControllerSupportWoBT() APPLE_KEXT_OVERRIDE;
     virtual UInt16 GetControllerVendorID() APPLE_KEXT_OVERRIDE;
     virtual UInt16 GetControllerProductID() APPLE_KEXT_OVERRIDE;
     virtual BluetoothHCIPowerState GetRadioPowerState() APPLE_KEXT_OVERRIDE;
     virtual void SetRadioPowerState( BluetoothHCIPowerState ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn ReConfigure();
     virtual IOReturn ResetBluetoothDevice() APPLE_KEXT_OVERRIDE;
     virtual void GetInfo(void * outInfo) APPLE_KEXT_OVERRIDE;
     static IOReturn SetIdlePolicyValueAction( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
     virtual IOReturn SetIdlePolicyValue(UInt32) APPLE_KEXT_OVERRIDE;
     virtual bool TransportWillReEnumerate() APPLE_KEXT_OVERRIDE;
     
+    static IOReturn MessageReceiver(void * target, void * refCon, UInt32 messageType, IOService * provider, void * messageArgument, vm_size_t argSize);
+    virtual IOReturn HandleMessage(UInt32, IOService *, void *, unsigned long);
+    static IOReturn HandleMessageAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5, void * arg6);
+    
+    virtual IOReturn SendHCIRequest(UInt8 *, UInt64) APPLE_KEXT_OVERRIDE;
+    static void DeviceRequestCompleteHandler(void * owner, void * parameter, IOReturn status, uint32_t bytesTransferred);
+    static IOReturn DeviceRequestCompleteAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5, void * arg6);
+    
+    virtual void UpdateSCOConnections(UInt8, UInt32) APPLE_KEXT_OVERRIDE;
+    virtual void * SetupTransportSCOParameters() APPLE_KEXT_OVERRIDE;
+    virtual void DestroyTransportSCOParameters() APPLE_KEXT_OVERRIDE;
+    
+    virtual bool ConfigureDevice();
+    virtual UInt8 GetInterfaceNumber(IOUSBHostInterface * interface);
+    virtual IOUSBHostInterface * FindNextInterface(IOUSBHostInterface *, UInt16, UInt16, UInt16, UInt16);
+    virtual IOUSBHostPipe * FindNextPipe(IOUSBHostInterface *, UInt8, UInt8, Descriptor *);
+    virtual bool FindInterfaces();
+    
+    virtual bool StartLMPLogging() APPLE_KEXT_OVERRIDE;
+    virtual bool StartLMPLoggingBulkPipeRead() APPLE_KEXT_OVERRIDE;
+    virtual IOReturn ToggleLMPLogging( UInt8 * ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn TransportLMPLoggingBulkOutWrite( UInt8, UInt8 ) APPLE_KEXT_OVERRIDE;
+    
+    virtual bool StartInterruptPipeRead() APPLE_KEXT_OVERRIDE;
+    virtual bool StopInterruptPipeRead() APPLE_KEXT_OVERRIDE;
+    static void InterruptReadHandler(void * owner, void * parameter, IOReturn status, uint32_t bytesTransferred);
+    
+    virtual bool StartBulkPipeRead() APPLE_KEXT_OVERRIDE;
+    virtual bool StopBulkPipeRead() APPLE_KEXT_OVERRIDE;
+    static void BulkInReadHandler(void * owner, void * parameter, IOReturn status, uint32_t bytesTransferred);
+    
+    virtual bool StartIsochPipeRead();
+    virtual bool StopIsochPipeRead();
+    static void IsochInReadHandler(void * owner, void * parameter, IOReturn status, IOUSBHostIsochronousFrame * frameList);
+    virtual void ResetIsocFrames(IOUSBHostIsochronousFrame *, UInt32);
+    
+    virtual bool StopAllPipes();
+    virtual bool StartAllPipes();
+    virtual void WaitForAllIOsToBeAborted();
+    virtual bool ReceiveInterruptData(void *, UInt32, bool);
+    
+    virtual IOReturn TransportBulkOutWrite(void *) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn BulkOutWrite(IOMemoryDescriptor *);
+    static void BulkOutWriteCompleteHandler(void * owner, void * parameter, IOReturn status, uint32_t bytesTransferred);
+    static IOReturn BulkOutWriteCompleteAction(OSObject * onwer, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5,void * arg6);
+    virtual void HandleBulkOutWriteTimeout(IOBluetoothMemoryDescriptorRetainer *);
+    static void BulkOutWriteTimerFired(OSObject * target, IOTimerEventSource * sender);
+    
+    virtual void HandleIsochData(void *, int, IOUSBHostIsochronousFrame *);
+    virtual IOReturn TransportIsochOutWrite(void * memDescriptor, void *, int) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn IsochOutWrite(IOMemoryDescriptor * memDescriptor, IOBluetoothSCOMemoryDescriptorRetainer *, int);
+    static void IsochOutWriteCompleteHandler(void * owner, void * parameter, IOReturn status, IOUSBHostIsochronousFrame * frameList);
+    
+    virtual void LogData(void *, UInt64, UInt64);
+    virtual bool USBControllerSupportsSuspend();
+    
+    virtual bool SystemGoingToSleep();
+    virtual bool PrepareControllerForSleep();
+    virtual bool PrepareControllerWakeFromSleep();
+    virtual bool PrepareControllerForPowerOff(bool);
+    virtual bool PrepareControllerForPowerOn();
+    virtual bool SystemWakeCausedByBluetooth();
+    
+    virtual IOReturn ProcessG3StandByWake();
+    virtual IOReturn ReConfigure();
+    virtual bool NeedToTurnOnUSBDebug();
+    
+    virtual IOReturn HardReset() APPLE_KEXT_OVERRIDE;
+    
+private:
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerUSBTransport, 0);
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerUSBTransport, 1);
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerUSBTransport, 2);
@@ -161,7 +180,7 @@ public:
 protected:
     //328 bytes inherited
     IOUSBHostDevice * mBluetoothUSBHostDevice; //328
-    IOUSBHostDevice * unknown1; //336
+    IOUSBHostDevice * mBluetoothUSBRootDevice; //336
     UInt16 unknown11; //344
     UInt16 mVendorID; //346
     UInt16 mProductID; //348
@@ -235,7 +254,7 @@ protected:
     bool v; //1724 pm state
     bool n; //1725 pm state
     bool mHostDeviceStarted; //1726
-    bool mOtherDeviceStarted; //1727 has to do with 336
+    bool mRootDeviceStarted; //1727 has to do with 336
     struct ExpansionData
     {
         UInt64 reserved;

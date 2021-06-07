@@ -56,6 +56,8 @@ class IOBluetoothHCIController : public IOService
 {
     OSDeclareDefaultStructors(IOBluetoothHCIController)
     
+    friend class IOBluetoothHostControllerTransport;
+    
 public:
     virtual bool init( OSDictionary * dictionary = NULL ) APPLE_KEXT_OVERRIDE;
     virtual void free() APPLE_KEXT_OVERRIDE;

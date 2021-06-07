@@ -41,7 +41,7 @@
 #include <IOKit/IOCommandGate.h>
 #include <IOKit/IOTimerEventSource.h>
 #include <IOKit/bluetooth/Bluetooth.h>
-#include "IOBluetoothHostController.h"
+#include <IOKit/bluetooth/IOBluetoothHostController.h>
 
 #ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
 #error "Missing macOS target version"
@@ -112,7 +112,6 @@ public:
  *   @result If SkipIOBluetoothHostControllerUSBTransport does not exist, the result of IOService::probe() would be returned. Otherwise, the result would be NULL. */
     
     virtual IOService * probe( IOService * provider, SInt32 * score ) APPLE_KEXT_OVERRIDE;
-    
     
     virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
     virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
@@ -281,7 +280,7 @@ protected:
     IOCommandGate * mCommandGate; //168
     UInt16 mPowerMask; //176 nope
     
-    bool reserved1; //178
+    bool mUSBControllerSupportsSuspend; //178
     UInt8 mTerminateStatus; //179
     bool mLMPLoggingEnabled; //180
     UInt16 mPowerStateNotChangeable; //181
