@@ -36,6 +36,10 @@
 #include <IOKit/pwr_mgt/RootDomain.h>
 #include <IOKit/pci/IOAGPDevice.h>
 
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 class IOPCIConfigurator;
 class IOPCIDevice;
@@ -279,15 +283,24 @@ protected:
     virtual IOReturn setDeviceASPMState(IOPCIDevice * device,
                                 IOService * client, IOOptionBits state);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_7
     OSMetaClassDeclareReservedUsed(IOPCIBridge, 3);
-	virtual IOReturn checkLink(uint32_t options = 0);
+    virtual IOReturn checkLink(uint32_t options = 0);
+#else
+    OSMetaClassDeclareReservedUnused(IOPCIBridge,  3);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_10
     OSMetaClassDeclareReservedUsed(IOPCIBridge, 4);
-	virtual IOReturn enableLTR(IOPCIDevice * device, bool enable);
+	  virtual IOReturn enableLTR(IOPCIDevice * device, bool enable);
 
     OSMetaClassDeclareReservedUsed(IOPCIBridge, 5);
     virtual IOPCIEventSource * createEventSource(IOPCIDevice * device,
 			OSObject * owner, IOPCIEventSource::Action action, uint32_t options);
+#else
+    OSMetaClassDeclareReservedUnused(IOPCIBridge,  4);
+    OSMetaClassDeclareReservedUnused(IOPCIBridge,  5);
+#endif
 
     // Unused Padding
     OSMetaClassDeclareReservedUnused(IOPCIBridge,  6);
@@ -424,12 +437,16 @@ public:
     virtual IOReturn setDeviceASPMState(IOPCIDevice * device,
                                 IOService * client, IOOptionBits state) APPLE_KEXT_OVERRIDE;
 
-	virtual IOReturn checkLink(uint32_t options = 0) APPLE_KEXT_OVERRIDE;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_7
+    virtual IOReturn checkLink(uint32_t options = 0) APPLE_KEXT_OVERRIDE;
+#endif
 
-	virtual IOReturn enableLTR(IOPCIDevice * device, bool enable) APPLE_KEXT_OVERRIDE;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_10
+    virtual IOReturn enableLTR(IOPCIDevice * device, bool enable) APPLE_KEXT_OVERRIDE;
 
     virtual IOPCIEventSource * createEventSource(IOPCIDevice * device,
 			OSObject * owner, IOPCIEventSource::Action action, uint32_t options) APPLE_KEXT_OVERRIDE;
+#endif
 
     // Unused Padding
     OSMetaClassDeclareReservedUnused(IOPCI2PCIBridge,  0);
