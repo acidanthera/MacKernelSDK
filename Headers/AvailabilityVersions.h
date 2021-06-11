@@ -56,7 +56,14 @@
 #define __MAC_10_15         101500
 #define __MAC_10_15_1       101501
 #define __MAC_10_15_4       101504
-/* __MAC_NA is not defined to a value but is uses as a token by macros to indicate that the API is unavailable */
+#define __MAC_10_16         101600
+#define __MAC_11_0          110000
+#define __MAC_11_1          110100
+#define __MAC_11_3          110300
+#define __MAC_11_4          110400
+#define __MAC_11_5          110500
+#define __MAC_12_0          120000
+/* __MAC_NA is not defined to a value but is used as a token by macros to indicate that the API is unavailable */
 
 #define __IPHONE_2_0      20000
 #define __IPHONE_2_1      20100
@@ -104,7 +111,16 @@
 #define __IPHONE_13_4    130400
 #define __IPHONE_13_5    130500
 #define __IPHONE_13_6    130600
-/* __IPHONE_NA is not defined to a value but is uses as a token by macros to indicate that the API is unavailable */
+#define __IPHONE_13_7    130700
+#define __IPHONE_14_0    140000
+#define __IPHONE_14_1    140100
+#define __IPHONE_14_2    140200
+#define __IPHONE_14_3    140300
+#define __IPHONE_14_5    140500
+#define __IPHONE_14_6    140600
+#define __IPHONE_14_7    140700
+#define __IPHONE_15_0    150000
+/* __IPHONE_NA is not defined to a value but is used as a token by macros to indicate that the API is unavailable */
 
 #define __TVOS_9_0        90000
 #define __TVOS_9_1        90100
@@ -127,6 +143,14 @@
 #define __TVOS_13_2      130200
 #define __TVOS_13_3      130300
 #define __TVOS_13_4      130400
+#define __TVOS_14_0      140000
+#define __TVOS_14_1      140100
+#define __TVOS_14_2      140200
+#define __TVOS_14_3      140300
+#define __TVOS_14_5      140500
+#define __TVOS_14_6      140600
+#define __TVOS_14_7      140700
+#define __TVOS_15_0      150000
 
 #define __WATCHOS_1_0     10000
 #define __WATCHOS_2_0     20000
@@ -147,10 +171,20 @@
 #define __WATCHOS_6_0     60000
 #define __WATCHOS_6_1     60100
 #define __WATCHOS_6_2     60200
+#define __WATCHOS_7_0     70000
+#define __WATCHOS_7_1     70100
+#define __WATCHOS_7_2     70200
+#define __WATCHOS_7_3     70300
+#define __WATCHOS_7_4     70400
+#define __WATCHOS_7_5     70500
+#define __WATCHOS_7_6     70600
+#define __WATCHOS_8_0     80000
 
 /*
  * Set up standard Mac OS X versions
  */
+
+#if (!defined(_POSIX_C_SOURCE) && !defined(_XOPEN_SOURCE)) || defined(_DARWIN_C_SOURCE)
 
 #define MAC_OS_X_VERSION_10_0         1000
 #define MAC_OS_X_VERSION_10_1         1010
@@ -183,6 +217,15 @@
 #define MAC_OS_X_VERSION_10_14_6    101406
 #define MAC_OS_X_VERSION_10_15      101500
 #define MAC_OS_X_VERSION_10_15_1    101501
+#define MAC_OS_X_VERSION_10_16      101600
+#define MAC_OS_VERSION_11_0         110000
+#define MAC_OS_VERSION_12_0         120000
+
+#endif /* #if (!defined(_POSIX_C_SOURCE) && !defined(_XOPEN_SOURCE)) || defined(_DARWIN_C_SOURCE) */
+
+#define __DRIVERKIT_19_0 190000
+#define __DRIVERKIT_20_0 200000
+#define __DRIVERKIT_21_0 210000
 
 #endif /* __AVAILABILITY_VERSIONS__ */
 
