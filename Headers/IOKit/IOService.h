@@ -684,6 +684,7 @@ public:
 
 	virtual bool finalize( IOOptionBits options );
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_10
 /*! @function init
  *   @abstract Initializes generic IOService data structures (expansion data, etc). */
 	virtual bool init( OSDictionary * dictionary = NULL ) APPLE_KEXT_OVERRIDE;
@@ -692,6 +693,7 @@ public:
  *   @abstract Initializes generic IOService data structures (expansion data, etc). */
 	virtual bool init( IORegistryEntry * from,
 	    const IORegistryPlane * inPlane ) APPLE_KEXT_OVERRIDE;
+#endif
 
 /*! @function free
  *   @abstract Frees data structures that were allocated when power management was initialized on this service. */

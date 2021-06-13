@@ -644,6 +644,28 @@ struct ifnet_init_params {
 	u_int32_t               broadcast_len;          /* required for non point-to-point interfaces */
 };
 
+/*
+ *       @enum Interface control commands
+ *       @abstract Constants defining control commands.
+ *       @discussion
+ *       @constant IFNET_CTL_SET_INPUT_MODEL Set input model.
+ *       @constant IFNET_CTL_GET_INPUT_MODEL Get input model.
+ *       @constant IFNET_CTL_SET_LOG Set logging level.
+ *       @constant IFNET_CTL_GET_LOG Get logging level.
+ */
+enum {
+	IFNET_CTL_SET_INPUT_MODEL       = 1,    /* input ctl */
+	IFNET_CTL_GET_INPUT_MODEL       = 2,    /* input ctl */
+	IFNET_CTL_SET_LOG               = 3,    /* output ctl */
+	IFNET_CTL_GET_LOG               = 4,    /* output ctl */
+	IFNET_CTL_NOTIFY_ADDRESS        = 5     /* output ctl */
+};
+
+/*
+ *       @typedef ifnet_ctl_cmd_t
+ *       @abstract Storage type for the interface control command.
+ */
+typedef u_int32_t ifnet_ctl_cmd_t;
 
 /*!
  *       @struct ifnet_stats_param
