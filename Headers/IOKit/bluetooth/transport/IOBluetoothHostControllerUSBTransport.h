@@ -180,7 +180,7 @@ private:
 protected:
     //328 bytes inherited
     IOUSBHostDevice * mBluetoothUSBHostDevice; //328
-    IOUSBHostDevice * mBluetoothUSBRootDevice; //336
+    IOUSBHostDevice * mBluetoothUSBProviderDevice; //336
     UInt16 unknown11; //344
     UInt16 mVendorID; //346
     UInt16 mProductID; //348
@@ -254,7 +254,7 @@ protected:
     bool v; //1724 pm state
     bool n; //1725 pm state
     bool mHostDeviceStarted; //1726
-    bool mRootDeviceStarted; //1727 has to do with 336
+    bool mProviderDeviceStarted; //1727
     struct ExpansionData
     {
         UInt64 reserved;
