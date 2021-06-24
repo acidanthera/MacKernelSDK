@@ -875,7 +875,9 @@ typedef enum BluetoothHCIVersions
     kBluetoothHCIVersionCoreSpecification4_0												= 0x06,
     kBluetoothHCIVersionCoreSpecification4_1												= 0x07,
     kBluetoothHCIVersionCoreSpecification4_2												= 0x08,
-    kBluetoothHCIVersionCoreSpecification5_0												= 0x09
+    kBluetoothHCIVersionCoreSpecification5_0												= 0x09,
+    kBluetoothHCIVersionCoreSpecification5_1												= 0x0A,
+    kBluetoothHCIVersionCoreSpecification5_2												= 0x0B
 } BluetoothHCIVersions;
 
 /*!
@@ -894,7 +896,9 @@ typedef enum BluetoothLMPVersions
     kBluetoothLMPVersionCoreSpecification4_0												= 0x06,
     kBluetoothLMPVersionCoreSpecification4_1												= 0x07,
     kBluetoothLMPVersionCoreSpecification4_2												= 0x08,
-    kBluetoothLMPVersionCoreSpecification5_0												= 0x09
+    kBluetoothLMPVersionCoreSpecification5_0												= 0x09,
+    kBluetoothLMPVersionCoreSpecification5_1												= 0x0A,
+    kBluetoothLMPVersionCoreSpecification5_2												= 0x0B
 } BluetoothLMPVersions;
 
 #ifdef	__cplusplus
