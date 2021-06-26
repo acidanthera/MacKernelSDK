@@ -401,8 +401,8 @@ public:
     virtual void SetChangingPowerState(bool);
     virtual void SetControllerPowerOptions(IOBluetoothHCIControllerPowerOptions inPowerOptions);
     virtual IOBluetoothHCIControllerPowerOptions GetControllerPowerOptions();
-    virtual void TransportIsReady(bool); //definitely not void
-    virtual void TransportIsGoingAway(); //definitely not void
+    virtual void TransportIsReady(bool);
+    virtual bool TransportIsGoingAway();
     virtual IOReturn ChangeControllerStateForRestart();
     virtual IOReturn CleanUpForPoweringOff(); //not sure
     virtual IOReturn CleanUpBeforeTransportTerminate(IOBluetoothHostControllerTransport *); //not sure
@@ -425,7 +425,7 @@ public:
     virtual IOReturn WriteLocalSupportedFeatures(UInt32, void *);
     virtual IOReturn WriteBufferSize();
     virtual bool DisableScan(); //not sure
-    virtual IOReturn CallBluetoothHCIReset(bool);
+    virtual IOReturn CallBluetoothHCIReset(bool, char *);
     virtual IOReturn IgnoreUSBReset(bool);
     virtual IOReturn HardResetController(UInt16); //useful
     virtual bool WillResetModule();
@@ -778,6 +778,8 @@ protected:
     bool mIdlePolicyIsOneByte; //this + 886
     
     UInt8 mNumTimedOutHCICommands; //this + 889
+    UInt16 xxxxxxx;
+    UInt32 mTransportSleepType; //this + 892
     
     IOBluetoothHCIControllerPowerOptions mControllerPowerOptions; //this + 900
     IOBluetoothHCIControllerConfigState mControllerConfigState; //this + 904

@@ -63,34 +63,34 @@ public:
     virtual unsigned long maxCapabilityForDomainState( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
     virtual unsigned long initialPowerStateForDomainState( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn setPowerStateWL( unsigned long powerStateOrdinal, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn RequestTransportPowerStateChange( IOBluetoothHCIControllerInternalPowerState powerState, char * ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn RequestTransportPowerStateChange( IOBluetoothHCIControllerInternalPowerState powerState, char * name ) APPLE_KEXT_OVERRIDE;
     virtual void CompletePowerStateChange( char * ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn ProcessPowerStateChangeAfterResumed( char * ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn powerStateWillChangeTo( IOPMPowerFlags capabilities, unsigned long stateNumber, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn powerStateWillChangeToWL( UInt32, void * ) APPLE_KEXT_OVERRIDE;
-    virtual void systemWillShutdownWL( UInt32, void * ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn powerStateWillChangeToWL( IOOptionBits options, void * ) APPLE_KEXT_OVERRIDE;
+    virtual void systemWillShutdownWL( IOOptionBits options, void * ) APPLE_KEXT_OVERRIDE;
     
     virtual bool ControllerSupportWoBT() APPLE_KEXT_OVERRIDE;
     virtual UInt16 GetControllerVendorID() APPLE_KEXT_OVERRIDE;
     virtual UInt16 GetControllerProductID() APPLE_KEXT_OVERRIDE;
     virtual BluetoothHCIPowerState GetRadioPowerState() APPLE_KEXT_OVERRIDE;
     virtual void SetRadioPowerState( BluetoothHCIPowerState ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn ResetBluetoothDevice() APPLE_KEXT_OVERRIDE;
+    virtual void ResetBluetoothDevice() APPLE_KEXT_OVERRIDE;
     virtual void GetInfo(void * outInfo) APPLE_KEXT_OVERRIDE;
     static IOReturn SetIdlePolicyValueAction( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
-    virtual IOReturn SetIdlePolicyValue(UInt32) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn SetIdlePolicyValue(uint32_t idleTimeoutMs) APPLE_KEXT_OVERRIDE;
     virtual bool TransportWillReEnumerate() APPLE_KEXT_OVERRIDE;
     
     static IOReturn MessageReceiver(void * target, void * refCon, UInt32 messageType, IOService * provider, void * messageArgument, vm_size_t argSize);
     virtual IOReturn HandleMessage(UInt32, IOService *, void *, unsigned long);
-    static IOReturn HandleMessageAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5, void * arg6);
+    static bool HandleMessageAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5, void * arg6);
     
-    virtual IOReturn SendHCIRequest(UInt8 *, UInt64) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn SendHCIRequest(UInt8 * buffer, IOByteCount size) APPLE_KEXT_OVERRIDE;
     static void DeviceRequestCompleteHandler(void * owner, void * parameter, IOReturn status, uint32_t bytesTransferred);
     static IOReturn DeviceRequestCompleteAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5, void * arg6);
     
     virtual void UpdateSCOConnections(UInt8, UInt32) APPLE_KEXT_OVERRIDE;
-    virtual void * SetupTransportSCOParameters() APPLE_KEXT_OVERRIDE;
+    virtual void SetupTransportSCOParameters() APPLE_KEXT_OVERRIDE;
     virtual void DestroyTransportSCOParameters() APPLE_KEXT_OVERRIDE;
     
     virtual bool ConfigureDevice();
@@ -115,14 +115,14 @@ public:
     virtual bool StartIsochPipeRead();
     virtual bool StopIsochPipeRead();
     static void IsochInReadHandler(void * owner, void * parameter, IOReturn status, IOUSBHostIsochronousFrame * frameList);
-    virtual void ResetIsocFrames(IOUSBHostIsochronousFrame *, UInt32);
+    virtual void ResetIsocFrames(IOUSBHostIsochronousFrame * isocFrames, UInt32 numberOfFrames);
     
     virtual bool StopAllPipes();
     virtual bool StartAllPipes();
     virtual void WaitForAllIOsToBeAborted();
     virtual bool ReceiveInterruptData(void *, UInt32, bool);
     
-    virtual IOReturn TransportBulkOutWrite(void *) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn TransportBulkOutWrite(void * buffer) APPLE_KEXT_OVERRIDE;
     virtual IOReturn BulkOutWrite(IOMemoryDescriptor *);
     static void BulkOutWriteCompleteHandler(void * owner, void * parameter, IOReturn status, uint32_t bytesTransferred);
     static IOReturn BulkOutWriteCompleteAction(OSObject * onwer, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5,void * arg6);
@@ -134,11 +134,11 @@ public:
     virtual IOReturn IsochOutWrite(IOMemoryDescriptor * memDescriptor, IOBluetoothSCOMemoryDescriptorRetainer *, int);
     static void IsochOutWriteCompleteHandler(void * owner, void * parameter, IOReturn status, IOUSBHostIsochronousFrame * frameList);
     
-    virtual void LogData(void *, UInt64, UInt64);
+    virtual void LogData(void * data, UInt64, IOByteCount size);
     virtual bool USBControllerSupportsSuspend();
     
     virtual bool SystemGoingToSleep();
-    virtual bool PrepareControllerForSleep();
+    virtual IOReturn PrepareControllerForSleep();
     virtual bool PrepareControllerWakeFromSleep();
     virtual bool PrepareControllerForPowerOff(bool);
     virtual bool PrepareControllerForPowerOn();
@@ -214,7 +214,7 @@ protected:
     int mIsochInReadDataBufferStates[2]; //1552
     IOUSBHostIsochronousCompletion * mIsochInCompletionRoutineList; //1560
     UInt32 mIsochInPipeNumReads; //1568
-    bool mIsochInReadsSucceeded; //1572
+    bool mIsochInReadsComplete; //1572
     IOUSBHostIsochronousFrame * mIsochInFrames; //1576
     UInt64 mIsochInFrameNumber; //1584
     vm_size_t mIsochInReadDataBufferLength; //1592
@@ -247,10 +247,11 @@ protected:
     UInt8 xxx; //1712
     bool __reserved5; //1713
     bool mMatchedOnInterface; //1714
+    unsigned int mInterruptSleepMs; //1716
     bool mAbortPipesAndCloseCalled; //1720
     bool u; //1721
     bool mIOClassIsAppleUSBXHCIPCI; //1722
-    bool mStopAllPipesCalled; //1723
+    bool mPipesStarted; //1723
     bool v; //1724 pm state
     bool n; //1725 pm state
     bool mHostDeviceStarted; //1726

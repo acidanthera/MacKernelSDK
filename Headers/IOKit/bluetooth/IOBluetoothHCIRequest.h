@@ -88,6 +88,7 @@ public:
     
     bool init( IOCommandGate * commandGate, IOBluetoothHostController * hostController );
     
+    /*
     virtual void retain() APPLE_KEXT_OVERRIDE;
     IOBluetoothHCIRequest::RetainRequest(char *)
     virtual void release() APPLE_KEXT_OVERRIDE;
@@ -117,7 +118,7 @@ public:
     
     
     IOBluetoothHCIRequest::DisposeRequest()
-
+/*
     /*
     
     void                            free();

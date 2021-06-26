@@ -45,11 +45,11 @@ extern const IORegistryPlane *  gIODTPlane;
 
 struct BluetoothHardwareListType
 {
-    //0
-    IOBluetoothHostController * mBluetoothHostController; //8
+    IOBluetoothHostControllerTransport  * mBluetoothTransport; //0
+    IOBluetoothHostController           * mBluetoothHostController; //8
     //16
-    BluetoothHardwareListType * mNextHardware; //24
-    BluetoothHardwareListType * mPreviousHardware; //32
+    BluetoothHardwareListType           * mNextHardware; //24
+    BluetoothHardwareListType           * mPreviousHardware; //32
 };
 
 class IOBluetoothHCIController : public IOService
@@ -118,12 +118,12 @@ public:
     
     //not sure
     virtual __int64 FindFirstBluetoothHardwareHasTransport();
-    virtual __int64 FindBluetoothHardware(BluetoothDeviceAddress *);
-    virtual __int64 FindBluetoothHardware(UInt16, UInt16, UInt32);
-    virtual __int64 FindBluetoothHardware(IOBluetoothHostController *);
-    virtual __int64 FindBluetoothHardware(IOBluetoothHostControllerTransport *);
-    virtual __int64 FindBluetoothHardware(BluetoothHardwareListType *);
-    virtual __int64 FindBluetoothHardware(UInt32);
+    virtual BluetoothHardwareListType * FindBluetoothHardware(BluetoothDeviceAddress *);
+    virtual BluetoothHardwareListType * FindBluetoothHardware(UInt16, UInt16, UInt32);
+    virtual BluetoothHardwareListType * FindBluetoothHardware(IOBluetoothHostController *);
+    virtual BluetoothHardwareListType * FindBluetoothHardware(IOBluetoothHostControllerTransport *);
+    virtual BluetoothHardwareListType * FindBluetoothHardware(BluetoothHardwareListType *);
+    virtual BluetoothHardwareListType * FindBluetoothHardware(UInt32);
     
     virtual __int64 FindInternalBluetoothController(); //not sure
     
@@ -143,8 +143,8 @@ public:
     virtual IOReturn DisableBluetoothHostControllerObject(BluetoothHardwareListType *);
     virtual IOReturn EnableBluetoothHostControllerObject(BluetoothHardwareListType *);
     
-    //WakeUpDisplay(void);
-    //FullWakeTimeOutHandler(void);
+    virtual void WakeUpDisplay();
+    virtual void FullWakeTimeOutHandler();
     
     virtual IOReturn StartFullWakeTimer();
     virtual IOReturn CancelFullWakeTimer();
@@ -204,7 +204,7 @@ public:
     virtual void BeginSignPost();
     virtual void EndSignPost();
     
-    virtual int ConvertErrorCodeToString(UInt32 errorCode, char * outStringFull, char * outStringShort);
+    virtual int ConvertErrorCodeToString(UInt32 errorCode, char * outStringLong, char * outStringShort);
     virtual int ConvertOpCodeToString(UInt16 opCode, char * outString);
     virtual int ConvertEventCodeToString(UInt8 eventCode, char * outString);
     virtual int ConvertVendorSpecificEventCodeToString(UInt8 eventCode, char * outString);

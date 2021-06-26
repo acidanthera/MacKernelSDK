@@ -116,7 +116,7 @@ public:
     virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
     virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
     
-    virtual IOCommandGate * getCommandGate() const; //2128
+    virtual IOCommandGate * getCommandGate() const;
     virtual IOWorkLoop * getWorkLoop() const APPLE_KEXT_OVERRIDE;
     virtual bool setTransportWorkLoop( void *, IOWorkLoop * inWorkLoop );
     
@@ -150,7 +150,7 @@ public:
     virtual IOReturn TransportSendSCOData( void * );
     virtual IOReturn TransportLMPLoggingBulkOutWrite( UInt8, UInt8 );
     
-    virtual IOReturn SendHCIRequest( UInt8 *, UInt64 );
+    virtual IOReturn SendHCIRequest(UInt8 * buffer, IOByteCount size);
     virtual void UpdateSCOConnections( UInt8, UInt32 );
     virtual IOReturn ToggleLMPLogging( UInt8 * );
     
@@ -164,7 +164,7 @@ public:
     static IOReturn setPowerStateAction( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
     virtual IOReturn setPowerStateWL( unsigned long powerStateOrdinal, IOService * whatDevice );
     
-    virtual IOReturn RequestTransportPowerStateChange( IOBluetoothHCIControllerInternalPowerState powerState, char * );
+    virtual IOReturn RequestTransportPowerStateChange( IOBluetoothHCIControllerInternalPowerState powerState, char * name );
     virtual IOReturn WaitForControllerPowerState( IOBluetoothHCIControllerInternalPowerState powerState, char * );
     virtual IOReturn WaitForControllerPowerStateWithTimeout( IOBluetoothHCIControllerInternalPowerState powerState, uint32_t timeout, char *, bool );
     virtual void CompletePowerStateChange( char * );
@@ -185,8 +185,8 @@ public:
     virtual IOBluetoothHCIControllerInternalPowerState GetCurrentPowerState();
     virtual IOBluetoothHCIControllerInternalPowerState GetPendingPowerState();
     
-    virtual IOReturn ChangeTransportPowerStateFromIdleToOn( char * );
-    virtual IOReturn ChangeTransportPowerState( UInt64, bool, IOBluetoothHCIControllerInternalPowerState, char * );
+    virtual IOReturn ChangeTransportPowerStateFromIdleToOn( char * name );
+    virtual IOReturn ChangeTransportPowerState( unsigned long ordinal, bool willWait, IOBluetoothHCIControllerInternalPowerState powerState, char * name );
     virtual IOReturn WaitForControllerPowerStateChange( IOBluetoothHCIControllerInternalPowerState, char * );
     
     virtual IOReturn WakeupSleepingPowerStateThread();
@@ -194,7 +194,7 @@ public:
     virtual UInt16 GetControllerVendorID();
     virtual UInt16 GetControllerProductID();
     virtual BluetoothHCIPowerState GetRadioPowerState();
-    virtual void SetRadioPowerState( BluetoothHCIPowerState );
+    virtual void SetRadioPowerState( BluetoothHCIPowerState powerState );
     virtual bool GetNVRAMSettingForSwitchBehavior();
     virtual UInt32 GetControllerLocationID();
     virtual bool GetBuiltIn();
@@ -204,16 +204,16 @@ public:
     virtual void ResetHardwareStatus();
     virtual UInt32 ConvertAddressToUInt32(void * address);
     virtual void SetActiveController(bool);
-    virtual IOReturn ResetBluetoothDevice();
+    virtual void ResetBluetoothDevice();
     virtual IOReturn TransportCommandSleep(void *, UInt32, char *, bool);
-    virtual bool ReadyToGo(bool);
+    virtual void ReadyToGo( bool oneThread );
     virtual bool TerminateCalled();
-    virtual void GetInfo(void * outInfo);
+    virtual void GetInfo( void * outInfo );
     virtual IOReturn CallPowerManagerChangePowerStateTo(unsigned long ordinal, char *);
     virtual UInt16 GetControllerTransportType();
     virtual bool SupportNewIdlePolicy();
     
-    virtual IOReturn CheckACPIMethodsAvailabilities();
+    virtual void CheckACPIMethodsAvailabilities();
     virtual IOReturn SetBTRS();
     virtual IOReturn SetBTPU();
     virtual IOReturn SetBTPD();
@@ -227,10 +227,10 @@ public:
     virtual void RetainTransport(char *);
     virtual void ReleaseTransport(char *);
     
-    virtual IOReturn SetIdlePolicyValue(UInt32);
+    virtual IOReturn SetIdlePolicyValue(uint32_t idleTimeoutMs);
     virtual bool TransportWillReEnumerate();
     virtual void ConvertPowerFlagsToString(IOPMPowerFlags, char *);
-    virtual void * SetupTransportSCOParameters();
+    virtual void SetupTransportSCOParameters();
     virtual void DestroyTransportSCOParameters();
     virtual bool WaitForSystemReadyForSleep(char *);
     virtual IOReturn StartBluetoothSleepTimer();
@@ -241,10 +241,10 @@ public:
     static IOReturn setPropertiesAction( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
     virtual IOReturn setPropertiesWL( OSObject * properties );
     
-    virtual IOReturn HardReset(); //2792
+    virtual IOReturn HardReset();
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
-    virtual void DumpTransportProviderState(); //not necessarily void
+    virtual void DumpTransportProviderState();
 #endif
     
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerTransport, 0);
@@ -278,14 +278,15 @@ protected:
     IOService * mProvider; //152
     IOWorkLoop * mWorkLoop; //160
     IOCommandGate * mCommandGate; //168
-    UInt16 mPowerMask; //176 nope
+    UInt16 mPowerMask; //176
     
     bool mUSBControllerSupportsSuspend; //178
-    UInt8 mTerminateStatus; //179
+    UInt8 mTerminateState; //179
     bool mLMPLoggingEnabled; //180
     UInt16 mPowerStateNotChangeable; //181
     uint8_t reserved2; //182
-    bool reserved3; //184
+    uint8_t reserved3; //183
+    bool mConfiguredPM; //184
     UInt32 mSwitchBehavior; //188
     bool mHardwareInitialized; //192
     UInt32 mHardwareStatus; //196
@@ -305,7 +306,6 @@ protected:
     bool reserved5; //248
     bool reserved6; //249
     bool mSupportWoBT; //250
-    
     UInt8 mCurrentPMMethod; //251
     UInt64 mTransportCounter; //256, retain/released in Retain/ReleaseTransport
     SInt16 mCommandSleepCounter; //264
