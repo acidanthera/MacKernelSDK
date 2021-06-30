@@ -44,10 +44,13 @@ To compile for 32-bit you will need to add a set of flags in your project:
 
 1. Other C Flags (`OTHER_CFLAGS`):
 
+    - `-static`
     - `-nostdlib`
     - `-Wno-stdlibcxx-not-found`
     - `-target i386-apple-macos10.6`
     - `-fallow-unsupported`
+    - `-fno-stack-protector` if targeting 10.5 and older
+    - `-fno-jump-tables` if targeting 10.5 and older
 
 2. Other Linker Flags (`OTHER_LDFLAGS`):
 
