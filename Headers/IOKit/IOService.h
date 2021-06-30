@@ -434,6 +434,7 @@ public:
 	virtual SInt32 nextIdleTimeout(AbsoluteTime currentTime,
 	    AbsoluteTime lastActivity, unsigned int powerState);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 /*! @function systemWillShutdown
  *   @availability Mac OS X v10.5 and later
  *   @abstract Notifies members of the power plane of system shutdown and restart.
@@ -443,7 +444,9 @@ public:
  *   @param specifier <code>kIOMessageSystemWillPowerOff</code> or <code>kIOMessageSystemWillRestart</code>. */
 
 	virtual void systemWillShutdown( IOOptionBits specifier );
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 /*! @function copyClientWithCategory
  *   @availability Mac OS X v10.6 and later
  *   @param category An OSSymbol corresponding to an IOMatchCategory matching property.
@@ -451,6 +454,7 @@ public:
  */
 
 	virtual IOService * copyClientWithCategory( const OSSymbol * category );
+#endif
 
 public:
 
@@ -508,8 +512,18 @@ private:
 	OSMetaClassDeclareReservedUsed(IOService, 1);
 	OSMetaClassDeclareReservedUsed(IOService, 2);
 	OSMetaClassDeclareReservedUsed(IOService, 3);
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 	OSMetaClassDeclareReservedUsed(IOService, 4);
+#else
+	OSMetaClassDeclareReservedUnused(IOService, 4);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 	OSMetaClassDeclareReservedUsed(IOService, 5);
+#else
+	OSMetaClassDeclareReservedUnused(IOService, 5);
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
 	OSMetaClassDeclareReservedUsed(IOService, 6);
