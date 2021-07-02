@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+
+import argparse
+from io import BytesIO
+import macholib.MachO
+
+# Initialize parser
+parser = argparse.ArgumentParser()
+parser.add_argument("input_bin")
+args = parser.parse_args()
+
+with open(args.input_bin, "rb") as inputFile:
+    inputBuf = BytesIO(inputFile.read())
+        
+machFile = macholib.MachO.MachO(args.input_bin)
+newFile = open(args.input_bin, "wb")
+
+# Align symbol table
+symCmd = machFile.headers[0].getSymbolTableCommand()
+oldSymOff = symCmd.symoff
+newSymOff = (oldSymOff + 3) & ~(3)
+print ("Old symbol table", oldSymOff, "new symbol table", newSymOff)
+symOffDelta = newSymOff - oldSymOff
+
+# Align string table
+oldStrOff = symCmd.stroff
+newStrOff = ((oldStrOff + symOffDelta) + 3) & ~(3)
+print ("Old string table", oldStrOff, "new string table", newStrOff)
+strOffDelta = newStrOff - (oldStrOff + symOffDelta)
+
+# Write header
+symCmd.symoff = newSymOff
+symCmd.stroff = newStrOff
+machFile.headers[0].write(newFile)
+
+inputBuf.seek(newFile.tell())
+
+# Copy rest of file and pad accordingly
+if (oldSymOff > oldStrOff):
+    newFile.write(inputBuf.read(oldStrOff - inputBuf.tell()))
+    newFile.write(bytearray(strOffDelta))
+    newFile.write(inputBuf.read(oldSymOff - inputBuf.tell()))
+    newFile.write(bytearray(symOffDelta))
+    newFile.write(inputBuf.read())
+else:
+    newFile.write(inputBuf.read(oldSymOff - inputBuf.tell()))
+    newFile.write(bytearray(symOffDelta))
+    newFile.write(inputBuf.read(oldStrOff - inputBuf.tell()))
+    newFile.write(bytearray(strOffDelta))
+    newFile.write(inputBuf.read())
+
+print ("Symbol table aligned for", args.input_bin)

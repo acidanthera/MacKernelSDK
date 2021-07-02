@@ -59,6 +59,14 @@ To compile for 32-bit you will need to add a set of flags in your project:
 
 3. C++ Standard Library (`CLANG_CXX_LIBRARY`) to **Compiler Default** or empty.
 
+4. The symbol table may be misaligned due to i386 kexts being of type `MH_OBJECT`.  
+`align-symtab-macho32` is provided in the Tools directory of this repository to correct alignments. Python 3 and `macholib` are required.
+
+    Usage:
+    ```
+    ./align-symtab-macho32 [bin_path]
+    ```
+
 ## Extensions and modifications
 
 - Based on macOS 11 SDK from Xcode 12.0 (12A7209)
