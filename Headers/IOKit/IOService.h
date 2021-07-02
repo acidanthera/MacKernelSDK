@@ -876,6 +876,7 @@ public:
 		LIBKERN_CONSUMED OSDictionary * matching,
 		mach_timespec_t * timeout = NULL);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 /*! @function waitForMatchingService
  *   @abstract Waits for a matching to service to be published.
  *   @discussion Provides a method of waiting for an IOService object matching the supplied matching dictionary to be registered and fully matched.
@@ -885,6 +886,7 @@ public:
 
 	static IOService * waitForMatchingService( OSDictionary * matching,
 	    uint64_t timeout = UINT64_MAX);
+#endif
 
 /*! @function getMatchingServices
  *   @abstract Finds the set of current published IOService objects matching a matching dictionary.
@@ -894,6 +896,7 @@ public:
 
 	static OSIterator * getMatchingServices( OSDictionary * matching );
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
 /*! @function copyMatchingService
  *   @abstract Finds one of the current published IOService objects matching a matching dictionary.
  *   @discussion Provides a method to find one member of the set of published IOService objects matching the supplied matching dictionary.
@@ -901,6 +904,7 @@ public:
  *   @result The IOService object or NULL. To be released by the caller. */
 
 	static IOService * copyMatchingService( OSDictionary * matching );
+#endif
 
 public:
 /* Helpers to make matching dictionaries for simple cases,
