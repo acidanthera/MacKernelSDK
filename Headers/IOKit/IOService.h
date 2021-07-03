@@ -834,6 +834,7 @@ public:
 		SInt32 priority = 0 )
 	APPLE_KEXT_DEPRECATED;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 /*! @function addMatchingNotification
  *   @abstract Adds a persistant notification handler to be notified of IOService events.
  *   @discussion IOService will deliver notifications of changes in state of an IOService object to registered clients. The type of notification is specified by a symbol, for example <code>gIOMatchedNotification</code> or <code>gIOTerminatedNotification</code>, and notifications will only include IOService objects that match the supplied matching dictionary. Notifications are ordered by a priority set with <code>addNotification</code>. When the notification is installed, its handler will be called with each of any currently existing IOService objects that are in the correct state (eg. registered) and match the supplied matching dictionary, avoiding races between finding preexisting and new IOService events. The notification request is identified by an instance of an IONotifier object, through which it can be enabled, disabled, or removed. <code>addMatchingNotification</code> does not consume a reference on the matching dictionary when the notification is removed, unlike addNotification.
@@ -856,6 +857,7 @@ public:
 		IOServiceMatchingNotificationHandler handler,
 		void * target, void * ref = NULL,
 		SInt32 priority = 0 );
+#endif
 
 
 #ifdef __BLOCKS__
