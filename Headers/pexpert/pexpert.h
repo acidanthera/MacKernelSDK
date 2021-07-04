@@ -258,7 +258,7 @@ extern char * PE_boot_args(
 #if !defined(__LP64__) && !defined(__arm__)
 extern boolean_t PE_parse_boot_arg(
   const char  *arg_string,
-  void      *arg_ptr) __deprecated;
+  void      *arg_ptr);
 #endif
 
 extern boolean_t PE_parse_boot_argn(
