@@ -130,7 +130,7 @@ public:
     static void BulkOutWriteTimerFired(OSObject * target, IOTimerEventSource * sender);
     
     virtual void HandleIsochData(void *, int, IOUSBHostIsochronousFrame *);
-    virtual IOReturn TransportIsochOutWrite(void * memDescriptor, void *, int) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn TransportIsochOutWrite(void * memDescriptor, void *, IOOptionBits) APPLE_KEXT_OVERRIDE;
     virtual IOReturn IsochOutWrite(IOMemoryDescriptor * memDescriptor, IOBluetoothSCOMemoryDescriptorRetainer *, int);
     static void IsochOutWriteCompleteHandler(void * owner, void * parameter, IOReturn status, IOUSBHostIsochronousFrame * frameList);
     

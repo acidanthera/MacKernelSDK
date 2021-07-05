@@ -104,6 +104,8 @@ class IOBluetoothHostController : public IOService
     typedef IOReturn (*IOBluetoothIncomingDataAction) (IOBluetoothHostController * hostController, UInt8 * inDataPtr, UInt32 inDataSize, UInt32 inSequenceNumber);
     
     friend class IOBluetoothHostControllerTransport;
+    friend class IOBluetoothHostControllerUSBTransport;
+    friend class IOBluetoothHostControllerUARTTransport;
     
 public:
     virtual IOReturn newUserClient(task_t owningTask, void * securityID, UInt32 type, IOUserClient ** handler) APPLE_KEXT_OVERRIDE;
@@ -387,7 +389,7 @@ public:
     virtual void WaitForAllDevicesToGetReadyToBeDestroyed();
     
     virtual bool UpdatePowerStateProperty(IOBluetoothHCIControllerInternalPowerState powerState, bool);
-    virtual IOReturn RequestPowerStateChange( IOBluetoothHCIControllerInternalPowerState newPowerState, bool *);
+    virtual IOReturn RequestPowerStateChange( IOBluetoothHCIControllerInternalPowerState newPowerState, char *);
     virtual IOReturn RequestPowerStateChangeFromUserSpace(IOBluetoothHCIControllerInternalPowerState newPowerState);
     virtual bool Power_State_Change_In_Progress();
     virtual bool Power_State_Is_Off();
@@ -405,7 +407,7 @@ public:
     virtual bool TransportIsGoingAway();
     virtual IOReturn ChangeControllerStateForRestart();
     virtual IOReturn CleanUpForPoweringOff(); //not sure
-    virtual IOReturn CleanUpBeforeTransportTerminate(IOBluetoothHostControllerTransport *); //not sure
+    virtual IOReturn CleanUpBeforeTransportTerminate(IOBluetoothHostControllerTransport * transport);
     virtual void SetVendorSpecificEventMask(bool);
     virtual IOReturn CleanUpForCompletePowerChangeFromSleepToOn();
     virtual IOReturn CleanupForPowerChangeFromOnToSleep(bool, UInt32 *);
@@ -780,6 +782,8 @@ protected:
     UInt8 mNumTimedOutHCICommands; //this + 889
     UInt16 xxxxxxx;
     UInt32 mTransportSleepType; //this + 892
+    
+    bool mCanDoHardReset; //896
     
     IOBluetoothHCIControllerPowerOptions mControllerPowerOptions; //this + 900
     IOBluetoothHCIControllerConfigState mControllerConfigState; //this + 904

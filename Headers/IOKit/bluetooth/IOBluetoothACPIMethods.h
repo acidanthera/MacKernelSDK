@@ -42,8 +42,9 @@ class IOACPIPlatformDevice;
 
 class IOBluetoothACPIMethods : public IOService
 {
-    OSDeclareDefaultStructors(IOBluetoothACPIMethods)
-
+    OSDeclareDefaultStructors(IOBluetoothACPIMethods);
+    friend class IOBluetoothHostControllerTransport;
+    
 public:
     bool init( IOService * provider );
     virtual void free() APPLE_KEXT_OVERRIDE;

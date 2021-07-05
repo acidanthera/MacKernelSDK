@@ -42,44 +42,52 @@
 #include <IOKit/IOTimerEventSource.h>
 #include <IOKit/bluetooth/Bluetooth.h>
 #include <IOKit/bluetooth/IOBluetoothHostController.h>
+#include <IOKit/bluetooth/IOBluetoothHCIController.h>
+#include <IOKit/bluetooth/IOBluetoothACPIMethods.h>
 
 #ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
 #error "Missing macOS target version"
 #endif
 
-extern const IORegistryPlane * gIODTPlane;
-
 extern void BluetoothSleepTimeOutOccurred( OSObject * owner, IOTimerEventSource * sender );
-
-class IOBluetoothHCIController;
-class IOBluetoothACPIMethods;
 
 const char * gInternalPowerStateString[7] = { "OFF", "ON", "SLEEP", "IDLE", "OFF", "IDLE", "ON" };
 const char * gOrdinalPowerStateString[3] = { "OFF", "IDLE", "ON" };
 const char * gPowerManagerSleepTypeString[9] =
 {
-  "kIOPMSleepTypeInvalid",
-  "kIOPMSleepTypeAbortedSleep",
-  "kIOPMSleepTypeNormalSleep",
-  "kIOPMSleepTypeSafeSleep",
-  "kIOPMSleepTypeHibernate",
-  "kIOPMSleepTypeStandby",
-  "kIOPMSleepTypePowerOff",
-  "kIOPMSleepTypeDeepIdle",
-  "kIOPMSleepTypeLast"
+    "kIOPMSleepTypeInvalid",
+    "kIOPMSleepTypeAbortedSleep",
+    "kIOPMSleepTypeNormalSleep",
+    "kIOPMSleepTypeSafeSleep",
+    "kIOPMSleepTypeHibernate",
+    "kIOPMSleepTypeStandby",
+    "kIOPMSleepTypePowerOff",
+    "kIOPMSleepTypeDeepIdle",
+    "kIOPMSleepTypeLast"
 };
 const char * gPowerManagerSleepTypeShortString[9] =
 {
-  "SleepTypeInvalid",
-  "SleepTypeAbortedSleep",
-  "SleepTypeNormalSleep",
-  "SleepTypeSafeSleep",
-  "SleepTypeHibernate",
-  "SleepTypeStandby",
-  "SleepTypePowerOff",
-  "SleepTypeDeepIdle",
-  "SleepTypeLast"
+    "SleepTypeInvalid",
+    "SleepTypeAbortedSleep",
+    "SleepTypeNormalSleep",
+    "SleepTypeSafeSleep",
+    "SleepTypeHibernate",
+    "SleepTypeStandby",
+    "SleepTypePowerOff",
+    "SleepTypeDeepIdle",
+    "SleepTypeLast"
 };
+
+#define mBluetoothFamilyLogPacket(packetType, fmt...) do {                          \
+    char * log = (char *) IOMalloc(511);                                            \
+    if (log) {                                                                      \
+        bzero(log, 511);                                                            \
+        snprintf(log, 511, fmt);                                                    \
+        if ( mBluetoothFamily )                                                     \
+            mBluetoothFamily->LogPacket(packetType, (void *) log, strlen(log));     \
+        IOFree(log, 511);                                                           \
+    }                                                                               \
+} while (0)
 
 /*! @class IOBluetoothHostControllerTransport
  *   @abstract The base class for IOBluetoothFamily transports.
@@ -116,8 +124,8 @@ public:
     virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
     virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
     
-    virtual IOCommandGate * getCommandGate() const;
     virtual IOWorkLoop * getWorkLoop() const APPLE_KEXT_OVERRIDE;
+    virtual IOCommandGate * getCommandGate() const;
     virtual bool setTransportWorkLoop( void *, IOWorkLoop * inWorkLoop );
     
     virtual bool terminate( IOOptionBits options = 0 ) APPLE_KEXT_OVERRIDE;
@@ -146,7 +154,7 @@ public:
     virtual bool StopBulkPipeRead();
     
     virtual IOReturn TransportBulkOutWrite( void * );
-    virtual IOReturn TransportIsochOutWrite( void *, void *, int );
+    virtual IOReturn TransportIsochOutWrite( void *, void *, IOOptionBits );
     virtual IOReturn TransportSendSCOData( void * );
     virtual IOReturn TransportLMPLoggingBulkOutWrite( UInt8, UInt8 );
     
@@ -234,7 +242,7 @@ public:
     virtual void DestroyTransportSCOParameters();
     virtual bool WaitForSystemReadyForSleep(char *);
     virtual IOReturn StartBluetoothSleepTimer();
-    virtual IOReturn CancelBluetoothSleepTimer();
+    virtual void CancelBluetoothSleepTimer();
     virtual os_log_t CreateOSLogObject();
     
     virtual IOReturn setProperties( OSObject * properties ) APPLE_KEXT_OVERRIDE;
@@ -283,7 +291,7 @@ protected:
     bool mUSBControllerSupportsSuspend; //178
     UInt8 mTerminateState; //179
     bool mLMPLoggingEnabled; //180
-    UInt16 mPowerStateNotChangeable; //181
+    bool mPowerStateNotChangeable; //181
     uint8_t reserved2; //182
     uint8_t reserved3; //183
     bool mConfiguredPM; //184
@@ -302,9 +310,10 @@ protected:
     bool mSupportPowerOff; //232
     UInt32 mSleepType; //236
     bool mIsControllerActive; //240
-    uint8_t reserved4[7]; //241
-    bool reserved5; //248
-    bool reserved6; //249
+    uint8_t reserved4; //241
+    UInt32 unknown111; //244
+    UInt8 reserved5; //248
+    UInt8 reserved6; //249
     bool mSupportWoBT; //250
     UInt8 mCurrentPMMethod; //251
     UInt64 mTransportCounter; //256, retain/released in Retain/ReleaseTransport
@@ -314,7 +323,7 @@ protected:
     bool mBluetoothSleepTimerStarted; //280
     os_log_t mInternalOSLogObject; //288
     bool reserved8; //296
-    UInt16 reserved9; //298
+    UInt16 mUARTProductID; //298
     IOBluetoothACPIMethods * mACPIMethods; //304
     bool reserved10; //312
     struct ExpansionData

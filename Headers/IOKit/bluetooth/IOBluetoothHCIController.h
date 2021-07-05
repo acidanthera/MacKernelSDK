@@ -57,6 +57,8 @@ class IOBluetoothHCIController : public IOService
     OSDeclareDefaultStructors(IOBluetoothHCIController)
     
     friend class IOBluetoothHostControllerTransport;
+    friend class IOBluetoothHostControllerUSBTransport;
+    friend class IOBluetoothHostControllerUARTTransport;
     
 public:
     virtual bool init( OSDictionary * dictionary = NULL ) APPLE_KEXT_OVERRIDE;
@@ -160,7 +162,7 @@ public:
     virtual bool SetActiveControllerInfoToPropertyList(UInt16 productID, UInt16 vendorID, UInt8 * deviceAddress, UInt32 locationID, UInt16 activeConnections);
     virtual bool AllControllersFinishedSettingUp();
     virtual IOReturn FamilyCommandSleep(void *, UInt32, char *, bool);
-    virtual UInt64 GetCurrentTime();
+    virtual UInt32 GetCurrentTime();
     virtual UInt32 ConvertAddressToUInt32(void *);
     virtual bool ActiveControllerOnline();
     virtual bool SpecialWakeReason();
