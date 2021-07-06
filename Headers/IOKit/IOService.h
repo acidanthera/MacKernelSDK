@@ -434,6 +434,7 @@ public:
 	virtual SInt32 nextIdleTimeout(AbsoluteTime currentTime,
 	    AbsoluteTime lastActivity, unsigned int powerState);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 /*! @function systemWillShutdown
  *   @availability Mac OS X v10.5 and later
  *   @abstract Notifies members of the power plane of system shutdown and restart.
@@ -443,7 +444,9 @@ public:
  *   @param specifier <code>kIOMessageSystemWillPowerOff</code> or <code>kIOMessageSystemWillRestart</code>. */
 
 	virtual void systemWillShutdown( IOOptionBits specifier );
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 /*! @function copyClientWithCategory
  *   @availability Mac OS X v10.6 and later
  *   @param category An OSSymbol corresponding to an IOMatchCategory matching property.
@@ -451,6 +454,7 @@ public:
  */
 
 	virtual IOService * copyClientWithCategory( const OSSymbol * category );
+#endif
 
 public:
 
@@ -508,8 +512,18 @@ private:
 	OSMetaClassDeclareReservedUsed(IOService, 1);
 	OSMetaClassDeclareReservedUsed(IOService, 2);
 	OSMetaClassDeclareReservedUsed(IOService, 3);
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 	OSMetaClassDeclareReservedUsed(IOService, 4);
+#else
+	OSMetaClassDeclareReservedUnused(IOService, 4);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 	OSMetaClassDeclareReservedUsed(IOService, 5);
+#else
+	OSMetaClassDeclareReservedUnused(IOService, 5);
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
 	OSMetaClassDeclareReservedUsed(IOService, 6);
@@ -820,6 +834,7 @@ public:
 		SInt32 priority = 0 )
 	APPLE_KEXT_DEPRECATED;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 /*! @function addMatchingNotification
  *   @abstract Adds a persistant notification handler to be notified of IOService events.
  *   @discussion IOService will deliver notifications of changes in state of an IOService object to registered clients. The type of notification is specified by a symbol, for example <code>gIOMatchedNotification</code> or <code>gIOTerminatedNotification</code>, and notifications will only include IOService objects that match the supplied matching dictionary. Notifications are ordered by a priority set with <code>addNotification</code>. When the notification is installed, its handler will be called with each of any currently existing IOService objects that are in the correct state (eg. registered) and match the supplied matching dictionary, avoiding races between finding preexisting and new IOService events. The notification request is identified by an instance of an IONotifier object, through which it can be enabled, disabled, or removed. <code>addMatchingNotification</code> does not consume a reference on the matching dictionary when the notification is removed, unlike addNotification.
@@ -842,6 +857,7 @@ public:
 		IOServiceMatchingNotificationHandler handler,
 		void * target, void * ref = NULL,
 		SInt32 priority = 0 );
+#endif
 
 
 #ifdef __BLOCKS__
@@ -862,6 +878,7 @@ public:
 		LIBKERN_CONSUMED OSDictionary * matching,
 		mach_timespec_t * timeout = NULL);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 /*! @function waitForMatchingService
  *   @abstract Waits for a matching to service to be published.
  *   @discussion Provides a method of waiting for an IOService object matching the supplied matching dictionary to be registered and fully matched.
@@ -871,6 +888,7 @@ public:
 
 	static IOService * waitForMatchingService( OSDictionary * matching,
 	    uint64_t timeout = UINT64_MAX);
+#endif
 
 /*! @function getMatchingServices
  *   @abstract Finds the set of current published IOService objects matching a matching dictionary.
@@ -880,6 +898,7 @@ public:
 
 	static OSIterator * getMatchingServices( OSDictionary * matching );
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_9
 /*! @function copyMatchingService
  *   @abstract Finds one of the current published IOService objects matching a matching dictionary.
  *   @discussion Provides a method to find one member of the set of published IOService objects matching the supplied matching dictionary.
@@ -887,6 +906,7 @@ public:
  *   @result The IOService object or NULL. To be released by the caller. */
 
 	static IOService * copyMatchingService( OSDictionary * matching );
+#endif
 
 public:
 /* Helpers to make matching dictionaries for simple cases,

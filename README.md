@@ -50,10 +50,13 @@ To compile for 32-bit you will need to add a set of flags in your project:
 
 1. Other C Flags (`OTHER_CFLAGS`):
 
+    - `-static`
     - `-nostdlib`
     - `-Wno-stdlibcxx-not-found`
     - `-target i386-apple-macos10.6`
     - `-fallow-unsupported`
+    - `-fno-stack-protector` if targeting 10.5 and older
+    - `-fno-jump-tables` if targeting 10.5 and older
 
 2. Other Linker Flags (`OTHER_LDFLAGS`):
 
@@ -61,6 +64,14 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - `-target i386-apple-macos10.6`
 
 3. C++ Standard Library (`CLANG_CXX_LIBRARY`) to **Compiler Default** or empty.
+
+4. The symbol table may be misaligned due to i386 kexts being of type `MH_OBJECT`.  
+`align-symtab-macho32` is provided in the Tools directory of this repository to correct alignments. Python 3 and `macholib` are required.
+
+    Usage:
+    ```
+    ./align-symtab-macho32 [bin_path]
+    ```
 
 ## Extensions and modifications
 
@@ -106,6 +117,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `IOSCSIParallelInterfaceController.h` to avoid new virtual methods before 10.7
     - In `IOPCIBridge.h` to avoid new virtual methods before 10.10
     - In `IOService.h` to avoid init methods before 10.10
+    - In `IOUserClient.h` to avoid new virtual methods before 10.6
 - Fixed compiler warnings:
     - In `IOPCIDevice.h` due to missing overrides
     - In `OSMetaClass.h` due to using unsupported memory checking with older clang

@@ -204,21 +204,38 @@ private:
 	void  * __reserved[9];
 
 public:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 	MIG_SERVER_ROUTINE virtual IOReturn
 	externalMethod(uint32_t selector, IOExternalMethodArguments *arguments,
 	    IOExternalMethodDispatch *dispatch = NULL,
 	    OSObject *target = NULL, void *reference = NULL);
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 	MIG_SERVER_ROUTINE virtual IOReturn registerNotificationPort(
 		mach_port_t port, UInt32 type, io_user_reference_t refCon);
+#endif
 
 private:
 #if __LP64__
+
 	OSMetaClassDeclareReservedUnused(IOUserClient, 0);
 	OSMetaClassDeclareReservedUnused(IOUserClient, 1);
+
 #else
+  
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 	OSMetaClassDeclareReservedUsed(IOUserClient, 0);
+#else
+  	OSMetaClassDeclareReservedUnused(IOUserClient, 0);
+#endif
+  
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 	OSMetaClassDeclareReservedUsed(IOUserClient, 1);
+#else
+  	OSMetaClassDeclareReservedUnused(IOUserClient, 1);
+#endif
+  
 #endif
 	OSMetaClassDeclareReservedUnused(IOUserClient, 2);
 	OSMetaClassDeclareReservedUnused(IOUserClient, 3);
