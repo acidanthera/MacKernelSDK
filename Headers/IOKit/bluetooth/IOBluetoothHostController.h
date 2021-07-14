@@ -317,7 +317,7 @@ public:
     virtual void ValidateHCIRequestReceivedEvents(UInt8, IOBluetoothHCIRequest * request);
     
     virtual IOReturn SendHCIRequestFormatted(BluetoothHCIRequestID inID, BluetoothHCICommandOpCode inOpCode, IOByteCount outResultsSize, void * outResultsPtr, const char * inFormat, ...);
-    virtual IOReturn SendRawHCICommand(BluetoothHCIRequestID inID, char * buffer, IOByteCount bufferSize, UInt8 *, IOByteCount);
+    virtual IOReturn SendRawHCICommand(BluetoothHCIRequestID inID, UInt8 * buffer, IOByteCount bufferSize, UInt8 *, IOByteCount);
     virtual IOReturn ProcessWaitingRequests(bool);
     virtual IOReturn SendingRequest(IOBluetoothHCIRequest * requestPtr);
     virtual IOReturn SendHCIRequestToTransport(UInt8 *, IOByteCount);

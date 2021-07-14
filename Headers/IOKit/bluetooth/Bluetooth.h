@@ -1973,6 +1973,13 @@ enum
     kBluetoothHCIMaxDataPacketSize			= kBluetoothHCIDataPacketHeaderSize + kBluetoothHCIDataPacketMaxDataSize
 };
 
+typedef struct BluetoothHCICommandPacket
+{
+    BluetoothHCICommandOpCode opCode;
+    UInt8 dataSize;
+    UInt8 data[255];
+} BluetoothHCICommandPacket;
+
 typedef uint8_t  BluetoothHCIEventCode;
 typedef uint8_t  BluetoothLinkType;
 enum BluetoothLinkTypes

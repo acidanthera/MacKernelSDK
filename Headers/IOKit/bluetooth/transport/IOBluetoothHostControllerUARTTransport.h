@@ -48,19 +48,19 @@ struct UARTPacket // guessed name... will try to refine it with the UART protoco
 
 struct ACLDataPacketHeader
 {
-    UInt16 x; //0
+    UInt16 offset; //0
     UInt16 dataSize; //2
 };
 
 struct SCODataPacketHeader
 {
-    UInt16 x; //0
+    UInt16 offset; //0
     UInt8 dataSize; //2
 };
 
 struct EventDataPacketHeader
 {
-    UInt8 x; //0
+    UInt8 offset; //0
     UInt8 dataSize; //1
 };
 
