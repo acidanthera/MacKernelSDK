@@ -1,0 +1,5 @@
+#!/bin/sh
+
+args="libtool $@"
+echo "${args/arch_only x86_64/arch_only i386}"
+${args/arch_only x86_64/arch_only i386}

@@ -1,52 +1,52 @@
 #!/usr/bin/env python3
 
-import argparse
 from io import BytesIO
+from pathlib import Path
+from sys import argv
+
 import macholib.MachO
 
-# Initialize parser
-parser = argparse.ArgumentParser()
-parser.add_argument("input_bin")
-args = parser.parse_args()
+input_path = Path(argv[1].strip())
 
-with open(args.input_bin, "rb") as inputFile:
-    inputBuf = BytesIO(inputFile.read())
-        
-machFile = macholib.MachO.MachO(args.input_bin)
-newFile = open(args.input_bin, "wb")
+# Initialize parser
+original_file = BytesIO(input_path.read_bytes())
+machFile = macholib.MachO.MachO(input_path)
 
 # Align symbol table
 symCmd = machFile.headers[0].getSymbolTableCommand()
+
 oldSymOff = symCmd.symoff
 newSymOff = (oldSymOff + 3) & ~(3)
-print ("Old symbol table", oldSymOff, "new symbol table", newSymOff)
+print("Old symbol table {} new symbol table {}".format(oldSymOff, newSymOff))
 symOffDelta = newSymOff - oldSymOff
 
 # Align string table
 oldStrOff = symCmd.stroff
 newStrOff = ((oldStrOff + symOffDelta) + 3) & ~(3)
-print ("Old string table", oldStrOff, "new string table", newStrOff)
+print("Old string table {} new string table {}".format(oldStrOff, newStrOff))
 strOffDelta = newStrOff - (oldStrOff + symOffDelta)
 
 # Write header
 symCmd.symoff = newSymOff
 symCmd.stroff = newStrOff
-machFile.headers[0].write(newFile)
 
-inputBuf.seek(newFile.tell())
+new_file = input_path.open("wb")
+
+machFile.headers[0].write(new_file)  # Write header to file
+original_file.seek(new_file.tell())  # Seek past header
 
 # Copy rest of file and pad accordingly
-if (oldSymOff > oldStrOff):
-    newFile.write(inputBuf.read(oldStrOff - inputBuf.tell()))
-    newFile.write(bytearray(strOffDelta))
-    newFile.write(inputBuf.read(oldSymOff - inputBuf.tell()))
-    newFile.write(bytearray(symOffDelta))
-    newFile.write(inputBuf.read())
+if oldSymOff > oldStrOff:
+    new_file.write(original_file.read(oldStrOff - original_file.tell()))
+    new_file.write(b"\0" * strOffDelta)
+    new_file.write(original_file.read(oldSymOff - original_file.tell()))
+    new_file.write(b"\0" * symOffDelta)
+    new_file.write(original_file.read())
 else:
-    newFile.write(inputBuf.read(oldSymOff - inputBuf.tell()))
-    newFile.write(bytearray(symOffDelta))
-    newFile.write(inputBuf.read(oldStrOff - inputBuf.tell()))
-    newFile.write(bytearray(strOffDelta))
-    newFile.write(inputBuf.read())
+    new_file.write(original_file.read(oldSymOff - original_file.tell()))
+    new_file.write(b"\0" * symOffDelta)
+    new_file.write(original_file.read(oldStrOff - original_file.tell()))
+    new_file.write(b"\0" * strOffDelta)
+    new_file.write(original_file.read())
 
-print ("Symbol table aligned for", args.input_bin)
+print("Symbol table aligned for " + input_path.name)
