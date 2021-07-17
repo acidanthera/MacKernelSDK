@@ -13,33 +13,15 @@
 			buildPhases = (
 			);
 			dependencies = (
-				41B8151726A114D20080FF35 /* PBXTargetDependency */,
-				41B8151926A114D20080FF35 /* PBXTargetDependency */,
 				41B8150226A114C90080FF35 /* PBXTargetDependency */,
 				41B8150426A114C90080FF35 /* PBXTargetDependency */,
 			);
 			name = All;
 			productName = All;
 		};
-		C61E2D9512F3647000FC9BCA /* 64-bit */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = C61E2D9612F3647000FC9BCA /* Build configuration list for PBXAggregateTarget "64-bit" */;
-			buildPhases = (
-			);
-			dependencies = (
-				C61E2D9912F364A800FC9BCA /* PBXTargetDependency */,
-				C61E2DA212F3650100FC9BCA /* PBXTargetDependency */,
-			);
-			name = "64-bit";
-			productName = All;
-		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		41990A3D26A1114D00BE5624 /* c_start.c in Sources */ = {isa = PBXBuildFile; fileRef = C61E2DA312F3661900FC9BCA /* c_start.c */; };
-		41990A3E26A1114D00BE5624 /* c_stop.c in Sources */ = {isa = PBXBuildFile; fileRef = C61E2DA412F3661900FC9BCA /* c_stop.c */; };
-		41B814DC26A112B90080FF35 /* cplus_start.c in Sources */ = {isa = PBXBuildFile; fileRef = C61E2DA512F3661900FC9BCA /* cplus_start.c */; };
-		41B814DD26A112B90080FF35 /* cplus_stop.c in Sources */ = {isa = PBXBuildFile; fileRef = C61E2DA612F3661900FC9BCA /* cplus_stop.c */; };
 		C61E2D8012F360A200FC9BCA /* libkmodtest.h in Headers */ = {isa = PBXBuildFile; fileRef = C61E2D7F12F360A200FC9BCA /* libkmodtest.h */; };
 		C61E2D8212F360A200FC9BCA /* libkmodtest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C61E2D8112F360A200FC9BCA /* libkmodtest.cpp */; };
 		C61E2DAC12F3661900FC9BCA /* README in Resources */ = {isa = PBXBuildFile; fileRef = C61E2DA712F3661900FC9BCA /* README */; };
@@ -64,34 +46,6 @@
 			remoteGlobalIDString = C61E2D9D12F364C100FC9BCA;
 			remoteInfo = "libkmodc++";
 		};
-		41B8151626A114D20080FF35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C61E2D6012F3605700FC9BCA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 41990A3B26A1114D00BE5624;
-			remoteInfo = libkmod32;
-		};
-		41B8151826A114D20080FF35 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C61E2D6012F3605700FC9BCA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 41B814DA26A112B90080FF35;
-			remoteInfo = "libkmod32c++";
-		};
-		C61E2D9812F364A800FC9BCA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C61E2D6012F3605700FC9BCA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C61E2D9112F3642100FC9BCA;
-			remoteInfo = libkmod;
-		};
-		C61E2DA112F3650100FC9BCA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C61E2D6012F3605700FC9BCA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C61E2D9D12F364C100FC9BCA;
-			remoteInfo = "libkmodc++";
-		};
 		C61E2DB112F36AC700FC9BCA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C61E2D6012F3605700FC9BCA /* Project object */;
@@ -109,8 +63,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		41990A4326A1114D00BE5624 /* libkmod32.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libkmod32.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		41B814E226A112B90080FF35 /* libkmod32c++.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libkmod32c++.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C61E2D7312F360A200FC9BCA /* libkmodtest.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libkmodtest.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		C61E2D7712F360A200FC9BCA /* Kernel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kernel.framework; path = System/Library/Frameworks/Kernel.framework; sourceTree = SDKROOT; };
 		C61E2D7A12F360A200FC9BCA /* libkmodtest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "libkmodtest-Info.plist"; sourceTree = "<group>"; };
@@ -126,20 +78,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		41990A3F26A1114D00BE5624 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		41B814DE26A112B90080FF35 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C61E2D6E12F360A200FC9BCA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -184,8 +122,6 @@
 				C61E2D7312F360A200FC9BCA /* libkmodtest.kext */,
 				C61E2D9212F3642100FC9BCA /* libkmod.a */,
 				C61E2D9E12F364C100FC9BCA /* libkmodc++.a */,
-				41990A4326A1114D00BE5624 /* libkmod32.a */,
-				41B814E226A112B90080FF35 /* libkmod32c++.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -227,20 +163,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		41990A4026A1114D00BE5624 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		41B814DF26A112B90080FF35 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C61E2D6F12F360A200FC9BCA /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -266,40 +188,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		41990A3B26A1114D00BE5624 /* libkmod32 */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 41990A4126A1114D00BE5624 /* Build configuration list for PBXNativeTarget "libkmod32" */;
-			buildPhases = (
-				41990A3C26A1114D00BE5624 /* Sources */,
-				41990A3F26A1114D00BE5624 /* Frameworks */,
-				41990A4026A1114D00BE5624 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = libkmod32;
-			productName = libkmod;
-			productReference = 41990A4326A1114D00BE5624 /* libkmod32.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		41B814DA26A112B90080FF35 /* libkmod32c++ */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 41B814E026A112B90080FF35 /* Build configuration list for PBXNativeTarget "libkmod32c++" */;
-			buildPhases = (
-				41B814DB26A112B90080FF35 /* Sources */,
-				41B814DE26A112B90080FF35 /* Frameworks */,
-				41B814DF26A112B90080FF35 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "libkmod32c++";
-			productName = "libkmodc++";
-			productReference = 41B814E226A112B90080FF35 /* libkmod32c++.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		C61E2D7212F360A200FC9BCA /* libkmodtest */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C61E2D8512F360A200FC9BCA /* Build configuration list for PBXNativeTarget "libkmodtest" */;
@@ -377,12 +265,9 @@
 			projectRoot = "";
 			targets = (
 				41B8150126A114C90080FF35 /* All */,
-				C61E2D9512F3647000FC9BCA /* 64-bit */,
 				C61E2D9112F3642100FC9BCA /* libkmod */,
 				C61E2D9D12F364C100FC9BCA /* libkmodc++ */,
 				C61E2D7212F360A200FC9BCA /* libkmodtest */,
-				41990A3B26A1114D00BE5624 /* libkmod32 */,
-				41B814DA26A112B90080FF35 /* libkmod32c++ */,
 			);
 		};
 /* End PBXProject section */
@@ -409,24 +294,6 @@
 /* End PBXRezBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		41990A3C26A1114D00BE5624 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				41990A3D26A1114D00BE5624 /* c_start.c in Sources */,
-				41990A3E26A1114D00BE5624 /* c_stop.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		41B814DB26A112B90080FF35 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				41B814DC26A112B90080FF35 /* cplus_start.c in Sources */,
-				41B814DD26A112B90080FF35 /* cplus_stop.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C61E2D6D12F360A200FC9BCA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -466,26 +333,6 @@
 			target = C61E2D9D12F364C100FC9BCA /* libkmodc++ */;
 			targetProxy = 41B8150526A114C90080FF35 /* PBXContainerItemProxy */;
 		};
-		41B8151726A114D20080FF35 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 41990A3B26A1114D00BE5624 /* libkmod32 */;
-			targetProxy = 41B8151626A114D20080FF35 /* PBXContainerItemProxy */;
-		};
-		41B8151926A114D20080FF35 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 41B814DA26A112B90080FF35 /* libkmod32c++ */;
-			targetProxy = 41B8151826A114D20080FF35 /* PBXContainerItemProxy */;
-		};
-		C61E2D9912F364A800FC9BCA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C61E2D9112F3642100FC9BCA /* libkmod */;
-			targetProxy = C61E2D9812F364A800FC9BCA /* PBXContainerItemProxy */;
-		};
-		C61E2DA212F3650100FC9BCA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C61E2D9D12F364C100FC9BCA /* libkmodc++ */;
-			targetProxy = C61E2DA112F3650100FC9BCA /* PBXContainerItemProxy */;
-		};
 		C61E2DB212F36AC700FC9BCA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C61E2D9112F3642100FC9BCA /* libkmod */;
@@ -499,77 +346,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		41990A4226A1114D00BE5624 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CC = "$(SRCROOT)/../../clang32/clang-12";
-				COPY_PHASE_STRIP = YES;
-				EXECUTABLE_PREFIX = lib;
-				GCC_ENABLE_BUILTIN_FUNCTIONS = NO;
-				GCC_ENABLE_KERNEL_DEVELOPMENT = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					KERNEL,
-					KERNEL_PRIVATE,
-					DRIVER_PRIVATE,
-					APPLE,
-					NeXT,
-					TARGET_OS_OSX,
-				);
-				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_USE_STANDARD_INCLUDE_SEARCHING = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					/System/Library/Frameworks/Kernel.framework/PrivateHeaders,
-					/System/Library/Frameworks/Kernel.framework/Headers,
-				);
-				INSTALL_PATH = /usr/lib;
-				LIBTOOL = "$(SRCROOT)/../../Tools/libtool32";
-				OTHER_CFLAGS = (
-					"-target",
-					"i386-apple-macos10.4",
-				);
-				PRODUCT_NAME = kmod32;
-			};
-			name = Release;
-		};
-		41B814E126A112B90080FF35 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CC = "$(SRCROOT)/../../clang32/clang-12";
-				COPY_PHASE_STRIP = YES;
-				EXECUTABLE_PREFIX = lib;
-				GCC_ENABLE_BUILTIN_FUNCTIONS = NO;
-				GCC_ENABLE_KERNEL_DEVELOPMENT = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					KERNEL,
-					KERNEL_PRIVATE,
-					DRIVER_PRIVATE,
-					APPLE,
-					NeXT,
-				);
-				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_USE_STANDARD_INCLUDE_SEARCHING = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					/System/Library/Frameworks/Kernel.framework/PrivateHeaders,
-					/System/Library/Frameworks/Kernel.framework/Headers,
-				);
-				INSTALL_PATH = /usr/lib;
-				LIBTOOL = "$(SRCROOT)/../../Tools/libtool32";
-				OTHER_CFLAGS = (
-					"-target",
-					"i386-apple-macos10.4",
-				);
-				PRODUCT_NAME = "kmod32c++";
-			};
-			name = Release;
-		};
 		41B8150726A114C90080FF35 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -582,8 +358,14 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = x86_64;
+				CC = "$(inherited)";
+				"CC[arch=ACID32]" = "$(SRCROOT)/../../clang32/clang-12";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				LIBTOOL = "$(inherited)";
+				"LIBTOOL[arch=ACID32]" = "$(SRCROOT)/../../Tools/libtool32";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				"MACOSX_DEPLOYMENT_TARGET[arch=ACID32]" = 10.4;
+				VALID_ARCHS = "x86_64 ACID32";
 			};
 			name = Release;
 		};
@@ -616,6 +398,7 @@
 					DRIVER_PRIVATE,
 					APPLE,
 					NeXT,
+					TARGET_OS_OSX,
 				);
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -628,14 +411,11 @@
 					/System/Library/Frameworks/Kernel.framework/Headers,
 				);
 				INSTALL_PATH = /usr/lib;
+				"OTHER_CFLAGS[arch=ACID32]" = (
+					"-target",
+					"i386-apple-macos10.4",
+				);
 				PRODUCT_NAME = kmod;
-			};
-			name = Release;
-		};
-		C61E2D9712F3647000FC9BCA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -652,6 +432,7 @@
 					DRIVER_PRIVATE,
 					APPLE,
 					NeXT,
+					TARGET_OS_OSX,
 				);
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -664,6 +445,10 @@
 					/System/Library/Frameworks/Kernel.framework/Headers,
 				);
 				INSTALL_PATH = /usr/lib;
+				"OTHER_CFLAGS[arch=ACID32]" = (
+					"-target",
+					"i386-apple-macos10.4",
+				);
 				PRODUCT_NAME = "kmodc++";
 			};
 			name = Release;
@@ -671,22 +456,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		41990A4126A1114D00BE5624 /* Build configuration list for PBXNativeTarget "libkmod32" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				41990A4226A1114D00BE5624 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		41B814E026A112B90080FF35 /* Build configuration list for PBXNativeTarget "libkmod32c++" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				41B814E126A112B90080FF35 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		41B8150626A114C90080FF35 /* Build configuration list for PBXAggregateTarget "All" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -715,14 +484,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C61E2D9412F3642100FC9BCA /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C61E2D9612F3647000FC9BCA /* Build configuration list for PBXAggregateTarget "64-bit" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C61E2D9712F3647000FC9BCA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
