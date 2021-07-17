@@ -42,3 +42,30 @@
  *   The linkline must look like this.
  *.o -lkmodc++ kmod_info.o -lkmod
  */
+#if __i386__ || __ppc__
+#include <mach/mach_types.h>
+
+asm(".destructors_used = 0");
+asm(".private_extern .destructors_used");
+
+// Functions defined in libkern/c++/OSRuntime.cpp
+extern kern_return_t OSRuntimeFinalizeCPP(kmod_info_t *ki, void *data);
+
+// This global symbols will be defined by CreateInfo script's info.c file.
+extern kmod_stop_func_t *_antimain;
+
+__private_extern__ kern_return_t _stop(kmod_info_t *ki, void *data)
+{
+    kern_return_t result = KERN_SUCCESS;
+
+    if (_antimain) {
+        result = (*_antimain)(ki, data);
+    }
+    
+    if (result == KERN_SUCCESS) {
+        result = OSRuntimeFinalizeCPP(ki, data);
+    }
+    
+    return result;
+}
+#endif
