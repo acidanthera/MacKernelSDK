@@ -22,6 +22,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		415A259026A3CD5300718BCB /* i386_builtins.c in Sources */ = {isa = PBXBuildFile; fileRef = 415A258F26A3CD5300718BCB /* i386_builtins.c */; };
+		415A259126A3CD5300718BCB /* i386_builtins.c in Sources */ = {isa = PBXBuildFile; fileRef = 415A258F26A3CD5300718BCB /* i386_builtins.c */; };
 		C61E2D8012F360A200FC9BCA /* libkmodtest.h in Headers */ = {isa = PBXBuildFile; fileRef = C61E2D7F12F360A200FC9BCA /* libkmodtest.h */; };
 		C61E2D8212F360A200FC9BCA /* libkmodtest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C61E2D8112F360A200FC9BCA /* libkmodtest.cpp */; };
 		C61E2DAC12F3661900FC9BCA /* README in Resources */ = {isa = PBXBuildFile; fileRef = C61E2DA712F3661900FC9BCA /* README */; };
@@ -63,6 +65,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		415A258F26A3CD5300718BCB /* i386_builtins.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = i386_builtins.c; sourceTree = "<group>"; };
 		C61E2D7312F360A200FC9BCA /* libkmodtest.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libkmodtest.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		C61E2D7712F360A200FC9BCA /* Kernel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kernel.framework; path = System/Library/Frameworks/Kernel.framework; sourceTree = SDKROOT; };
 		C61E2D7A12F360A200FC9BCA /* libkmodtest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "libkmodtest-Info.plist"; sourceTree = "<group>"; };
@@ -105,6 +108,7 @@
 		C61E2D5E12F3605700FC9BCA = {
 			isa = PBXGroup;
 			children = (
+				415A258F26A3CD5300718BCB /* i386_builtins.c */,
 				C61E2DA312F3661900FC9BCA /* c_start.c */,
 				C61E2DA412F3661900FC9BCA /* c_stop.c */,
 				C61E2DA512F3661900FC9BCA /* cplus_start.c */,
@@ -307,6 +311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C61E2DAD12F3672F00FC9BCA /* c_start.c in Sources */,
+				415A259026A3CD5300718BCB /* i386_builtins.c in Sources */,
 				C61E2DAE12F3672F00FC9BCA /* c_stop.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -316,6 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C61E2DAF12F3673A00FC9BCA /* cplus_start.c in Sources */,
+				415A259126A3CD5300718BCB /* i386_builtins.c in Sources */,
 				C61E2DB012F3673A00FC9BCA /* cplus_stop.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
