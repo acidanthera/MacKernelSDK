@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		C61E2D9512F3647000FC9BCA /* All */ = {
+		41B8150126A114C90080FF35 /* All */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = C61E2D9612F3647000FC9BCA /* Build configuration list for PBXAggregateTarget "All" */;
+			buildConfigurationList = 41B8150626A114C90080FF35 /* Build configuration list for PBXAggregateTarget "All" */;
 			buildPhases = (
 			);
 			dependencies = (
-				C61E2D9912F364A800FC9BCA /* PBXTargetDependency */,
-				C61E2DA212F3650100FC9BCA /* PBXTargetDependency */,
+				41B8150226A114C90080FF35 /* PBXTargetDependency */,
+				41B8150426A114C90080FF35 /* PBXTargetDependency */,
 			);
 			name = All;
 			productName = All;
@@ -22,6 +22,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		415A259026A3CD5300718BCB /* i386_builtins.c in Sources */ = {isa = PBXBuildFile; fileRef = 415A258F26A3CD5300718BCB /* i386_builtins.c */; };
+		415A259126A3CD5300718BCB /* i386_builtins.c in Sources */ = {isa = PBXBuildFile; fileRef = 415A258F26A3CD5300718BCB /* i386_builtins.c */; };
 		C61E2D8012F360A200FC9BCA /* libkmodtest.h in Headers */ = {isa = PBXBuildFile; fileRef = C61E2D7F12F360A200FC9BCA /* libkmodtest.h */; };
 		C61E2D8212F360A200FC9BCA /* libkmodtest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C61E2D8112F360A200FC9BCA /* libkmodtest.cpp */; };
 		C61E2DAC12F3661900FC9BCA /* README in Resources */ = {isa = PBXBuildFile; fileRef = C61E2DA712F3661900FC9BCA /* README */; };
@@ -32,14 +34,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C61E2D9812F364A800FC9BCA /* PBXContainerItemProxy */ = {
+		41B8150326A114C90080FF35 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C61E2D6012F3605700FC9BCA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = C61E2D9112F3642100FC9BCA;
 			remoteInfo = libkmod;
 		};
-		C61E2DA112F3650100FC9BCA /* PBXContainerItemProxy */ = {
+		41B8150526A114C90080FF35 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C61E2D6012F3605700FC9BCA /* Project object */;
 			proxyType = 1;
@@ -63,6 +65,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		415A258F26A3CD5300718BCB /* i386_builtins.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = i386_builtins.c; sourceTree = "<group>"; };
 		C61E2D7312F360A200FC9BCA /* libkmodtest.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libkmodtest.kext; sourceTree = BUILT_PRODUCTS_DIR; };
 		C61E2D7712F360A200FC9BCA /* Kernel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kernel.framework; path = System/Library/Frameworks/Kernel.framework; sourceTree = SDKROOT; };
 		C61E2D7A12F360A200FC9BCA /* libkmodtest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "libkmodtest-Info.plist"; sourceTree = "<group>"; };
@@ -105,6 +108,7 @@
 		C61E2D5E12F3605700FC9BCA = {
 			isa = PBXGroup;
 			children = (
+				415A258F26A3CD5300718BCB /* i386_builtins.c */,
 				C61E2DA312F3661900FC9BCA /* c_start.c */,
 				C61E2DA412F3661900FC9BCA /* c_stop.c */,
 				C61E2DA512F3661900FC9BCA /* cplus_start.c */,
@@ -264,7 +268,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C61E2D9512F3647000FC9BCA /* All */,
+				41B8150126A114C90080FF35 /* All */,
 				C61E2D9112F3642100FC9BCA /* libkmod */,
 				C61E2D9D12F364C100FC9BCA /* libkmodc++ */,
 				C61E2D7212F360A200FC9BCA /* libkmodtest */,
@@ -307,6 +311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C61E2DAD12F3672F00FC9BCA /* c_start.c in Sources */,
+				415A259026A3CD5300718BCB /* i386_builtins.c in Sources */,
 				C61E2DAE12F3672F00FC9BCA /* c_stop.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -316,6 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C61E2DAF12F3673A00FC9BCA /* cplus_start.c in Sources */,
+				415A259126A3CD5300718BCB /* i386_builtins.c in Sources */,
 				C61E2DB012F3673A00FC9BCA /* cplus_stop.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -323,15 +329,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C61E2D9912F364A800FC9BCA /* PBXTargetDependency */ = {
+		41B8150226A114C90080FF35 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C61E2D9112F3642100FC9BCA /* libkmod */;
-			targetProxy = C61E2D9812F364A800FC9BCA /* PBXContainerItemProxy */;
+			targetProxy = 41B8150326A114C90080FF35 /* PBXContainerItemProxy */;
 		};
-		C61E2DA212F3650100FC9BCA /* PBXTargetDependency */ = {
+		41B8150426A114C90080FF35 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C61E2D9D12F364C100FC9BCA /* libkmodc++ */;
-			targetProxy = C61E2DA112F3650100FC9BCA /* PBXContainerItemProxy */;
+			targetProxy = 41B8150526A114C90080FF35 /* PBXContainerItemProxy */;
 		};
 		C61E2DB212F36AC700FC9BCA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -346,13 +352,26 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		41B8150726A114C90080FF35 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		C61E2D6612F3605700FC9BCA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = x86_64;
+				CC = "$(inherited)";
+				"CC[arch=ACID32]" = "$(SRCROOT)/../../clang32/clang-12";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				LIBTOOL = "$(inherited)";
+				"LIBTOOL[arch=ACID32]" = "$(SRCROOT)/../../Tools/libtool32";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				"MACOSX_DEPLOYMENT_TARGET[arch=ACID32]" = 10.4;
+				VALID_ARCHS = "x86_64 ACID32";
 			};
 			name = Release;
 		};
@@ -385,6 +404,7 @@
 					DRIVER_PRIVATE,
 					APPLE,
 					NeXT,
+					TARGET_OS_OSX,
 				);
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -397,14 +417,11 @@
 					/System/Library/Frameworks/Kernel.framework/Headers,
 				);
 				INSTALL_PATH = /usr/lib;
+				"OTHER_CFLAGS[arch=ACID32]" = (
+					"-target",
+					"i386-apple-macos10.4",
+				);
 				PRODUCT_NAME = kmod;
-			};
-			name = Release;
-		};
-		C61E2D9712F3647000FC9BCA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -421,6 +438,7 @@
 					DRIVER_PRIVATE,
 					APPLE,
 					NeXT,
+					TARGET_OS_OSX,
 				);
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -433,6 +451,10 @@
 					/System/Library/Frameworks/Kernel.framework/Headers,
 				);
 				INSTALL_PATH = /usr/lib;
+				"OTHER_CFLAGS[arch=ACID32]" = (
+					"-target",
+					"i386-apple-macos10.4",
+				);
 				PRODUCT_NAME = "kmodc++";
 			};
 			name = Release;
@@ -440,6 +462,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		41B8150626A114C90080FF35 /* Build configuration list for PBXAggregateTarget "All" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				41B8150726A114C90080FF35 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C61E2D6312F3605700FC9BCA /* Build configuration list for PBXProject "libkmod" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -460,14 +490,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C61E2D9412F3642100FC9BCA /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C61E2D9612F3647000FC9BCA /* Build configuration list for PBXAggregateTarget "All" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C61E2D9712F3647000FC9BCA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
