@@ -368,7 +368,7 @@
 				"CC[arch=ACID32]" = "$(SRCROOT)/../../clang32/clang-12";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				LIBTOOL = "$(inherited)";
-				"LIBTOOL[arch=ACID32]" = "$(SRCROOT)/../../Tools/libtool32";
+				"LIBTOOL[arch=ACID32]" = "$(SRCROOT)/ocbuild/scripts/libtool32";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				"MACOSX_DEPLOYMENT_TARGET[arch=ACID32]" = 10.4;
 				VALID_ARCHS = "x86_64 ACID32";
