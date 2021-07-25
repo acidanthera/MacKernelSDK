@@ -111,16 +111,19 @@ struct IOSMBusAlarmMessage {
 static constexpr size_t kSMBusMaximumDataSize = 32;
 
 // Holds data related to a SMBus transaction
+// Padding required for 32-bit as 64-bit integers are normally not aligned to 8 bytes
 struct IOSMBusTransaction {
 	uint8_t  address;
 	uint8_t  command;
 	uint8_t  protocol;
+	uint8_t  pad1[5];
 	uint64_t timeout;
 	uint32_t sendDataCount;
 	uint8_t  sendData[kSMBusMaximumDataSize];
 	IOSMBusStatus status;
 	uint32_t receiveDataCount;
 	uint8_t  receiveData[kSMBusMaximumDataSize];
+	uint32_t pad2;
 };
 
 static_assert(sizeof(IOSMBusTransaction) == 0x60, "Invalid IOSMBusTransaction size");
@@ -148,7 +151,7 @@ public:
 	void *unknown[6];
 };
 
-static_assert(sizeof(IOSMBusRequest) == 0x80, "Invalid IOSMBusRequest size");
+static_assert(sizeof(IOSMBusRequest) == (0x10 * sizeof(uintptr_t)), "Invalid IOSMBusRequest size"); // 0x80 on 64-bit
 
 // Main SMBus controller base class.
 class IOACPIPlatformDevice;
@@ -187,10 +190,22 @@ public:
 	void *fPrivateUnknown2[5];
 };
 
-static_assert(sizeof(IOSMBusController) == 0xD0, "Invalid IOSMBusController size");
+#if defined(__i386__)
+static_assert(sizeof(IOSMBusController) == 0x74, "Invalid 32-bit IOSMBusController size");
 #if defined(__GNUC__) && (__GNUC__ == 3 && __GNUC_MINOR__ >= 5 || __GNUC__ > 3)
-static_assert(offsetof(IOSMBusController, fPrivateCommandGate) == 0x90, "Invalid IOSMBusController::fCommandGate offset");
-static_assert(offsetof(IOSMBusController, fPrivateCommandQueue) == 0x98, "Invalid IOSMBusController::fCommandQueue offset");
+static_assert(offsetof(IOSMBusController, fPrivateCommandGate) == 0x54, "Invalid 32-bit IOSMBusController::fCommandGate offset");
+static_assert(offsetof(IOSMBusController, fPrivateCommandQueue) == 0x58, "Invalid 32-bit IOSMBusController::fCommandQueue offset");
+#endif
+
+#elif defined(__x86_64__)
+static_assert(sizeof(IOSMBusController) == 0xD0, "Invalid 64-bit IOSMBusController size");
+#if defined(__GNUC__) && (__GNUC__ == 3 && __GNUC_MINOR__ >= 5 || __GNUC__ > 3)
+static_assert(offsetof(IOSMBusController, fPrivateCommandGate) == 0x90, "Invalid 64-bit IOSMBusController::fCommandGate offset");
+static_assert(offsetof(IOSMBusController, fPrivateCommandQueue) == 0x98, "Invalid 64-bit IOSMBusController::fCommandQueue offset");
+#endif
+
+#else
+#error Unsupported arch
 #endif
 
 #endif /* RE_APPLE_IOSMBUSCONTROLLER_H */
