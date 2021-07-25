@@ -33,6 +33,17 @@
 
 #pragma once
 
+#define BluetoothFamilyLogPacket(family, packetType, fmt...) do {                  \
+    char * log = (char *) IOMalloc(511);                                            \
+    if (log) {                                                                      \
+        bzero(log, 511);                                                            \
+        snprintf(log, 511, fmt);                                                    \
+        if ( family )                                                               \
+            family->LogPacket(packetType, (void *) log, strlen(log));               \
+        IOFree(log, 511);                                                           \
+    }                                                                               \
+} while (0)
+
 typedef enum IOBluetoothHCIControllerConfigState
 {
     kIOBluetoothHCIControllerConfigStateOnline,	                        // Controller is configured and ready for clients

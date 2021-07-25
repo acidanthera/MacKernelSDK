@@ -78,17 +78,6 @@ const char * gPowerManagerSleepTypeShortString[9] =
     "SleepTypeLast"
 };
 
-#define mBluetoothFamilyLogPacket(packetType, fmt...) do {                          \
-    char * log = (char *) IOMalloc(511);                                            \
-    if (log) {                                                                      \
-        bzero(log, 511);                                                            \
-        snprintf(log, 511, fmt);                                                    \
-        if ( mBluetoothFamily )                                                     \
-            mBluetoothFamily->LogPacket(packetType, (void *) log, strlen(log));     \
-        IOFree(log, 511);                                                           \
-    }                                                                               \
-} while (0)
-
 /*! @class IOBluetoothHostControllerTransport
  *   @abstract The base class for IOBluetoothFamily transports.
  *   @discussion ???

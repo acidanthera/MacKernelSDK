@@ -103,6 +103,7 @@ class IOBluetoothHostController : public IOService
     
     typedef IOReturn (*IOBluetoothIncomingDataAction) (IOBluetoothHostController * hostController, UInt8 * inDataPtr, UInt32 inDataSize, UInt32 inSequenceNumber);
     
+    friend class IOBluetoothHCIRequest;
     friend class IOBluetoothHostControllerTransport;
     friend class IOBluetoothHostControllerUSBTransport;
     friend class IOBluetoothHostControllerUARTTransport;
@@ -333,7 +334,7 @@ public:
     virtual IOReturn AbortRequestAndSetTime(IOBluetoothHCIRequest *);
     virtual IOReturn KillAllPendingRequests(bool destroy, bool includeIdleRequests);
     virtual IOReturn CallKillAllPendingRequests(bool destroy, bool includeIdleRequests);;
-    virtual IOReturn IncrementHCICommandTimeOutCounter();
+    virtual IOReturn IncrementHCICommandTimeOutCounter(UInt16 inOpCode);
     virtual void ResetHCICommandTimeOutCounter();
     
     virtual void IncrementActiveConnections();
