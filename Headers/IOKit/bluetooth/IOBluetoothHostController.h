@@ -99,11 +99,12 @@ typedef struct LEDeviceListType
 
 class IOBluetoothHostController : public IOService
 {
-    OSDeclareDefaultStructors(IOBluetoothHostController)
+    OSDeclareAbstractStructors(IOBluetoothHostController)
     
     typedef IOReturn (*IOBluetoothIncomingDataAction) (IOBluetoothHostController * hostController, UInt8 * inDataPtr, UInt32 inDataSize, UInt32 inSequenceNumber);
     
     friend class IOBluetoothHCIRequest;
+    friend class IOBluetoothHCIController;
     friend class IOBluetoothHostControllerTransport;
     friend class IOBluetoothHostControllerUSBTransport;
     friend class IOBluetoothHostControllerUARTTransport;
@@ -808,7 +809,10 @@ protected:
     UInt32 mIdleTimerValue; //1256
     bool un; //1260
     
+    UInt32 ut; //1264
+    
     bool n; //1280
+    bool mUpdatingFirmware; //1281
     SInt16 mControllerOutstandingCalls; //1284
     os_log_t mInternalOSLogObject; //1288
     

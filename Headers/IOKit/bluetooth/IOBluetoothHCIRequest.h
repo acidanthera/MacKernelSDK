@@ -41,43 +41,48 @@ class IOBluetoothHCIRequest : public OSObject
 {
     OSDeclareDefaultStructors(IOBluetoothHCIRequest)
 
+    friend class IOBluetoothHostController;
+    
 public:
     static IOBluetoothHCIRequest *      Create( IOCommandGate * commandGate, IOBluetoothHostController * hostController, bool async = true, UInt32 timeout = 5, UInt32 controlFlags = 0 );
     static IOReturn                     Dispose( IOBluetoothHCIRequest * inObject );
+    IOReturn                            DisposeRequest();
     
     bool                                init( IOCommandGate * commandGate, IOBluetoothHostController * hostController );
+    void                                InitializeRequest();
     virtual void                        free() APPLE_KEXT_OVERRIDE;
     virtual void                        retain() const APPLE_KEXT_OVERRIDE;
+    void                                RetainRequest( char * name );
     virtual void                        release() const APPLE_KEXT_OVERRIDE;
-    void                                RetainRequest(char *);
-    void                                ReleaseRequest(char *);
+    void                                ReleaseRequest( char * name );
+    
+    const char *                        RequestDescription( const char * name );
     
     IOReturn                            Start();    // Called when a request is started on a transport
     void                                Complete(); // Called when a request is completed on a transport
     
-    void                                SetState(BluetoothHCIRequestState inState);
+    void                                SetState( BluetoothHCIRequestState inState );
+    
+    void                                SetCallbackInfo( BluetoothHCIRequestCallbackInfo * inInfo );
+    void                                SetCallbackInfoToZero();
+    
     void                                SetResultsDataSize( IOByteCount inCount );
     void                                SetResultsBufferPtrAndSize( UInt8 * resultsBuffer, IOByteCount inSize );
     void                                CopyDataIntoResultsPtr( UInt8 * inDataPtr, IOByteCount inSize );
     UInt8 *                             GetResultsBuffer();
     IOByteCount                         GetResultsBufferSize();
-    BluetoothHCICommandOpCode           GetCommandOpCode();
     
-    const char *                        RequestDescription(const char * description);
+    BluetoothHCICommandOpCode           GetCommandOpCode();
     
     void                                StartTimer();
     
-    static void                         timerFired( OSObject *owner, IOTimerEventSource *sender );
+    static void                         timerFired( OSObject * owner, IOTimerEventSource * sender );
     void                                handleTimeout();
-    
-    void                                SetCallbackInfoToZero();
-    void                                SetCallbackInfo( BluetoothHCIRequestCallbackInfo * inInfo );
-    bool                                CompareDeviceAddress( const BluetoothDeviceAddress * inDeviceAddress );
     
     UInt32                              GetCurrentTime();
     void                                SetStartTimeForDelete();
-    void                                InitializeRequest();
-    IOReturn                            DisposeRequest();
+    
+    bool                                CompareDeviceAddress( const BluetoothDeviceAddress * inDeviceAddress );
     
 protected:
     UInt8                               mPrivateResultsBuffer[kMaxHCIBufferLength * 4];    // Just in case they didn't give a results ptr. 12
@@ -117,10 +122,11 @@ public:
     bool                                mHCIRequestDeleteWasCalled;                    // Fixed rdar://problem/7044168 2780
     UInt32                              mStartTimeForDelete; //2784
     
-    //These are initialized but never used... Might be used outside though
+private:
+    //Some of them can be derived from DumpStats
     UInt8                               __reserved1; //2788
-    UInt32                              __reserved2; //2792
-    UInt8                               __reserved3; //2796
+    UInt32                              mExpectedEvents; //2792
+    UInt8                               mExpectedExplicitCompleteEvents; //2796
     UInt64                              __reserved4; //2800
     UInt64                              __reserved5; //2808
     UInt64                              __reserved6; //2816

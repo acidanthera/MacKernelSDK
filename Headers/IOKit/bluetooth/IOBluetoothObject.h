@@ -28,7 +28,7 @@
  */
 /*!
  *   @header IOBluetoothObject.h
- *   This header contains the definition of the IOBluetoothObject class, a base for many classes, such as channels, in the IOBluetoothFamily.
+ *   This header contains the definition of the IOBluetoothObject class, a base for many classes, mostly channels, in the IOBluetoothFamily.
  */
 
 #ifndef _IOKIT_BLUETOOTH_IOBLUETOOTHOBJECT_H
@@ -137,7 +137,7 @@ protected:
  *   Offset: 156. */
     UInt8 mTerminateMask;
     
-/*! @var mTerminateMask
+/*! @var mBluetoothObjectID
  *   This integer records the BluetoothObjectID of this class, derived from mBluetoothFamily.
  *   Offset: 160. */
     UInt32 mBluetoothObjectID;

@@ -78,6 +78,8 @@ const char * gPowerManagerSleepTypeShortString[9] =
     "SleepTypeLast"
 };
 
+extern const IORegistryPlane * gIODTPlane;
+
 /*! @class IOBluetoothHostControllerTransport
  *   @abstract The base class for IOBluetoothFamily transports.
  *   @discussion ???
@@ -87,6 +89,9 @@ const char * gPowerManagerSleepTypeShortString[9] =
 class IOBluetoothHostControllerTransport : public IOService
 {
     OSDeclareAbstractStructors(IOBluetoothHostControllerTransport)
+    
+    friend class IOBluetoothHCIController;
+    friend class IOBluetoothHostController;
     
 public:
 /*! @function init
@@ -280,7 +285,7 @@ protected:
     bool mUSBControllerSupportsSuspend; //178
     UInt8 mTerminateState; //179
     bool mLMPLoggingEnabled; //180
-    bool mPowerStateNotChangeable; //181
+    bool mSystemOnTheWayToSleep; //181
     uint8_t reserved2; //182
     uint8_t reserved3; //183
     bool mConfiguredPM; //184
