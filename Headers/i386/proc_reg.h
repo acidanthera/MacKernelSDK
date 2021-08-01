@@ -455,48 +455,71 @@ stac(void)
 	__asm__ volatile("rdpmc" : "=a" (lo), "=d" (hi) : "c" (counter))
 
 
-#ifdef __LP64__
-static inline uint64_t
-rdpmc64(uint32_t pmc)
+#if defined(__i386__)
+
+static inline uint64_t rdmsr64(uint32_t msr)
 {
-	uint32_t lo = 0, hi = 0;
-	rdpmc(pmc, lo, hi);
-	return (((uint64_t)hi) << 32) | ((uint64_t)lo);
+  uint64_t ret;
+  __asm__ volatile("rdmsr" : "=A" (ret) : "c" (msr));
+  return ret;
 }
 
-static inline uint64_t
-rdmsr64(uint32_t msr)
+static inline void wrmsr64(uint32_t msr, uint64_t val)
 {
-	uint32_t lo = 0, hi = 0;
-	rdmsr(msr, lo, hi);
-	return (((uint64_t)hi) << 32) | ((uint64_t)lo);
+  __asm__ volatile("wrmsr" : : "c" (msr), "A" (val));
 }
 
-static inline void
-wrmsr64(uint32_t msr, uint64_t val)
+static inline uint64_t rdtsc64(void)
 {
-	wrmsr(msr, (val & 0xFFFFFFFFUL), ((val >> 32) & 0xFFFFFFFFUL));
+  uint64_t ret;
+  __asm__ volatile("lfence; rdtsc; lfence" : "=A" (ret));
+  return ret;
 }
 
-static inline uint64_t
-rdtsc64(void)
+static inline uint64_t rdtscp64(uint32_t *aux)
 {
-	uint64_t lo, hi;
-	rdtsc(lo, hi);
-	return ((hi) << 32) | (lo);
+  uint64_t ret;
+  __asm__ volatile("rdtscp; mov %%ecx, %1"
+        : "=A" (ret), "=m" (*aux)
+        :
+        : "ecx");
+  return ret;
 }
 
-static inline uint64_t
-rdtscp64(uint32_t *aux)
+#elif defined(__x86_64__)
+
+static inline uint64_t rdmsr64(uint32_t msr)
 {
-	uint64_t lo, hi;
-	__asm__ volatile ("rdtscp; mov %%ecx, %1"
-                                          : "=a" (lo), "=d" (hi), "=m" (*aux)
-                                          :
-                                          : "ecx");
-	return ((hi) << 32) | (lo);
+  uint32_t lo=0, hi=0;
+  rdmsr(msr, lo, hi);
+  return (((uint64_t)hi) << 32) | ((uint64_t)lo);
 }
-#endif /* __LP64__ */
+
+static inline void wrmsr64(uint32_t msr, uint64_t val)
+{
+  wrmsr(msr, (val & 0xFFFFFFFFUL), ((val >> 32) & 0xFFFFFFFFUL));
+}
+
+static inline uint64_t rdtsc64(void)
+{
+  uint64_t lo, hi;
+  rdtsc(lo, hi);
+  return ((hi) << 32) | (lo);
+}
+
+static inline uint64_t rdtscp64(uint32_t *aux)
+{
+  uint64_t lo, hi;
+  __asm__ volatile("rdtscp; mov %%ecx, %1"
+           : "=a" (lo), "=d" (hi), "=m" (*aux)
+           :
+           : "ecx");
+  return ((hi) << 32) | (lo);
+}
+
+#else
+#error Unsupported architecture
+#endif
 
 /*
  * rdmsr_carefully() returns 0 when the MSR has been read successfully,
