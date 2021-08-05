@@ -406,7 +406,7 @@ public:
     virtual void SetControllerPowerOptions(IOBluetoothHCIControllerPowerOptions inPowerOptions);
     virtual IOBluetoothHCIControllerPowerOptions GetControllerPowerOptions();
     virtual void TransportIsReady(bool);
-    virtual bool TransportIsGoingAway();
+    virtual void TransportIsGoingAway();
     virtual IOReturn ChangeControllerStateForRestart();
     virtual IOReturn CleanUpForPoweringOff(); //not sure
     virtual IOReturn CleanUpBeforeTransportTerminate(IOBluetoothHostControllerTransport * transport);
@@ -414,7 +414,7 @@ public:
     virtual IOReturn CleanUpForCompletePowerChangeFromSleepToOn();
     virtual IOReturn CleanupForPowerChangeFromOnToSleep(bool, UInt32 *);
     
-    virtual IOReturn PerformTaskForPowerManagementCalls(IOReturn);
+    virtual IOReturn PerformTaskForPowerManagementCalls(IOOptionBits options);
     virtual IOReturn disableHIDEmulation();
     virtual IOReturn SetHIDEmulation(UInt32, bool);
     virtual IOReturn CallSetHIDEmulation();
@@ -690,21 +690,20 @@ private:
 
 protected:
     OSSet * mReporterSet; //136
-    IOReportLegend * mReportLegend; //this + 144
-    IOStateReporter * mPowerStateReporter; //this + 152
-    BluetoothDeviceReporter ** mDeviceReporterList; //this + 160
-    BluetoothDeviceReporter * mDeviceReporter; //this + 168
-    IOSimpleReporter * mAppleBTLEAdvertisingReporter; //this + 176
-    IOSimpleReporter * mLESetAdvertisingDataReporter; //this + 184
-    void * x1; //this + 192
+    IOReportLegend * mReportLegend; //144
+    IOStateReporter * mPowerStateReporter; //152
+    BluetoothDeviceReporter ** mDeviceReporterList; //160
+    BluetoothDeviceReporter * mActiveDeviceReporter; //168
+    IOSimpleReporter * mAppleBTLEAdvertisingReporter; //176
+    IOSimpleReporter * mLESetAdvertisingDataReporter; //184
+    void * x1; //192
     IOWorkLoop * mWorkLoop; //this + 200
     IOCommandGate * mCommandGate; //this + 208
     IOBluetoothHCIRequest * mBusyQueueHead; //this + 216
     IOBluetoothHCIRequest * mWaitQueueHead; //this + 224
     IOBluetoothHCIRequest ** mHCIRequestList; //this + 232
-    UInt64 mHCIRequestListSize; //this + 240
+    IOByteCount mHCIRequestListSize; //this + 240
     UInt32 D248; //this + 248
-    
     
     IOBluetoothDevice * mDeviceListHead; //this + 256
     void * u;//264, size is 2048
@@ -745,8 +744,9 @@ protected:
     UInt16 mNumberOfAllowedMidPriorityLEACLDataPackets; //426
     UInt16 mNumberOfAllowedHighPriorityLEACLDataPackets; //428
     
-    
-    
+    OSArray * mAllowedIncomingL2CAPChannels; //480
+    //488
+    OSArray * mAllowedIncomingRFCOMMChannels; //496
     IOBluetoothHCIControllerConfigState mPreviousControllerConfigState; //this + 504
     
     
@@ -759,11 +759,16 @@ protected:
     HearingDeviceListType * mConnectedHearingDeviceListHead; //568
     HearingDeviceListType * mConnectedHearingDeviceListTail; //576
     
-    UInt64 mTotalDataBytesSent; //728
-    UInt64 mTotalDataBytesReceived; //736
-    UInt64 mTotalSCOBytesReceived; //744
+    IOByteCount mTotalDataBytesSent; //728
+    IOByteCount mTotalDataBytesReceived; //736
+    IOByteCount mTotalSCOBytesReceived; //744
     bool mKillAllPendingRequestsCalled; //752
     
+    //760 UInt64
+    //768 UInt64
+    //776 UInt64
+    //784 UInt64
+    //792
     
     OSSet * mHostControllerClients; //this + 800
     LEDeviceListType * mLEDeviceListHead; //this + 808
@@ -779,13 +784,16 @@ protected:
     bool mControllerSetupIsComplete; //this + 876
     bool mTransportIsReady; //this + 877
     bool mTransportIsGoingAway; //this + 878
+    //880
+    //885
     bool mIdlePolicyIsOneByte; //this + 886
     
-    UInt8 mNumTimedOutHCICommands; //this + 889
+    UInt8 mNumberOfTimedOutHCICommands; //this + 889
     UInt16 xxxxxxx;
     UInt32 mTransportSleepType; //this + 892
     
     bool mCanDoHardReset; //896
+    bool mPowerStateNotChanging; //897
     
     IOBluetoothHCIControllerPowerOptions mControllerPowerOptions; //this + 900
     IOBluetoothHCIControllerConfigState mControllerConfigState; //this + 904
@@ -799,6 +807,9 @@ protected:
     UInt8 mNumConfiguredHIDDevices; //956
     bool unknown; //this + 959
     
+    bool mSupportDeepIdle; //970
+    
+    bool mPowerReportersCreated; //1112
     long long mLESetAdvertisingDataCommandSent[15]; //this + 1120 (types 1 - 15)
     //this + 1240
     
@@ -810,12 +821,15 @@ protected:
     bool un; //1260
     
     UInt32 ut; //1264
+    UInt32 mIdleTimerValue; //1268
     
     bool n; //1280
     bool mUpdatingFirmware; //1281
-    SInt16 mControllerOutstandingCalls; //1284
+    UInt16 mControllerOutstandingCalls; //1284
     os_log_t mInternalOSLogObject; //1288
     
+    bool mAutoResumeSet; //1296
+    UInt8 mAllowedNumberOfTimedOutHCICommands; //1307
     bool mBluetoothdNotFound; //this + 1312
     
     struct ExpansionData
