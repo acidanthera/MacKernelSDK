@@ -816,10 +816,7 @@ protected:
     
     bool mIdleTimerDisabled; //1248
     bool mPowerStateChanging; //1249
-    
-    UInt32 mIdleTimerValue; //1256
     bool un; //1260
-    
     UInt32 ut; //1264
     UInt32 mIdleTimerValue; //1268
     
