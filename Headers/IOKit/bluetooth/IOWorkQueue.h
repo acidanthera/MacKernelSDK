@@ -27,8 +27,8 @@
  * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
  */
 
-#ifndef __IOKIT_IOWORKQUEUE_H
-#define __IOKIT_IOWORKQUEUE_H
+#ifndef _IOKIT_IOWORKQUEUE_H
+#define _IOKIT_IOWORKQUEUE_H
 
 #include <IOKit/IOCommandGate.h>
 #include <IOKit/IOLib.h>

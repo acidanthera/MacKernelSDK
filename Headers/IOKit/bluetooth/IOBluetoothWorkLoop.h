@@ -31,8 +31,8 @@
  *   This header contains the definitions of the IOBluetoothLocalUtilityEventSource and IOBluetoothWorkLoop classes.
  */
 
-#ifndef _IOKIT_BLUETOOTH_IOBLUETOOTHWORKLOOP_H
-#define _IOKIT_BLUETOOTH_IOBLUETOOTHWORKLOOP_H
+#ifndef _IOKIT_IOBLUETOOTHWORKLOOP_H
+#define _IOKIT_IOBLUETOOTHWORKLOOP_H
 
 #include <IOKit/IOEventSource.h>
 #include <IOKit/IOWorkLoop.h>

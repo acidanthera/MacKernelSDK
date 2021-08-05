@@ -30,8 +30,8 @@
  *   This header contains the definition of the IOBluetoothHIDDriver class, which is the driver for generic Bluetooth HID devices. It is a direct subclass of IOHIDDevice.
  */
 
-#ifndef _IOKIT_BLUETOOTH_IOBLUETOOTHHIDDRIVER_H
-#define _IOKIT_BLUETOOTH_IOBLUETOOTHHIDDRIVER_H
+#ifndef _IOKIT_IOBLUETOOTHHIDDRIVER_H
+#define _IOKIT_IOBLUETOOTHHIDDRIVER_H
 
 #import <IOKit/hid/IOHIDDevice.h>
 #import <IOKit/bluetooth/Bluetooth.h>

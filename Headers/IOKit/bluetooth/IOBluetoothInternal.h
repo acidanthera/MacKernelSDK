@@ -48,8 +48,8 @@
     char * log = (char *) IOMalloc(511);                                            \
     if (log) {                                                                      \
         bzero(log, 511);                                                            \
+        os_log(obj, log, fmt...);                                                   \
         snprintf(log, 511, fmt);                                                    \
-        os_log(obj, log);                                                           \
         if ( family )                                                               \
             family->LogPacket(packetType, (void *) log, strlen(log));               \
         IOFree(log, 511);                                                           \

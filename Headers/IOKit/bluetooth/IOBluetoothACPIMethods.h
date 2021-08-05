@@ -31,8 +31,8 @@
  *   This header contains the definition of the IOBluetoothACPIMethods class.
  */
 
-#ifndef _IOKIT_BLUETOOTH_IOBLUETOOTHACPIMETHODS_H
-#define _IOKIT_BLUETOOTH_IOBLUETOOTHACPIMETHODS_H
+#ifndef _IOKIT_IOBLUETOOTHACPIMETHODS_H
+#define _IOKIT_IOBLUETOOTHACPIMETHODS_H
 
 #include <IOKit/IOService.h>
 #include <os/log.h>
