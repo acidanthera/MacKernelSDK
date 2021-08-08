@@ -73,6 +73,9 @@ typedef IOReturn (IOService::*IOAsyncMethod)(OSAsyncReference asyncRef,
 typedef IOReturn (IOService::*IOTrap)(void * p1, void * p2, void * p3,
     void * p4, void * p5, void * p6 );
 
+typedef IOReturn (*IOMethodACID)(IOService * svc, void * p1, void * p2, void * p3,
+    void * p4, void * p5, void * p6 );
+
 struct IOExternalMethod {
 	IOService *         object;
 	IOMethod            func;
@@ -93,6 +96,32 @@ struct IOExternalTrap {
 	IOService *         object;
 	IOTrap              func;
 };
+
+//
+// When building for i386, clang does not emit proper code for IOExternalMethod.
+// The below struct is a workaround to have the correct positioning of the function pointer.
+//
+struct IOExternalMethodACID {
+  IOService *         object;
+#if defined(__i386__)
+  uint32_t            padding;
+#endif
+  IOMethodACID        func;
+#if defined(__x86_64__)
+  uint64_t            padding;
+#endif
+  IOOptionBits        flags;
+  IOByteCount         count0;
+  IOByteCount         count1;
+};
+
+#if defined(__i386__)
+#define kIOExternalMethodACIDPadding 0xFFFF0000
+#elif defined(__x86_64__)
+#define kIOExternalMethodACIDPadding 0x0
+#else
+#error Unsupported arch
+#endif
 
 enum {
 	kIOUserNotifyMaxMessageSize = 64
