@@ -308,7 +308,7 @@ protected:
     UInt16 mActiveControllerVendorID; //348
     BluetoothDeviceAddress mActiveControllerAddress; //350
     UInt32 mActiveControllerLocationID; //356
-    UInt16 ActiveControllerActiveConnections; //360
+    UInt16 mActiveControllerActiveConnections; //360
     bool mActiveControllerValid; //362
     //363
     
@@ -320,7 +320,7 @@ protected:
     //374
     UInt32 mInternalControllerLocationID; //376
     bool mInternalControllerValid; //380
-    bool ff; //381
+    bool mControllersFinishedSettingUp; //381
     //382
     bool gg; //383
     
@@ -342,9 +342,9 @@ protected:
     
     thread_call_t mHardResetThreadCall;//440
     UInt32 mUSBHardResetWLCallTime; //448
-    UInt32 b; //452
-    
-    UInt16 c; //456
+    bool mTestHCICommandTimeoutHardReset; //453
+    bool mTestNoHardResetWhenSleepCommandTimeout; //455
+    bool mTestHCICommandTimeoutWhenWake; //456
     UInt8 d; //458
     UInt64 e; //464
     IOUSBHostDevice * mHardResetUSBHostDevice; //472

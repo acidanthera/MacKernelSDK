@@ -48,13 +48,13 @@
     char * log = (char *) IOMalloc(511);                                            \
     if (log) {                                                                      \
         bzero(log, 511);                                                            \
-        os_log(obj, log, fmt...);                                                   \
+        os_log(obj, fmt, ...);                                                      \
         snprintf(log, 511, fmt);                                                    \
         if ( family )                                                               \
             family->LogPacket(packetType, (void *) log, strlen(log));               \
         IOFree(log, 511);                                                           \
     }                                                                               \
-} while (0)
+} while (0) // I need to fix this
 
 typedef enum IOBluetoothHCIControllerConfigState
 {
