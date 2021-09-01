@@ -97,6 +97,13 @@ typedef struct LEDeviceListType
     LEDeviceListType *                      mPreviousDevice;
 } BluetoothLEDevice;
 
+struct BluetoothHCIACLPacket
+{
+    IOMemoryDescriptor * descriptor;
+    IOBluetoothDevice * device;
+    BluetoothHCIACLPacket * nextPacket;
+};
+
 class IOBluetoothHostController : public IOService
 {
     OSDeclareAbstractStructors(IOBluetoothHostController)
@@ -501,10 +508,10 @@ public:
     virtual IOReturn BluetoothHCIRemoteOOBDataRequestReply(BluetoothHCIRequestID inID, const BluetoothDeviceAddress * inAddressPtr, BluetoothHCISimplePairingOOBData *, BluetoothHCISimplePairingOOBData *);
     virtual IOReturn BluetoothHCIRemoteOOBDataRequestNegativeReply(BluetoothHCIRequestID inID, const BluetoothDeviceAddress * inAddressPtr);
     virtual IOReturn BluetoothHCIIOCapabilityRequestNegativeReply(BluetoothHCIRequestID inID, const BluetoothDeviceAddress * inAddressPtr, UInt8);
-    virtual IOReturn BluetoothHCISetupSynchronousConnection(BluetoothHCIRequestID inID, UInt16, BluetoothHCISetupSynchronousConnectionParams *);
+    virtual IOReturn BluetoothHCISetupSynchronousConnection(BluetoothHCIRequestID inID, BluetoothConnectionHandle inHandle, BluetoothHCISetupSynchronousConnectionParams * inParams);
     virtual IOReturn BluetoothHCIAcceptSynchronousConnectionRequest(BluetoothHCIRequestID inID, const BluetoothDeviceAddress * inAddressPtr, BluetoothHCIAcceptSynchronousConnectionRequestParams *);
     virtual IOReturn BluetoothHCIRejectSynchronousConnectionRequest(BluetoothHCIRequestID inID, const BluetoothDeviceAddress * inAddressPtr, UInt8);
-    virtual IOReturn BluetoothHCIEnhancedSetupSynchronousConnection(BluetoothHCIRequestID inID, UInt16, BluetoothHCIEnhancedSetupSynchronousConnectionParams *);
+    virtual IOReturn BluetoothHCIEnhancedSetupSynchronousConnection(BluetoothHCIRequestID inID, BluetoothConnectionHandle inHandle, BluetoothHCIEnhancedSetupSynchronousConnectionParams * inParams);
     virtual IOReturn BluetoothHCIEnhancedAcceptSynchronousConnectionRequest(BluetoothHCIRequestID inID, const BluetoothDeviceAddress * inAddressPtr, BluetoothHCIEnhancedAcceptSynchronousConnectionRequestParams *);
     
     virtual IOReturn BluetoothHCIHoldMode(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothHCIModeInterval inHoldModeMaxInterval, BluetoothHCIModeInterval inHoldModeMinInterval);
@@ -729,7 +736,6 @@ protected:
     UInt16 mNumberOfOutstandingHighPriorityACLPackets; //310
     UInt16 mTotalNumberOfOutstandingACLPackets; //312
     
-    UInt16 __reserved1; //314
     UInt32 mNumberOfLowPriorityACLPacketsInQueue; //316
     UInt32 mNumberOfMidPriorityACLPacketsInQueue; //320
     UInt32 mNumberOfHighPriorityACLPacketsInQueue; //324
@@ -739,12 +745,12 @@ protected:
     UInt16 mNumberOfAllowedMidPriorityACLDataPackets; //334
     UInt16 mNumberOfAllowedHighPriorityACLDataPackets; //336
     
-    //344
-    //352
-    //360
-    //368
-    //376
-    //384
+    BluetoothHCIACLPacket * mHighPriorityACLPacketsHead; //344
+    BluetoothHCIACLPacket * mHighPriorityACLPacketsTail; //352
+    BluetoothHCIACLPacket * mMidriorityACLPacketsHead; //360
+    BluetoothHCIACLPacket * mMidPriorityACLPacketsTail; //368
+    BluetoothHCIACLPacket * mLowPriorityACLPacketsHead; //376
+    BluetoothHCIACLPacket * mLowPriorityACLPacketsTail; //384
     
     UInt16 mPreviousNumberOfOutstandingLowPriorityLEACLPackets; //392
     UInt16 mPreviousNumberOfOutstandingMidPriorityLEACLPackets; //394
@@ -765,34 +771,55 @@ protected:
     UInt16 mNumberOfAllowedMidPriorityLEACLDataPackets; //426
     UInt16 mNumberOfAllowedHighPriorityLEACLDataPackets; //428
     
+    BluetoothHCIACLPacket * mHighPriorityLEACLPacketsHead; //432
+    BluetoothHCIACLPacket * mHighPriorityLEACLPacketsTail; //440
+    BluetoothHCIACLPacket * mMidriorityLEACLPacketsHead; //448
+    BluetoothHCIACLPacket * mMidPriorityLEACLPacketsTail; //456
+    BluetoothHCIACLPacket * mLowPriorityLEACLPacketsHead; //464
+    BluetoothHCIACLPacket * mLowPriorityLEACLPacketsTail; //472
     
     OSArray * mAllowedIncomingL2CAPChannels; //480
-    //488
+    UInt32 unknown; //488, not enough info
     UInt32 mCurrentlyExecutingSequenceNumber; //492
     OSArray * mAllowedIncomingRFCOMMChannels; //496
     IOBluetoothHCIControllerConfigState mPreviousControllerConfigState; //504
-    
+    UInt32 un1;//508
+    UInt32 un2; //512
+    UInt16 un3; //516
     UInt8 * mSCOPacketBuffer; //520
-    
+    UInt16 mNumBufferedSCOBytes; //528
+    AbsoluteTime mBufferedSCOPacketTimestamp; //536
     IOBluetoothInactivityTimerEventSource * mIdleTimer; //544
-    
+    //552
     UInt32 mCurrentlyExecutingSCOSequenceNumber;//556
     //560
     UInt16 mSynchronousConnectionPacketType; //562
-
+    
     HearingDeviceListType * mConnectedHearingDeviceListHead; //568
     HearingDeviceListType * mConnectedHearingDeviceListTail; //576
+    
+    BluetoothHCISetupSynchronousConnectionParams mSetupSynchronousConnectionParams; //584
+    BluetoothConnectionHandle mSetupSynchronousConnectionHandle; //600
+    IOBluetoothDevice * mSetupSynchronousConnectionDevice; //608
+    BluetoothDeviceAddress * mSetupSynchronousConnectionDeviceAddress; //616
+    
+    BluetoothHCIEnhancedSetupSynchronousConnectionParams mEnhancedSetupSynchronousConnectionParams; //624
+    BluetoothConnectionHandle mEnhancedSetupSynchronousConnectionHandle; //704
+    IOBluetoothDevice * mEnhancedSetupSynchronousConnectionDevice; //712
+    BluetoothDeviceAddress * mEnhancedSetupSynchronousConnectionDeviceAddress; //720
     
     IOByteCount mTotalDataBytesSent; //728
     IOByteCount mTotalDataBytesReceived; //736
     IOByteCount mTotalSCOBytesReceived; //744
     bool mKillAllPendingRequestsCalled; //752
+    bool mScanEnabled; //753
     
-    //760 UInt64
-    //768 UInt64
-    //776 UInt64
-    //784 UInt64
-    //792
+    BluetoothSetEventMask mSetEventMask; //760
+    BluetoothSetEventmask mPreviousSetEventMask; //768
+    BluetoothSetEventMask mLESetEventMask; //776
+    BluetoothSetEventMask mPreviousLESetEventMask; //784
+    bool mLESetAdvertisingEnabled; //792
+    bool mLESetScanEnabled; //793
     
     OSSet * mHostControllerClients; //800
     LEDeviceListType * mLEDeviceListHead; //808
@@ -864,7 +891,7 @@ protected:
     
     struct ExpansionData
     {
-        void * reserved;
+        void * refCon;
     };
     ExpansionData * mIOBluetoothHostControllerExpansionData; //1320
 };
