@@ -65,12 +65,14 @@ To compile for 32-bit you will need to add a set of flags in your project:
 
 3. C++ Standard Library (`CLANG_CXX_LIBRARY`) to **Compiler Default** or empty.
 
-4. The symbol table may be misaligned due to i386 kexts being of type `MH_OBJECT`.  
-`align-symtab-macho32` is provided in the Tools directory of this repository to correct alignments. Python 3 and `macholib` are required.
+4. Library Search Paths set to contain a kmod with an i386 slice, e.g. $(PROJECT_DIR)/MacKernelSDK/Library/universal.
+
+5. The symbol table may be misaligned due to i386 kexts being of type `MH_OBJECT`.  
+`fix-macho32` is provided in the `scripts` directory of [ocbuild](https://github.com/acidanthera/ocbuild) to correct alignments. Python 3 and `macholib` are required.
 
     Usage:
     ```
-    ./align-symtab-macho32 [bin_path]
+    ./fix-macho32 [bin_path]
     ```
 
 ## Extensions and modifications
