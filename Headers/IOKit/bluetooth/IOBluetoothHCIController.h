@@ -48,7 +48,7 @@ struct BluetoothHardwareListType
     BluetoothHardwareListType           * mPreviousHardware; //32
 };
 
-struct HCIEventListener
+struct HCIEventNotificationListener
 {
     task_t owningTask;
     mach_port_t port;
@@ -138,7 +138,7 @@ public:
     virtual IOReturn SwitchBluetoothHardware(BluetoothHardwareListType *);
     virtual void PrintBluetoothHardwareList(bool);
     
-    virtual bool SearchForTransportEventTimeOutHandler(); //?
+    virtual bool SearchForTransportEventTimeOutHandler();
     virtual bool WriteActiveControllerInfoToNVRAM(UInt16 productID, UInt16 vendorID, UInt8 * deviceAddress, UInt32 locationID, UInt16 activeConnections);
     virtual bool ReadActiveControllerInfoFromNVRAM(UInt16 * productID, UInt16 * vendorID, UInt8 * deviceAddress, UInt32 * locationID, UInt16 * activeConnections);
     virtual IOReturn UpdateNVRAMControllerInfo();
@@ -164,7 +164,7 @@ public:
     
     virtual bool SetActiveControllerInfoToPropertyList(UInt16 productID, UInt16 vendorID, UInt8 * deviceAddress, UInt32 locationID, UInt16 activeConnections);
     virtual bool AllControllersFinishedSettingUp();
-    virtual IOReturn FamilyCommandSleep(void *, UInt32, char *, bool);
+    virtual IOReturn FamilyCommandSleep(void * event, UInt32 milliseconds, char * calledByFunction, bool panicMachine);
     virtual UInt32 GetCurrentTime();
     virtual UInt32 ConvertAddressToUInt32(void *);
     virtual bool ActiveControllerOnline();
@@ -276,6 +276,7 @@ protected:
     IOCommandGate * mCommandGate; //144
     IOWorkLoop * mUSBHardResetWorkLoop; //152
     IOCommandGate * mUSBHardResetCommandGate; //160
+    
     OSSet * mUserClientSet; //168
     IOBluetoothPacketLogger * mPacketLogger; //176
     IONotifier * mPacketLoggerPublishNotifier; //184
@@ -289,45 +290,48 @@ protected:
     bool mFullWakeWithAppleExternalDisplay; //240
     bool mExternalDisplayPublished; //241
     
-    HCIEventListener * mHCIEventListenersList; //248
+    HCIEventNotificationListener * mHCIEventListenersList; //248
     IOByteCount mHCIEventListenersListSize; //256
     bool mDebugMode; //264
     
     IOWorkQueue * mFamilyWorkQueue; //272
     IOWorkQueue * mExternalControllerWorkQueue; //280
+    
     BluetoothHardwareListType * mBluetoothHardwareListHead; //288
     BluetoothHardwareListType * mBluetoothHardwareListTail; //296
     BluetoothHardwareListType * mActiveBluetoothHardware; //304
     BluetoothHardwareListType * mActiveControllerBluetoothHardware; //312
-    //320
+    BluetoothHardwareListType * mActiveTransportBluetoothHardware; //320
+    
     IONotifier * mBluetoothTransportShowsUpNotifier; //328
     IONotifier * mBluetoothTransportGoesAwayNotifier; //336
     bool mReceivedTransportNotification; //344
-    //345
+    //345 reserved
+    
     UInt16 mActiveControllerProductID; //346
     UInt16 mActiveControllerVendorID; //348
     BluetoothDeviceAddress mActiveControllerAddress; //350
     UInt32 mActiveControllerLocationID; //356
     UInt16 mActiveControllerActiveConnections; //360
     bool mActiveControllerValid; //362
-    //363
+    //363 reserved
     
     UInt16 mInternalControllerProductID; //364
     UInt16 mInternalControllerVendorID; //366
-    UInt8 xxxx; //368
-    //369
-    UInt16 cc; //372
-    //374
+    BluetoothDeviceAddress mInternalControllerAddress; //368
     UInt32 mInternalControllerLocationID; //376
     bool mInternalControllerValid; //380
+    
     bool mControllersFinishedSettingUp; //381
     //382
     bool gg; //383
     
+    bool mNVRAMControllerInfoUpdated; //384
     UInt32 mCheckACPIMethodsAvailabilitiesCallTime; //388
-    //392
-    //396
-    //400
+    bool mUserClientsAttached; //392
+    IOOptionBits unknownx; //396
+    UInt16 ; //400
+    
     UInt32 mActivityTickleCallTime; //404
     IOTimerEventSource * mFullWakeTimer; //408
     //416
@@ -342,22 +346,28 @@ protected:
     
     thread_call_t mHardResetThreadCall;//440
     UInt32 mUSBHardResetWLCallTime; //448
+    //452
     bool mTestHCICommandTimeoutHardReset; //453
+    //454
     bool mTestNoHardResetWhenSleepCommandTimeout; //455
     bool mTestHCICommandTimeoutWhenWake; //456
+    //456
     UInt8 d; //458
+    
     UInt64 e; //464
     IOUSBHostDevice * mHardResetUSBHostDevice; //472
     IOUSBHostDevice * mHardResetUSBHub; //480
     IOBluetoothACPIMethods * mACPIMethods; //488
+    
     IOTimerEventSource * mRecoveryTimer; //496
     bool mRecoveryTimerHasTimeout; //504
-    //505
+    
     UInt16 mCurrentBluetoothObjectID; //506
-    bool mBluetoothObjects[0xFFFD]; //508
+    bool mBluetoothObjects[0xFFFD]; //508, size might be too small...
     IOLock * mBluetoothObjectsLock; //66048
-    UInt16 wahtt; //66056
-    //66057 UInt8
+    UInt8 mNumHCIEventListeners; //66056
+    bool mTriedToRecoverX238EModule; //66057
+    
     struct ExpansionData
     {
         void * ptr1;
@@ -369,14 +379,14 @@ protected:
 #endif
 
 /*
-_IOBluetoothRingBufferRead
-__IOBluetoothRingBufferBytesInBuffer
-__IOBluetoothRingBufferSequentialBytesInBuffer
-_IOBluetoothRingBufferReadAtOffset
-_IOBluetoothRingBufferWrite
-__IOBluetoothRingBufferBytesAvailable
-__IOBluetoothRingBufferSequentialBytesAvailable
-_IOBluetoothRingBufferWriteAtOffset
+IOBluetoothRingBufferRead
+_IOBluetoothRingBufferBytesInBuffer
+_IOBluetoothRingBufferSequentialBytesInBuffer
+IOBluetoothRingBufferReadAtOffset
+IOBluetoothRingBufferWrite
+_IOBluetoothRingBufferBytesAvailable
+_IOBluetoothRingBufferSequentialBytesAvailable
+IOBluetoothRingBufferWriteAtOffset
 SearchForTransportEventTimeOutOccurred(OSObject *,IOTimerEventSource *);
 FullWakeTimeOutOccurred(OSObject *,IOTimerEventSource *);
 */

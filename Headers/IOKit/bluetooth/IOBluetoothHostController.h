@@ -783,7 +783,7 @@ protected:
     UInt32 mCurrentlyExecutingSequenceNumber; //492
     OSArray * mAllowedIncomingRFCOMMChannels; //496
     IOBluetoothHCIControllerConfigState mPreviousControllerConfigState; //504
-    UInt32 un1;//508
+    UInt32 un1; //508
     UInt32 un2; //512
     UInt16 un3; //516
     UInt8 * mSCOPacketBuffer; //520
@@ -791,7 +791,7 @@ protected:
     AbsoluteTime mBufferedSCOPacketTimestamp; //536
     IOBluetoothInactivityTimerEventSource * mIdleTimer; //544
     //552
-    UInt32 mCurrentlyExecutingSCOSequenceNumber;//556
+    UInt32 mCurrentlyExecutingSCOSequenceNumber; //556
     //560
     UInt16 mSynchronousConnectionPacketType; //562
     
@@ -815,7 +815,7 @@ protected:
     bool mScanEnabled; //753
     
     BluetoothSetEventMask mSetEventMask; //760
-    BluetoothSetEventmask mPreviousSetEventMask; //768
+    BluetoothSetEventMask mPreviousSetEventMask; //768
     BluetoothSetEventMask mLESetEventMask; //776
     BluetoothSetEventMask mPreviousLESetEventMask; //784
     bool mLESetAdvertisingEnabled; //792
@@ -828,19 +828,21 @@ protected:
     IOBluetoothHostControllerTransport * mBluetoothTransport; //832
     IOWorkQueue * mControllerWorkQueue; //840
     IOWorkQueue * mReporterWorkQueue; //848
-    //856
+    UInt16 __reserved1; //856
     UInt16 mVendorID; //858
     UInt16 mProductID; //860
-    //862
+    UInt16 __reserved2; //862
+    
     UInt32 mLocationID; //864
     BluetoothDeviceAddress mDeviceAddress; //868
-    //874
+    bool mBuiltIn; //874
     //875
     bool mControllerSetupIsComplete; //876
     bool mTransportIsReady; //877
     bool mTransportIsGoingAway; //878
     //879
     UInt16 mActiveControllerType; //880
+    //882
     bool mHostControllerVariablesNotInitialized; //885
     bool mIdlePolicyIsOneByte; //886
     
@@ -862,10 +864,11 @@ protected:
     
     UInt8 mNumConfiguredHIDDevices; //956
     bool mSupportWoBT; //958
-    bool unknown; //959
+    bool unknownf; //959
     
     bool mSupportDeepIdle; //970
     //972
+    
     bool mPowerReportersCreated; //1112
     int64_t mLESetAdvertisingDataReportChannelValue[15]; //1120 (15 channels)
     int64_t mPowerReporterChannelValue; //1240
@@ -878,16 +881,23 @@ protected:
     
     bool n; //1280
     bool mUpdatingFirmware; //1281
+    
     UInt16 mControllerOutstandingCalls; //1284
+    //1286
     //1287
     os_log_t mInternalOSLogObject; //1288
     
     bool mAutoResumeSet; //1296
-    
-    UInt32 mCreateLEDeviceCallTime; //1300
+    bool mACLPacketCausedFullWake; //1297
+    UInt32 mHardResetCounter; //1300
     //1304
+    //1305
+    //1306
     UInt8 mAllowedNumberOfTimedOutHCICommands; //1307
+    UInt32 mCreateLEDeviceCallTime; //1308
     bool mBluetoothdNotFound; //1312
+    bool mSupportLighthouseFeature; //1313
+    //1314
     
     struct ExpansionData
     {
