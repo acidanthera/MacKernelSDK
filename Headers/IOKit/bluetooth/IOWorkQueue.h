@@ -55,16 +55,16 @@ class IOWorkQueue : public IOEventSource
     
     struct IOWorkQueueCall
     {
-        Action              action; //0
-        void *              arg0; //8
-        void *              arg1; //16
-        void *              arg2; //24
-        void *              arg3; //32
-        void *              arg4; //40
-        void *              arg5; //48
+        Action action; //0
+        void * arg0; //8
+        void * arg1; //16
+        void * arg2; //24
+        void * arg3; //32
+        void * arg4; //40
+        void * arg5; //48
         
-        IOWorkQueueCall *   nextCall; //56
-        IOWorkQueueCall *   previousCall; //64
+        IOWorkQueueCall * nextCall; //56
+        IOWorkQueueCall * previousCall; //64
     };
     
 public:

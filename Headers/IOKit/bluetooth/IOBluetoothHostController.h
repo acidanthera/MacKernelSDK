@@ -844,8 +844,9 @@ protected:
     UInt16 mActiveControllerType; //880
     //882
     bool mHostControllerVariablesNotInitialized; //885
-    bool mIdlePolicyIsOneByte; //886
-    
+    bool mSupportNewIdlePolicy; //886
+    bool mSupportPowerOff; //887
+    bool mSupportConcurrentCreateConnection; //888
     UInt8 mNumberOfTimedOutHCICommands; //889
     UInt16 xxxxxxx;
     UInt32 mTransportSleepType; //892
@@ -884,20 +885,18 @@ protected:
     
     UInt16 mControllerOutstandingCalls; //1284
     //1286
-    //1287
+    bool mSupportDPLE; //1287
     os_log_t mInternalOSLogObject; //1288
     
     bool mAutoResumeSet; //1296
     bool mACLPacketCausedFullWake; //1297
     UInt32 mHardResetCounter; //1300
     //1304
-    //1305
+    bool mSupportLighthouseFeature; //1305
     //1306
     UInt8 mAllowedNumberOfTimedOutHCICommands; //1307
     UInt32 mCreateLEDeviceCallTime; //1308
     bool mBluetoothdNotFound; //1312
-    bool mSupportLighthouseFeature; //1313
-    //1314
     
     struct ExpansionData
     {

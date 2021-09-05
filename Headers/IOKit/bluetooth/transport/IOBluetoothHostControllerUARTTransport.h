@@ -31,8 +31,8 @@
 #define _IOKIT_IOBLUETOOTHHOSTCONTROLLERUARTTRANSPORT_H
 
 #include <IOKit/bluetooth/transport/IOBluetoothHostControllerTransport.h>
+#include <IOKit/bluetooth/serail/IOBluetoothSerialClient.h>
 #include <IOKit/IOInterruptEventSource.h>
-#include <IOKit/bluetooth/IOBluetoothSerialClient.h>
 
 #ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
 #error "Missing macOS target version"

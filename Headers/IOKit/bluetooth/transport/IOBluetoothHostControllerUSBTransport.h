@@ -180,7 +180,7 @@ private:
 protected:
     //328 bytes inherited
     IOUSBHostDevice * mBluetoothUSBHostDevice; //328
-    IOUSBHostDevice * mBluetoothUSBProviderDevice; //336
+    IOUSBHostDevice * mBluetoothUSBHub; //336
     UInt16 unknown11; //344
     UInt16 mVendorID; //346
     UInt16 mProductID; //348
