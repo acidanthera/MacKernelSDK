@@ -66,9 +66,11 @@ IOBluetoothRingBufferWrite
 _IOBluetoothRingBufferBytesAvailable
 _IOBluetoothRingBufferSequentialBytesAvailable
 IOBluetoothRingBufferWriteAtOffset
-SearchForTransportEventTimeOutOccurred(OSObject *,IOTimerEventSource *);
-FullWakeTimeOutOccurred(OSObject *,IOTimerEventSource *);
 */
+
+extern bool SearchForTransportEventTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
+extern void FullWakeTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
+extern void RecoveryWakeTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
 
 class IOBluetoothHCIController : public IOService
 {
@@ -128,7 +130,7 @@ public:
     virtual void LogPacket( UInt8 packetType, void * packetData, size_t packetSize );
     
     virtual bool shouldOverrideExistingController(IOBluetoothHCIController *, BluetoothHardwareListType *);
-    virtual IOReturn SwitchToSelectedHostController(UInt32);
+    virtual IOReturn SwitchToSelectedHostController( UInt32 locationID );
     
     static IOReturn ProcessBluetoothTransportGoesAwayAction(IOBluetoothHCIController *, UInt8 *, UInt32);
     virtual IOReturn ProcessBluetoothTransportGoesAwayActionWL(IOBluetoothHostControllerTransport *);
@@ -336,14 +338,14 @@ protected:
     bool mInternalControllerValid; //380
     
     bool mControllersFinishedSettingUp; //381
-    bool mm; //382
-    bool gg; //383
+    bool __reserved; //382, never used, not sure what it is
+    bool mSwitchingHostController; //383
     
     bool mNVRAMControllerInfoUpdated; //384
     UInt32 mCheckACPIMethodsAvailabilitiesCallTime; //388
     bool mUserClientsAttached; //392
-    IOOptionBits unknownx; //396
-    UInt16 watx; //400
+    IOOptionBits mTranspotPowerStateOptions; //396
+    UInt16 mNumCommandSleepsInWorkLoop; //400, +1 when commandSleep is called in FamilyCommandSleep and -1 when it's done
     
     UInt32 mActivityTickleCallTime; //404
     IOTimerEventSource * mFullWakeTimer; //408
@@ -353,19 +355,19 @@ protected:
     bool mSignPostStarted; //419
     
     os_log_t mInternalOSLogObject; //424
-    bool a; //432
+    bool unknown; //432, has to do with power state in transports
     bool mBootFromROM; //433
-    bool c; //434, BTRB param
+    bool mBTRBStatus; //434, BTRB param, GPIO true or false currently
     bool mRegisterServiceCalled; //435
     
     thread_call_t mHardResetThreadCall; //440
     UInt32 mUSBHardResetWLCallTime; //448
     bool mTestHCICommandTimeoutUSBHardResetWL; //452
     bool mTestHCICommandTimeoutHardReset; //453
-    bool hh; //454
+    bool unknown1; //454, see DispatchHardwareResetTest
     bool mTestNoHardResetWhenSleepCommandTimeout; //455
     bool mTestHCICommandTimeoutWhenWake; //456
-    bool h; //457
+    bool unknown2; //457
     
     UInt8 mNumHardResetRetries; //458
     IOBluetoothHostControllerUSBTransport * mHardResetUSBTransport; //464
