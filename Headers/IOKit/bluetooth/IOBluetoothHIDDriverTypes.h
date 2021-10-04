@@ -35,61 +35,61 @@
 // Vendor ID Sources
 enum
 {
-    kVendorIDSourceBluetoothSIG					= 0x1,
-    kVendorIDSourceUSBIF						= 0x2
+    kVendorIDSourceBluetoothSIG                 = 0x1,
+    kVendorIDSourceUSBIF                        = 0x2
 };
 
 // Bluetooth HID Transaction Headers
 enum
 {
-    IOBTHID_HANDSHAKE_HEADER					= 0x00,
-    IOBTHID_HID_CONTROL_HEADER					= 0x10,
-    IOBTHID_GET_REPORT_HEADER					= 0x40,
-    IOBTHID_SET_REPORT_HEADER					= 0x50,
-    IOBTHID_GET_PROTOCOL_HEADER					= 0x60,
-    IOBTHID_SET_PROTOCOL_HEADER					= 0x70,
-    IOBTHID_GET_IDLE_HEADER						= 0x80,
-    IOBTHID_SET_IDLE_HEADER						= 0x90,
-    IOBTHID_DATA_HEADER							= 0xA0,
-    IOBTHID_DATC_HEADER							= 0xB0
+    kBluetoothHIDTransactionHandshakeHeader         = 0x00,
+    kBluetoothHIDTransactionHIDControlHeader        = 0x10,
+    kBluetoothHIDTransactionGetReportHeader         = 0x40,
+    kBluetoothHIDTransactionSetReportHeader         = 0x50,
+    kBluetoothHIDTransactionGetProtocolHeader       = 0x60,
+    kBluetoothHIDTransactionSetProtocolHeader       = 0x70,
+    kBluetoothHIDTransactionGetIdleHeader           = 0x80,
+    kBluetoothHIDTransactionSetIdleHeader           = 0x90,
+    kBluetoothHIDTransactionDataHeader              = 0xA0,
+    kBluetoothHIDTransactionDatcHeader              = 0xB0
 };
 
 // Handshake Types
 enum
 {
-    IOBTHID_HANDSHAKE_SUCCESSFUL				= 0x0,
-    IOBTHID_HANDSHAKE_NOT_READY					= 0x1,
-    IOBTHID_HANDSHAKE_INVALID_REPORT_ID			= 0x2,
-    IOBTHID_HANDSHAKE_UNSUPPORTED_REQUEST		= 0x3,
-    IOBTHID_HANDSHAKE_INVALID_PARAMETER			= 0x4,
-    IOBTHID_HANDSHAKE_ERR_UNKNOWN				= 0xD,
-    IOBTHID_HANDSHAKE_ERR_FATAL					= 0xF
+    kBluetoothHandshakeTypeSuccessful               = 0x0,
+    kBluetoothHandshakeTypeNotReady                 = 0x1,
+    kBluetoothHandshakeTypeInvalidReportID          = 0x2,
+    kBluetoothHandshakeTypeUnsupportedRequest       = 0x3,
+    kBluetoothHandshakeTypeInvalidParameter         = 0x4,
+    kBluetoothHandshakeTypeErrorUnknown             = 0xD,
+    kBluetoothHandshakeTypeErrorFatal               = 0xF
 };
 
-// HID_Control Types
+// HID Control Types
 enum
 {
-    IOBTHID_CONTROL_NOP							= 0x0,
-    IOBTHID_CONTROL_HARD_RESET					= 0x1,
-    IOBTHID_CONTROL_SOFT_RESET					= 0x2,
-    IOBTHID_CONTROL_SUSPEND						= 0x3,
-    IOBTHID_CONTROL_EXIT_SUSPEND				= 0x4,
-    IOBTHID_CONTROL_VC_UNPLUG					= 0x5
-};
-
-// Protocol Types
-enum
-{
-    IOBTHID_BOOT_PROTOCOL						= 0x0,
-    IOBTHID_REPORT_PROTOCOL						= 0x1
+    kBluetoothHIDControlTypeNoOperation             = 0x0,
+    kBluetoothHIDControlTypeHardReset               = 0x1,
+    kBluetoothHIDControlTypeSoftRest                = 0x2,
+    kBluetoothHIDControlTypeSuspend                 = 0x3,
+    kBluetoothHIDControlTypeExitSuspend             = 0x4,
+    kBluetoothHIDControlTypeVCUnplug                = 0x5
 };
 
 // Report Types
 enum
 {
-    IOBTHID_RESERVED_REPORT						= 0x0,
-    IOBTHID_OTHER_REPORT						= 0x0,
-    IOBTHID_INPUT_REPORT						= 0x1,
-    IOBTHID_OUTPUT_REPORT						= 0x2,
-    IOBTHID_FEATURE_REPORT						= 0x3
+    kBluetoothReportTypeReserved                    = 0x0,
+    kBluetoothReportTypeOther                       = 0x0,
+    kBluetoothReportTypeInput                       = 0x1,
+    kBluetoothReportTypeOutput                      = 0x2,
+    kBluetoothReportTypeFeature                     = 0x3
+};
+
+// Protocol Types
+enum
+{
+    kBluetoothProtocolTypeBoot                      = 0x0,
+    kBluetoothProtocolTypeReport                    = 0x1
 };
