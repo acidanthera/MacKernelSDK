@@ -151,7 +151,7 @@ protected:
 		
         IOReturn                mExitHIDSuspendResult;
     };
-    ExpansionData *				_expansionData;
+    ExpansionData *             _expansionData;
 	
 public:
     // Standard IOService Methods
@@ -213,7 +213,7 @@ public:
     virtual IOReturn    setPowerState( unsigned long powerStateOrdinal, IOService * whatDevice );
     virtual IOReturn    createCommandGate( IOService * provider );
     virtual IOReturn    getDeviceProperties( IOService * provider );
-    virtual	bool        readDeviceName();
+    virtual bool        readDeviceName();
 
     // Command Gate Actions
     static  IOReturn    staticCloseDownServicesAction( OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
@@ -280,7 +280,7 @@ public:
     virtual void handleReadyToSleepTimerFired();
 
     OSMetaClassDeclareReservedUsed( IOBluetoothHIDDriver, 10 );
-    virtual	IOReturn HIDCommandSleep ( void * event, UInt32 milliseconds, char * calledByFunction, bool panicMachine );
+    virtual IOReturn HIDCommandSleep ( void * event, UInt32 milliseconds, char * calledByFunction, bool panicMachine );
 
     OSMetaClassDeclareReservedUnused( IOBluetoothHIDDriver, 11 );
     OSMetaClassDeclareReservedUnused( IOBluetoothHIDDriver, 12 );
