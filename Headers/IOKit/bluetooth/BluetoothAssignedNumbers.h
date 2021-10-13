@@ -47,19 +47,19 @@ extern "C"
 
 enum BluetoothCompanyIdentifers
     {
-    kBluetoothCompanyIdentiferEricssonTechnologyLicensing						= 0,
-    kBluetoothCompanyIdentiferNokiaMobilePhones									= 1,
-    kBluetoothCompanyIdentiferIntel												= 2,
-    kBluetoothCompanyIdentiferIBM												= 3,
-    kBluetoothCompanyIdentiferToshiba											= 4,
-    kBluetoothCompanyIdentifer3Com												= 5,
-    kBluetoothCompanyIdentiferMicrosoft											= 6,
-    kBluetoothCompanyIdentiferLucent											= 7,
-    kBluetoothCompanyIdentiferMotorola											= 8,
-    kBluetoothCompanyIdentiferInfineonTechnologiesAG							= 9,
-    kBluetoothCompanyIdentiferCambridgeSiliconRadio								= 10,
-    kBluetoothCompanyIdentiferSiliconWave										= 11,
-    kBluetoothCompanyIdentiferDigianswerAS										= 12,
+    kBluetoothCompanyIdentiferEricssonTechnologyLicensing                       = 0,
+    kBluetoothCompanyIdentiferNokiaMobilePhones                                 = 1,
+    kBluetoothCompanyIdentiferIntel                                             = 2,
+    kBluetoothCompanyIdentiferIBM                                               = 3,
+    kBluetoothCompanyIdentiferToshiba                                           = 4,
+    kBluetoothCompanyIdentifer3Com                                              = 5,
+    kBluetoothCompanyIdentiferMicrosoft                                         = 6,
+    kBluetoothCompanyIdentiferLucent                                            = 7,
+    kBluetoothCompanyIdentiferMotorola                                          = 8,
+    kBluetoothCompanyIdentiferInfineonTechnologiesAG                            = 9,
+    kBluetoothCompanyIdentiferCambridgeSiliconRadio                             = 10,
+    kBluetoothCompanyIdentiferSiliconWave                                       = 11,
+    kBluetoothCompanyIdentiferDigianswerAS                                      = 12,
     kBluetoothCompanyIdentiferTexasInstruments									= 13,
     kBluetoothCompanyIdentiferParthusTechnologies								= 14,
     kBluetoothCompanyIdentiferBroadcom											= 15,
@@ -786,29 +786,29 @@ enum SDPAttributeIdentifierCodes
 
 enum SDPAttributeDeviceIdentificationRecord
 {
-    // DeviceID v1.3																Required		Type		Section		Notes
-    kBluetoothSDPAttributeDeviceIdentifierServiceDescription			= 0x0001,	// O			string		-
-    kBluetoothSDPAttributeDeviceIdentifierDocumentationURL				= 0x000A,	// O			url			-
-    kBluetoothSDPAttributeDeviceIdentifierClientExecutableURL			= 0x000B,	// O			url			-
-    kBluetoothSDPAttributeDeviceIdentifierSpecificationID				= 0x0200,	// M			uint16		5.1
-    kBluetoothSDPAttributeDeviceIdentifierVendorID						= 0x0201,	// M			uint16		5.2
-    kBluetoothSDPAttributeDeviceIdentifierProductID						= 0x0202,	// M			uint16		5.3
-    kBluetoothSDPAttributeDeviceIdentifierVersion						= 0x0203,	// M			uint16		5.4
-    kBluetoothSDPAttributeDeviceIdentifierPrimaryRecord					= 0x0204,	// M			bool		5.5
-    kBluetoothSDPAttributeDeviceIdentifierVendorIDSource				= 0x0205,	// M			uint16		5.6
-    kBluetoothSDPAttributeDeviceIdentifierReservedRangeStart			= 0x0206,
-    kBluetoothSDPAttributeDeviceIdentifierReservedRangeEnd				= 0x02FF
+    // DeviceID v1.3                                                                Required        Type        Section     Notes
+    kBluetoothSDPAttributeDeviceIdentifierServiceDescription            = 0x0001,   // O            string      -
+    kBluetoothSDPAttributeDeviceIdentifierDocumentationURL              = 0x000A,   // O            url         -
+    kBluetoothSDPAttributeDeviceIdentifierClientExecutableURL           = 0x000B,   // O            url         -
+    kBluetoothSDPAttributeDeviceIdentifierSpecificationID               = 0x0200,   // M            uint16      5.1
+    kBluetoothSDPAttributeDeviceIdentifierVendorID                      = 0x0201,   // M            uint16      5.2
+    kBluetoothSDPAttributeDeviceIdentifierProductID                     = 0x0202,   // M            uint16      5.3
+    kBluetoothSDPAttributeDeviceIdentifierVersion                       = 0x0203,   // M            uint16      5.4
+    kBluetoothSDPAttributeDeviceIdentifierPrimaryRecord                 = 0x0204,   // M            bool        5.5
+    kBluetoothSDPAttributeDeviceIdentifierVendorIDSource                = 0x0205,   // M            uint16      5.6
+    kBluetoothSDPAttributeDeviceIdentifierReservedRangeStart            = 0x0206,
+    kBluetoothSDPAttributeDeviceIdentifierReservedRangeEnd              = 0x02FF
 	
 };
 
 enum ProtocolParameters
 {
-    kBluetoothSDPProtocolParameterL2CAPPSM								= 1,
-    kBluetoothSDPProtocolParameterRFCOMMChannel							= 1,
-    kBluetoothSDPProtocolParameterTCPPort								= 1,
-    kBluetoothSDPProtocolParameterUDPPort								= 1,
-    kBluetoothSDPProtocolParameterBNEPVersion							= 1,
-    kBluetoothSDPProtocolParameterBNEPSupportedNetworkPacketTypeList	= 2
+    kBluetoothSDPProtocolParameterL2CAPPSM                              = 1,
+    kBluetoothSDPProtocolParameterRFCOMMChannel                         = 1,
+    kBluetoothSDPProtocolParameterTCPPort                               = 1,
+    kBluetoothSDPProtocolParameterUDPPort                               = 1,
+    kBluetoothSDPProtocolParameterBNEPVersion                           = 1,
+    kBluetoothSDPProtocolParameterBNEPSupportedNetworkPacketTypeList    = 2
 };
 
 /*!
@@ -819,21 +819,21 @@ enum ProtocolParameters
 
 enum BluetoothHCIExtendedInquiryResponseDataTypes
 {
-    kBluetoothHCIExtendedInquiryResponseDataTypeFlags										= 0x01,
-    kBluetoothHCIExtendedInquiryResponseDataType16BitServiceClassUUIDsWithMoreAvailable		= 0x02,
-    kBluetoothHCIExtendedInquiryResponseDataType16BitServiceClassUUIDsCompleteList			= 0x03,
-    kBluetoothHCIExtendedInquiryResponseDataType32BitServiceClassUUIDsWithMoreAvailable		= 0x04,
-    kBluetoothHCIExtendedInquiryResponseDataType32BitServiceClassUUIDsCompleteList			= 0x05,
-    kBluetoothHCIExtendedInquiryResponseDataType128BitServiceClassUUIDsWithMoreAvailable	= 0x06,
-    kBluetoothHCIExtendedInquiryResponseDataType128BitServiceClassUUIDsCompleteList			= 0x07,
-    kBluetoothHCIExtendedInquiryResponseDataTypeShortenedLocalName							= 0x08,
-    kBluetoothHCIExtendedInquiryResponseDataTypeCompleteLocalName							= 0x09,
+    kBluetoothHCIExtendedInquiryResponseDataTypeFlags                                       = 0x01,
+    kBluetoothHCIExtendedInquiryResponseDataType16BitServiceClassUUIDsWithMoreAvailable     = 0x02,
+    kBluetoothHCIExtendedInquiryResponseDataType16BitServiceClassUUIDsCompleteList          = 0x03,
+    kBluetoothHCIExtendedInquiryResponseDataType32BitServiceClassUUIDsWithMoreAvailable     = 0x04,
+    kBluetoothHCIExtendedInquiryResponseDataType32BitServiceClassUUIDsCompleteList          = 0x05,
+    kBluetoothHCIExtendedInquiryResponseDataType128BitServiceClassUUIDsWithMoreAvailable    = 0x06,
+    kBluetoothHCIExtendedInquiryResponseDataType128BitServiceClassUUIDsCompleteList         = 0x07,
+    kBluetoothHCIExtendedInquiryResponseDataTypeShortenedLocalName                          = 0x08,
+    kBluetoothHCIExtendedInquiryResponseDataTypeCompleteLocalName                           = 0x09,
     kBluetoothHCIExtendedInquiryResponseDataTypeTransmitPowerLevel                          = 0x0A,
     kBluetoothHCIExtendedInquiryResponseDataTypeSSPOOBClassOfDevice                         = 0x0D,
     kBluetoothHCIExtendedInquiryResponseDataTypeSSPOOBSimplePairingHashC                    = 0x0E,
     kBluetoothHCIExtendedInquiryResponseDataTypeSSPOOBSimplePairingRandomizerR              = 0x0F,
-    kBluetoothHCIExtendedInquiryResponseDataTypeDeviceID									= 0x10,
-    kBluetoothHCIExtendedInquiryResponseDataTypeSecurityManagerTKValue						= 0x10,
+    kBluetoothHCIExtendedInquiryResponseDataTypeDeviceID                                    = 0x10,
+    kBluetoothHCIExtendedInquiryResponseDataTypeSecurityManagerTKValue                      = 0x10,
     kBluetoothHCIExtendedInquiryResponseDataTypeSecurityManagerOOBFlags                     = 0x11,
     kBluetoothHCIExtendedInquiryResponseDataTypeSlaveConnectionIntervalRange                = 0x12,
     kBluetoothHCIExtendedInquiryResponseDataTypeServiceSolicitation16BitUUIDs               = 0x14,
@@ -842,21 +842,21 @@ enum BluetoothHCIExtendedInquiryResponseDataTypes
     kBluetoothHCIExtendedInquiryResponseDataTypePublicTargetAddress                         = 0x17,
     kBluetoothHCIExtendedInquiryResponseDataTypeRandomTargetAddress                         = 0x18,
     kBluetoothHCIExtendedInquiryResponseDataTypeAppearance                                  = 0x19,
-    kBluetoothHCIExtendedInquiryResponseDataTypeAdvertisingInterval							= 0x1A,
-    kBluetoothHCIExtendedInquiryResponseDataTypeLEBluetoothDeviceAddress					= 0x1B,
-    kBluetoothHCIExtendedInquiryResponseDataTypeLERole										= 0x1C,
-    kBluetoothHCIExtendedInquiryResponseDataTypeSimplePairingHash							= 0x1D,
-    kBluetoothHCIExtendedInquiryResponseDataTypeSimplePairingRandomizer						= 0x1E,
-    kBluetoothHCIExtendedInquiryResponseDataTypeServiceSolicitation32BitUUIDs				= 0x1F,
-    kBluetoothHCIExtendedInquiryResponseDataTypeServiceData32BitUUID						= 0x20,
-    kBluetoothHCIExtendedInquiryResponseDataTypeServiceData128BitUUID						= 0x21,
-    kBluetoothHCIExtendedInquiryResponseDataTypeSecureConnectionsConfirmationValue			= 0x22,
-    kBluetoothHCIExtendedInquiryResponseDataTypeSecureConnectionsRandomValue				= 0x23,
-    kBluetoothHCIExtendedInquiryResponseDataTypeURI											= 0x24,
-    kBluetoothHCIExtendedInquiryResponseDataTypeIndoorPositioning							= 0x25,
-    kBluetoothHCIExtendedInquiryResponseDataTypeTransportDiscoveryData						= 0x26,
-    kBluetoothHCIExtendedInquiryResponseDataType3DInformationData							= 0x3D,
-    kBluetoothHCIExtendedInquiryResponseDataTypeManufacturerSpecificData					= 0xFF
+    kBluetoothHCIExtendedInquiryResponseDataTypeAdvertisingInterval                         = 0x1A,
+    kBluetoothHCIExtendedInquiryResponseDataTypeLEBluetoothDeviceAddress                    = 0x1B,
+    kBluetoothHCIExtendedInquiryResponseDataTypeLERole                                      = 0x1C,
+    kBluetoothHCIExtendedInquiryResponseDataTypeSimplePairingHash                           = 0x1D,
+    kBluetoothHCIExtendedInquiryResponseDataTypeSimplePairingRandomizer                     = 0x1E,
+    kBluetoothHCIExtendedInquiryResponseDataTypeServiceSolicitation32BitUUIDs               = 0x1F,
+    kBluetoothHCIExtendedInquiryResponseDataTypeServiceData32BitUUID                        = 0x20,
+    kBluetoothHCIExtendedInquiryResponseDataTypeServiceData128BitUUID                       = 0x21,
+    kBluetoothHCIExtendedInquiryResponseDataTypeSecureConnectionsConfirmationValue          = 0x22,
+    kBluetoothHCIExtendedInquiryResponseDataTypeSecureConnectionsRandomValue                = 0x23,
+    kBluetoothHCIExtendedInquiryResponseDataTypeURI                                         = 0x24,
+    kBluetoothHCIExtendedInquiryResponseDataTypeIndoorPositioning                           = 0x25,
+    kBluetoothHCIExtendedInquiryResponseDataTypeTransportDiscoveryData                      = 0x26,
+    kBluetoothHCIExtendedInquiryResponseDataType3DInformationData                           = 0x3D,
+    kBluetoothHCIExtendedInquiryResponseDataTypeManufacturerSpecificData                    = 0xFF
 };
 
 /*!
@@ -866,18 +866,19 @@ enum BluetoothHCIExtendedInquiryResponseDataTypes
 
 typedef enum BluetoothHCIVersions
 {
-    kBluetoothHCIVersionCoreSpecification1_0b												= 0x00,
-    kBluetoothHCIVersionCoreSpecification1_1												= 0x01,
-    kBluetoothHCIVersionCoreSpecification1_2												= 0x02,
-    kBluetoothHCIVersionCoreSpecification2_0EDR												= 0x03,
-    kBluetoothHCIVersionCoreSpecification2_1EDR												= 0x04,
-    kBluetoothHCIVersionCoreSpecification3_0HS												= 0x05,
-    kBluetoothHCIVersionCoreSpecification4_0												= 0x06,
-    kBluetoothHCIVersionCoreSpecification4_1												= 0x07,
-    kBluetoothHCIVersionCoreSpecification4_2												= 0x08,
-    kBluetoothHCIVersionCoreSpecification5_0												= 0x09,
-    kBluetoothHCIVersionCoreSpecification5_1												= 0x0A,
-    kBluetoothHCIVersionCoreSpecification5_2												= 0x0B
+    kBluetoothHCIVersionCoreSpecification1_0b                                               = 0x00,
+    kBluetoothHCIVersionCoreSpecification1_1                                                = 0x01,
+    kBluetoothHCIVersionCoreSpecification1_2                                                = 0x02,
+    kBluetoothHCIVersionCoreSpecification2_0EDR                                             = 0x03,
+    kBluetoothHCIVersionCoreSpecification2_1EDR                                             = 0x04,
+    kBluetoothHCIVersionCoreSpecification3_0HS                                              = 0x05,
+    kBluetoothHCIVersionCoreSpecification4_0                                                = 0x06,
+    kBluetoothHCIVersionCoreSpecification4_1                                                = 0x07,
+    kBluetoothHCIVersionCoreSpecification4_2                                                = 0x08,
+    kBluetoothHCIVersionCoreSpecification5_0                                                = 0x09,
+    kBluetoothHCIVersionCoreSpecification5_1                                                = 0x0A,
+    kBluetoothHCIVersionCoreSpecification5_2												= 0x0B,
+    kBluetoothHCIVersionCoreSpecification5_3                                                = 0x0C
 } BluetoothHCIVersions;
 
 /*!
@@ -887,18 +888,19 @@ typedef enum BluetoothHCIVersions
 
 typedef enum BluetoothLMPVersions
 {
-    kBluetoothLMPVersionCoreSpecification1_0b												= 0x00,
-    kBluetoothLMPVersionCoreSpecification1_1												= 0x01,
-    kBluetoothLMPVersionCoreSpecification1_2												= 0x02,
-    kBluetoothLMPVersionCoreSpecification2_0EDR												= 0x03,
-    kBluetoothLMPVersionCoreSpecification2_1EDR												= 0x04,
-    kBluetoothLMPVersionCoreSpecification3_0HS												= 0x05,
-    kBluetoothLMPVersionCoreSpecification4_0												= 0x06,
-    kBluetoothLMPVersionCoreSpecification4_1												= 0x07,
-    kBluetoothLMPVersionCoreSpecification4_2												= 0x08,
-    kBluetoothLMPVersionCoreSpecification5_0												= 0x09,
-    kBluetoothLMPVersionCoreSpecification5_1												= 0x0A,
-    kBluetoothLMPVersionCoreSpecification5_2												= 0x0B
+    kBluetoothLMPVersionCoreSpecification1_0b                                               = 0x00,
+    kBluetoothLMPVersionCoreSpecification1_1                                                = 0x01,
+    kBluetoothLMPVersionCoreSpecification1_2                                                = 0x02,
+    kBluetoothLMPVersionCoreSpecification2_0EDR                                             = 0x03,
+    kBluetoothLMPVersionCoreSpecification2_1EDR                                             = 0x04,
+    kBluetoothLMPVersionCoreSpecification3_0HS                                              = 0x05,
+    kBluetoothLMPVersionCoreSpecification4_0                                                = 0x06,
+    kBluetoothLMPVersionCoreSpecification4_1                                                = 0x07,
+    kBluetoothLMPVersionCoreSpecification4_2                                                = 0x08,
+    kBluetoothLMPVersionCoreSpecification5_0                                                = 0x09,
+    kBluetoothLMPVersionCoreSpecification5_1                                                = 0x0A,
+    kBluetoothLMPVersionCoreSpecification5_2                                                = 0x0B,
+    kBluetoothLMPVersionCoreSpecification5_3                                                = 0x0C
 } BluetoothLMPVersions;
 
 #ifdef	__cplusplus

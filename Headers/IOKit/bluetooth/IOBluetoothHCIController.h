@@ -43,6 +43,8 @@ struct BluetoothHardwareListType
     IOBluetoothHostControllerTransport  * mBluetoothTransport; //0
     IOBluetoothHostController           * mBluetoothHostController; //8
     //16
+    //17
+    //18
     UInt8 mHardResetCounter; //19
     //20
     BluetoothHardwareListType           * mNextHardware; //24
@@ -57,16 +59,10 @@ struct HCIEventNotificationListener
     UInt64 unknown;
 };
 
-/*
-IOBluetoothRingBufferRead
-_IOBluetoothRingBufferBytesInBuffer
-_IOBluetoothRingBufferSequentialBytesInBuffer
-IOBluetoothRingBufferReadAtOffset
-IOBluetoothRingBufferWrite
-_IOBluetoothRingBufferBytesAvailable
-_IOBluetoothRingBufferSequentialBytesAvailable
-IOBluetoothRingBufferWriteAtOffset
-*/
+extern UInt32 IOBluetoothRingBufferRead(UInt32 *, UInt8 *, UInt32, UInt32);
+extern UInt32 IOBluetoothRingBufferReadAtOffset(UInt32 *, void *, UInt32, UInt64, UInt32);
+extern UInt32 IOBluetoothRingBufferWrite(UInt32 *, UInt8 *, UInt32, UInt32);
+extern UInt32 IOBluetoothRingBufferWriteAtOffset(UInt32 *, void *, UInt32, UInt64, UInt32);
 
 extern bool SearchForTransportEventTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
 extern void FullWakeTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
@@ -340,7 +336,6 @@ protected:
     bool mControllersFinishedSettingUp; //381
     bool __reserved; //382, never used, not sure what it is
     bool mSwitchingHostController; //383
-    
     bool mNVRAMControllerInfoUpdated; //384
     UInt32 mCheckACPIMethodsAvailabilitiesCallTime; //388
     bool mUserClientsAttached; //392
@@ -357,7 +352,7 @@ protected:
     os_log_t mInternalOSLogObject; //424
     bool unknown; //432, has to do with power state in transports
     bool mBootFromROM; //433
-    bool mBTRBStatus; //434, BTRB param, GPIO true or false currently
+    bool mBTGPIOResult; //434, BTRB result
     bool mRegisterServiceCalled; //435
     
     thread_call_t mHardResetThreadCall; //440

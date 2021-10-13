@@ -790,7 +790,7 @@ protected:
     UInt16 mNumBufferedSCOBytes; //528
     AbsoluteTime mBufferedSCOPacketTimestamp; //536
     IOBluetoothInactivityTimerEventSource * mIdleTimer; //544
-    //552
+    UInt32 mNumSCODataInQueue; //552
     UInt32 mCurrentlyExecutingSCOSequenceNumber; //556
     //560
     UInt16 mSynchronousConnectionPacketType; //562
@@ -828,19 +828,18 @@ protected:
     IOBluetoothHostControllerTransport * mBluetoothTransport; //832
     IOWorkQueue * mControllerWorkQueue; //840
     IOWorkQueue * mReporterWorkQueue; //848
-    UInt16 __reserved1; //856
+    UInt16 __reserved; //856
     UInt16 mVendorID; //858
     UInt16 mProductID; //860
-    UInt16 __reserved2; //862
     
     UInt32 mLocationID; //864
     BluetoothDeviceAddress mDeviceAddress; //868
     bool mBuiltIn; //874
-    //875
+    bool mHostControllerVariablesInitialized; //875
     bool mControllerSetupIsComplete; //876
     bool mTransportIsReady; //877
     bool mTransportIsGoingAway; //878
-    //879
+    UInt8 mControllerSetupState; //879
     UInt16 mActiveControllerType; //880
     //882
     bool mHostControllerVariablesNotInitialized; //885
@@ -848,7 +847,6 @@ protected:
     bool mSupportPowerOff; //887
     bool mSupportConcurrentCreateConnection; //888
     UInt8 mNumberOfTimedOutHCICommands; //889
-    UInt16 xxxxxxx;
     UInt32 mTransportSleepType; //892
     
     bool mCanDoHardReset; //896
@@ -858,27 +856,43 @@ protected:
     IOBluetoothHCIControllerConfigState mControllerConfigState; //904
     IOBluetoothHCIControllerFeatureFlags mControllerFeatureFlags; //908
     UInt8 mNumberOfCommandsAllowedByHardware; //912
-    //913
+    bool mWaitingForACLPackets; //913
     UInt8 mNumSCOConnections; //914
     UInt64 mTotalSCOBytesSent; //920
     UInt16 mActiveConnections; //928
+    UInt8 mNextNewSynchronousConnectionType; //930
+    
+    bool mNeedToGetCurrentUSBIsochFrameNumber; //931
+    UInt16 x; //932, setted to 256
+    //934, param in SetMaxPowerForConnection
+    //936
     
     UInt8 mNumConfiguredHIDDevices; //956
+    //957
     bool mSupportWoBT; //958
     bool unknownf; //959
     
     bool mSupportDeepIdle; //970
-    //972
+    //971
+    bool mWaitingForCompletedHCICommandsToSleep; //972 calls transport completepowerstatechange
     
+    int64_t mAppleBTLEAdvertisingReport[15]; //976
+    int64_t mTotalnumberofBTLEAdvertisingReportsReceived; //1096
+    int64_t mTotalNumberOfTimesBluetoothIdleTimerExpired; //1104
     bool mPowerReportersCreated; //1112
-    int64_t mLESetAdvertisingDataReportChannelValue[15]; //1120 (15 channels)
-    int64_t mPowerReporterChannelValue; //1240
+    int64_t mLESetAdvertisingData[15]; //1120
+    int64_t mTotalNumberOfLESetAdvertisingDataCommandSent; //1240
     
     bool mIdleTimerDisabled; //1248
     bool mPowerStateChanging; //1249
-    bool un; //1260
+    bool mHandlingIdleTimeout; //1250
+    UInt32 mCurrentIdleTime; //1252
+    UInt32 mIdleTimerValue; //1256
+    bool mIdleTimerValueSet; //1260
     UInt32 ut; //1264
-    UInt32 mIdleTimerValue; //1268
+    //1268
+    //1272
+    //1276
     
     bool n; //1280
     bool mUpdatingFirmware; //1281

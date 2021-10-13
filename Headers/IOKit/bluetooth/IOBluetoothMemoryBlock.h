@@ -194,12 +194,11 @@ public:
     virtual UInt64 writeBytes( UInt64 offset, void * bytes, UInt64 length );
     
 protected:
-    //108 bytes inherited from IOBluetoothMemoryBlock
-    UInt8 mAddressByte; //this + 108
-    UInt8 mControlByte; //this + 109
-    UInt16 unknown1; //this + 110
-    UInt8 mHeaderBytes; //this + 112
-    UInt8 mFCFByte; //this + 113
+    UInt8 mAddressByte; //108
+    UInt8 mControlByte; //109
+    UInt16 unknown1; //110
+    UInt8 mHeaderBytes; //112
+    UInt8 mFCFByte; //113
 };
 
 class IOBluetoothACLMemoryDescriptor : public IOGeneralMemoryDescriptor
@@ -239,7 +238,6 @@ protected:
     UInt16 unknown2; //202
     UInt32 unknown3; //204
     bool mAsReference; //208
-    uint8_t reserved1[3];
     IOOptionBits mPacketSentStatus; //212
     void * mBuffers; //216
     IOByteCount mBuffersSize; //224

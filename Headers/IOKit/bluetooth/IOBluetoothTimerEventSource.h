@@ -63,10 +63,10 @@ public:
     virtual void cancelTimeout() APPLE_KEXT_OVERRIDE;
     
 protected:
-    IOBluetoothTimer * currentTimer; //96
+    IOBluetoothTimer * mCurrentTimer; //96
     OSObject * mOwner; //104
     Action mTimeoutHandler; //112
-    IOBluetoothTimer * firingTimer; //120
+    IOBluetoothTimer * mFiringTimer; //120
 };
 
 #endif
