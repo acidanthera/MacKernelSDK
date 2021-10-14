@@ -99,13 +99,15 @@ class IOBluetoothL2CAPSupervisoryFrameMemoryBlock : public IOBluetoothL2CAPMemor
 {
     OSDeclareDefaultStructors(IOBluetoothL2CAPSupervisoryFrameMemoryBlock)
     
+    typedef UInt8 SupervisoryFunctionMask;
+    
 public:
     static IOBluetoothL2CAPSupervisoryFrameMemoryBlock * withDirection( IODirection direction );
     
     virtual bool init() APPLE_KEXT_OVERRIDE;
     virtual void free() APPLE_KEXT_OVERRIDE;
     
-    virtual bool sent( int ) APPLE_KEXT_OVERRIDE;
+    virtual bool sent( IOOptionBits status ) APPLE_KEXT_OVERRIDE;
     virtual bool hasCallBack() APPLE_KEXT_OVERRIDE;
     
     virtual IOByteCount readBytes( IOByteCount offset, void * bytes, IOByteCount length ) APPLE_KEXT_OVERRIDE;
@@ -114,7 +116,7 @@ public:
     
     UInt8 getSupervisoryFunctionMask( UInt16 );
     virtual UInt8 getSupervisoryFunctionMask();
-    virtual UInt8 setSupervisoryFunctionMask(IOBluetoothL2CAPSupervisoryFrameMemoryBlock::SupervisoryFunctionMask);
+    virtual UInt8 setSupervisoryFunctionMask(SupervisoryFunctionMask mask);
     
     bool getRetransmissionDisableBit( UInt16 );
     virtual bool getRetransmissionDisableBit();
@@ -128,15 +130,16 @@ public:
     virtual IOReturn writeFCS( UInt16 );
     
 protected:
-    UInt8 mSupervisoryFunctionMask; //110
-    //The first bit of this UInt8 stores the RetransmissionDisableBit, and the 5 & 6 bits stores the SupervisoryFunctionMask. The other bits, as of right now, are reserved.
+    UInt8 mRequestSequenceNumber; //110
     UInt8 mReceiveSequenceNumber; //111
-    UInt16 mFCS; //112, Frame Check Sequence
+    UInt16 mFrameCheckSequence; //112
 };
 
 class IOBluetoothL2CAPInformationFrameMemoryBlock : public IOBluetoothL2CAPSupervisoryFrameMemoryBlock
 {
     OSDeclareDefaultStructors(IOBluetoothL2CAPInformationFrameMemoryBlock)
+    
+    typedef UInt16 SegmentationAndReassemblyMask;
     
 public:
     static IOBluetoothL2CAPInformationFrameMemoryBlock * withDataFromBlock( IOBluetoothL2CAPInformationFrameMemoryBlock * block, UInt64, UInt64, UInt32 );
@@ -149,12 +152,12 @@ public:
     virtual UInt64 getLength() APPLE_KEXT_OVERRIDE;
     virtual IOBluetoothMemoryBlock * getBlock() APPLE_KEXT_OVERRIDE;
     
-    virtual bool sent( int ) APPLE_KEXT_OVERRIDE;
+    virtual bool sent( IOOptionBits status ) APPLE_KEXT_OVERRIDE;
     virtual bool hasCallBack() APPLE_KEXT_OVERRIDE;
     
     UInt16 getSegmentationMask( UInt16 );
     virtual UInt16 getSegmentationMask();
-    virtual UInt16 setSegmentationMask( IOBluetoothL2CAPInformationFrameMemoryBlock::SegmentationAndReassemblyMask );
+    virtual UInt16 setSegmentationMask( SegmentationAndReassemblyMask );
     UInt16 getTransmitSequenceNumber( UInt16 );
     virtual UInt16 getTransmitSequenceNumber();
     virtual UInt16 setTransmitSequenceNumber( UInt8 );
@@ -220,9 +223,9 @@ public:
     virtual IOReturn prepare(IODirection forDirection = kIODirectionNone) APPLE_KEXT_OVERRIDE;
     virtual IOReturn complete(IODirection forDirection = kIODirectionNone) APPLE_KEXT_OVERRIDE;
     
-    virtual IOByteCount getLength() APPLE_KEXT_OVERRIDE;
+    virtual IOByteCount getLength() const APPLE_KEXT_OVERRIDE;
     virtual IOByteCount getPayloadLength();
-    virtual bool sent( int );
+    virtual bool sent( IOOptionBits status );
     virtual int packetSentStatus();
     virtual bool hasCallBack();
     virtual BluetoothConnectionHandle getConnectionHandle();
