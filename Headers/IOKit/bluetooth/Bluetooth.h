@@ -2652,8 +2652,13 @@ enum
     kBluetoothHCIErrorConnectionFailedToBeEstablished                   = 0x3E,
     kBluetoothHCIErrorMACConnectionFailed                               = 0x3F,
     kBluetoothHCIErrorCoarseClockAdjustmentRejected                     = 0x40,
+    kBluetoothHCIErrorType0SubmapNotDefined                             = 0x41,
+    kBluetoothHCIErrorUnknownAdvertisingIdentifier                      = 0x42,
+    kBluetoothHCIErrorLimitReached                                      = 0x43,
+    kBluetoothHCIErrorOperationCancelledByHost                          = 0x44,
+    kBluetoothHCIErrorPacketTooLong                                     = 0x45,
 
-    kBluetoothHCIErrorMax                                               = 0x40
+    kBluetoothHCIErrorMax                                               = 0x45
 };
 
 #if 0
