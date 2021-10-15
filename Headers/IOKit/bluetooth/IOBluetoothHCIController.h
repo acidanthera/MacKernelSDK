@@ -26,6 +26,12 @@
 #include <IOKit/usb/IOUSBHostDevice.h>
 #include <os/log.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class IOWorkQueue;
 class IODisplayWrangler;
 class IOBluetoothACPIMethods;
@@ -113,7 +119,10 @@ public:
     virtual IOReturn RemoveHCIEventNotification( task_t inOwningTask );
     
     virtual bool GetNvramPacketLoggerBufferSize(UInt32 *);
+    
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
     virtual bool NeedToWaitForControllerToShowUp();
+#endif
     
     virtual IOWorkLoop * getWorkLoop() const APPLE_KEXT_OVERRIDE;
     virtual IOCommandGate * getCommandGate() const;
@@ -200,7 +209,7 @@ public:
     virtual UInt32 GetNextBluetoothObjectID();
     virtual IOReturn FreeBluetoothObjectID(UInt32);
     virtual void CheckACPIMethodsAvailabilities();
-    virtual IOReturn CallRegisterService(void);
+    virtual IOReturn CallRegisterService();
     
     virtual bool ReachHardResetLimit(IOBluetoothHostController *);
     virtual void IncrementHardResetCounter(IOBluetoothHostController *);
@@ -215,9 +224,11 @@ public:
     virtual bool USBBluetoothModuleWithROMBootCapability();
     virtual IOReturn RecoverX238EModule(BluetoothHardwareListType *);
     
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
     virtual void RecoveryTimeOutHandler();
     virtual IOReturn StartRecoveryTimer();
     virtual void CancelRecoveryTimer();
+#endif
     
     virtual IOReturn DumpStats();
     virtual void BeginSignPost();
@@ -367,8 +378,10 @@ protected:
     IOUSBHostDevice * mHardResetUSBHub; //480
     IOBluetoothACPIMethods * mACPIMethods; //488
     
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
     IOTimerEventSource * mRecoveryTimer; //496
     bool mRecoveryTimerHasTimeout; //504
+#endif
     
     UInt16 mCurrentBluetoothObjectID; //506
     bool mBluetoothObjects[0xFFFF]; //508
@@ -378,8 +391,8 @@ protected:
     
     struct ExpansionData
     {
-        void * ptr1;
-        void * ptr2;
+        void * mUnusedPointer1;
+        void * mUnusedPointer2;
     };
     ExpansionData * mExpansionData; //66064
 };
