@@ -103,7 +103,6 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - IOUSBFamily from macOS 10.10 SDK
     - IO80211Family from Black80211 originally created by Roman Peshkov
     - IOBluetoothFamily by cjiang (`IOKit/bluetooth`)
-    - IOWorkQueue analyzed from IOBluetoothFamily by cjiang (`IOKit/IOWorkQueue.h`)
 - Added kmod targeting earlier macOS kernels:
     - 10.6 or newer (`Library/x86_64/libkmod.a`)
 - Added availability checking when targeting older macOS versions:
