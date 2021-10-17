@@ -45,13 +45,11 @@ public:
  */
     
     virtual bool init( OSObject * owner, Action action = NULL ) APPLE_KEXT_OVERRIDE;
-    
-    
-    static void timerFired( OSObject * owner, IOBluetoothInactivityTimerEventSource * sender );
     virtual bool initWithTimeoutInterval( AbsoluteTime interval, OSObject * owner, Action action = NULL );
     virtual bool initWithTimeoutIntervalMS( UInt32 ms, OSObject * owner, Action action = NULL );
     virtual bool initWithTimeoutIntervalUS( UInt32 us, OSObject * owner, Action action = NULL );
     
+    static void timerFired( OSObject * owner, IOBluetoothInactivityTimerEventSource * sender );
     virtual IOReturn setTimeout( AbsoluteTime interval ) APPLE_KEXT_OVERRIDE;
     virtual void cancelTimeout() APPLE_KEXT_OVERRIDE;
     

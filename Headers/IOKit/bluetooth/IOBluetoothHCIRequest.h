@@ -49,7 +49,8 @@ enum BluetoothHCIRequestStates
 {
     kHCIRequestStateIdle        = 0,
     kHCIRequestStateWaiting     = 1,
-    kHCIRequestStateBusy        = 2
+    kHCIRequestStateBusy        = 2,
+    kHCIRequestStateEnd
 };
 
 class IOBluetoothHCIRequest : public OSObject

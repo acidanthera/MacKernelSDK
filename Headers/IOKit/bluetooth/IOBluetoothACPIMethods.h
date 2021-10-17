@@ -95,7 +95,7 @@ public:
     
     virtual UInt32 GetCurrentTime();
     
-    virtual int ConvertErrorCodeToString(int, char *, char *);
+    virtual void ConvertErrorCodeToString(UInt32 errorCode, char * outStringLong, char * outStringShort);
 
 protected:
     IOBluetoothHCIController * mBluetoothFamily; //136

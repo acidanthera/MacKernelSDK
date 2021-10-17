@@ -59,7 +59,7 @@ public:
     
 protected:
     bool mInitializedWithBuffer; //40, determines if the data queue should be freed
-    char mDataQueueOwnerName[50]; //41
+    char mDataQueueOwnerName[0x30]; //41
     IOMemoryMap * mMemoryMap; //96
     IOMemoryDescriptor * mMemoryDescriptor; //104
     bool mInitializedWithClientBuffer; //112, will setTag(3) in free if it is true, set to true in initWithClientBuffer
