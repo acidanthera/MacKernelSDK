@@ -71,7 +71,7 @@ struct HCIEventNotificationListener
     task_t owningTask;
     mach_port_t port;
     void * refCon;
-    UInt64 unknown;
+    UInt64 unknown; //All set to 1
 };
 
 extern UInt32 IOBluetoothRingBufferRead(UInt32 *, UInt8 *, UInt32, UInt32);
@@ -354,7 +354,7 @@ protected:
     bool mInternalControllerValid; //380
     
     bool mControllersFinishedSettingUp; //381
-    bool __reserved; //382, never used, not sure what it is
+    bool __reserved; //382, never used
     bool mSwitchingHostController; //383
     bool mNVRAMControllerInfoUpdated; //384
     UInt32 mCheckACPIMethodsAvailabilitiesCallTime; //388
