@@ -40,6 +40,12 @@
 #include <IOKit/IOReportTypes.h>
 #include <os/log.h>
 
+#include <Availability.h>
+
+#ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
+#error "Missing macOS target version"
+#endif
+
 class IOBluetoothHostControllerUserClient;
 class IOBluetoothHostControllerTransport;
 class IOBluetoothHCIController;
@@ -179,7 +185,6 @@ public:
     
     virtual IOBluetoothHCIControllerFeatureFlags GetControllerFeatureFlags();
     virtual bool SetControllerFeatureFlags(IOBluetoothHCIControllerFeatureFlags featureFlags);
-    
     virtual void setConfigState(IOBluetoothHCIControllerConfigState configState);
     
     virtual bool InitializeController();
@@ -222,7 +227,7 @@ public:
     
     virtual HearingDeviceListType * FindHearingDeviceWithAddress(const BluetoothDeviceAddress * inDeviceAddress);
     virtual IOReturn AddHearingDevice(IOBluetoothDevice * inDevice);
-    virtual IOReturn RemoveHearingDevice(IOBluetoothDevice *inDevice, bool all);
+    virtual IOReturn RemoveHearingDevice(IOBluetoothDevice * inDevice, bool all);
     
     virtual LEDeviceListType * FindLEDeviceWithConnectionHandle(BluetoothConnectionHandle inConnectionHandle);
     virtual IOReturn AddLEDevice(BluetoothConnectionHandle inConnectionHandle);
@@ -248,7 +253,7 @@ public:
     virtual void SaveNumOutstandingACLPackets();
     virtual void DecrementIdleTimerActivityCount(UInt16);
     virtual void IncrementIdleTimerActivityCount();
-    virtual void DecrementOutstandingACLPackets(UInt16, UInt16, UInt16, UInt16, UInt16, UInt16); //Gonna be useful
+    virtual void DecrementOutstandingACLPackets(UInt16, UInt16, UInt16, UInt16, UInt16, UInt16);
     
     virtual void ProcessFlushOccurredEvent(BluetoothHCIEventFlushOccurredResults * inFlushResults);
     virtual void ProcessNumberOfCompletedPacketsEvent(UInt8 *);
@@ -258,7 +263,7 @@ public:
     virtual IOReturn DispatchIncomingSCOData(UInt8 * inDataPtr, UInt32 inDataSize, UInt32 inMissingData, AbsoluteTime inTimestamp);
     virtual IOBluetoothDevice * OpenDeviceConnection(const BluetoothDeviceAddress * inDeviceAddress);
     static IOReturn OpenDeviceConnectionAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4 );
-    virtual IOBluetoothDevice * OpenDeviceConnectionWL(const BluetoothDeviceAddress * inDeviceAddress);
+    virtual IOBluetoothDevice * OpenDeviceConnectionWL(const BluetoothDeviceAddress * inDeviceAddress, UInt16, bool);
     virtual IOReturn SendACLData(IOMemoryDescriptor * memDescriptor);
     static void ACLPacketTimerFired(OSObject * owner, IOTimerEventSource * timerEventSource);
     virtual IOReturn SendACLPacket(IOBluetoothACLMemoryDescriptor * memDescriptor, IOBluetoothDevice * inTargetDevice = NULL);
@@ -319,7 +324,7 @@ public:
     virtual IOReturn FindSynchronousConnectionCompleteType(BluetoothDeviceAddress * inDeviceAddress, BluetoothHCICommandOpCode * outOpCode);
     
     virtual IOReturn HandleSpecialOpcodes(BluetoothHCICommandOpCode opCode);
-    virtual IOReturn HCIRequestCreate(BluetoothHCIRequestID * outRequestID, bool inDoAsyncNotify = true, UInt32 inTimeout = 5, BluetoothHCIRequestCallbackInfo * inCallbackInfo = NULL, task_t inTaskID = 0, UInt32 inControlFlags = 0);
+    virtual IOReturn HCIRequestCreate(BluetoothHCIRequestID * outRequestID, bool inDoAsyncNotify = true, UInt32 inTimeout = 5, BluetoothHCIRequestCallbackInfo * inCallbackInfo = NULL, task_t inTaskID = NULL, UInt32 inControlFlags = 0);
     virtual IOReturn HCIRequestDelete(task_t inTask, BluetoothHCIRequestID inID);
     virtual IOReturn LookupRequest(BluetoothHCIRequestID inID, IOBluetoothHCIRequest ** outRequestPtr);
     virtual IOReturn PrepareRequestForNewCommand(BluetoothHCIRequestID inID, const BluetoothDeviceAddress * inDeviceAddress, BluetoothConnectionHandle inConnectionHandle);
@@ -385,8 +390,8 @@ public:
     virtual bool IsAllowedIncomingL2CAPChannelForDevice(BluetoothL2CAPPSM incomingPSM, IOBluetoothDevice * device);
     virtual bool IsAllowedIncomingRFCOMMChannelForDevice(BluetoothRFCOMMChannelID incomingChannelID, IOBluetoothDevice * device);
     
-    virtual void StartIdleTimer(uint32_t milliseconds);
     static void idleTimerFired(OSObject * owner, IOTimerEventSource * timerEventSource);
+    virtual void StartIdleTimer(uint32_t milliseconds);
     virtual void StopIdleTimer();
     virtual void EvaluateHighPriorityConnections();
     virtual void handleIdleTimeout();
@@ -395,9 +400,9 @@ public:
     virtual IOReturn CallResetTimerForIdleTimer();
     virtual IOReturn EnableIdleTimer();
     virtual IOReturn DisableIdleTimer();
-    virtual UInt32 ChangeIdleTimerTime(char *, UInt32);
-    virtual IOReturn SetIdleTimerValue(UInt32);
-    virtual IOReturn SetIdleTimerValueInNVRAM(UInt32);
+    virtual UInt32 ChangeIdleTimerTime(char * calledByFunction, UInt32 newTime);
+    virtual IOReturn SetIdleTimerValue(UInt32 value);
+    virtual IOReturn SetIdleTimerValueInNVRAM(UInt32 value);
     virtual IOReturn ClearIdleTimerValueInNVRAM();
     virtual void WriteIdleTimerValueToNVRAM();
     virtual void ReadIdleTimerValueFromNVRAM();
@@ -424,7 +429,7 @@ public:
     virtual void TransportIsReady(bool);
     virtual void TransportIsGoingAway();
     virtual IOReturn ChangeControllerStateForRestart();
-    virtual IOReturn CleanUpForPoweringOff(); //not sure
+    virtual IOReturn CleanUpForPoweringOff();
     virtual IOReturn CleanUpBeforeTransportTerminate(IOBluetoothHostControllerTransport * transport);
     virtual void SetVendorSpecificEventMask(bool);
     virtual IOReturn CleanUpForCompletePowerChangeFromSleepToOn();
@@ -441,14 +446,17 @@ public:
     virtual IOReturn CallPowerRadio(bool);
     virtual IOReturn SendBFCSetParams(UInt8, UInt8, UInt8);
     virtual bool SetMaxPowerForConnection(UInt32, UInt8, UInt16);
-    virtual IOReturn WriteDeviceAddress(UInt32, BluetoothDeviceAddress *);
+    virtual IOReturn WriteDeviceAddress(BluetoothHCIRequestID inID, BluetoothDeviceAddress * inAddress);
     virtual IOReturn WriteLocalSupportedFeatures(UInt32, void *);
     virtual IOReturn WriteBufferSize();
-    virtual bool DisableScan(); //not sure
+    virtual bool DisableScan();
     virtual IOReturn CallBluetoothHCIReset(bool, char *);
     virtual IOReturn IgnoreUSBReset(bool);
-    virtual IOReturn HardResetController(UInt16); //useful
+    virtual IOReturn HardResetController(UInt16);
     virtual bool WillResetModule();
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
+    virtual IOReturn EnqueueHardResetControllerAction(UInt16);
+#endif
     virtual IOReturn ResetTransportHardwareStatus();
     virtual IOReturn GetTransportHardwareStatus(UInt32 *);
     virtual void TransportTerminating(IOBluetoothHostControllerTransport *);
@@ -475,7 +483,9 @@ public:
     virtual IOReturn SetLighthouseDebugQuery(UInt8);
     virtual void WakeUpLEConnectionCompleteOutOfSequenceThread();
     virtual IOReturn RecoverX238EModule();
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
     virtual void SetControllerSleepMode();
+#endif
     virtual void TakeAHexDump(const void * inData, UInt32 inDataSize);
     virtual void PrintAllHCIRequests();
     virtual void PrintDeviceListAddress();
@@ -675,7 +685,9 @@ public:
     virtual IOReturn BluetoothHCIBroadcomLighthouseDebugQuery(UInt32, UInt8);
     virtual IOReturn BluetoothHCIBroadcomMasterSkipSniffMode(UInt16, UInt8, UInt8, UInt16, UInt16);
     virtual IOReturn BluetoothHCIBroadcomLoadPwrRegulatoryFile(UInt8 *, UInt8);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
     virtual IOReturn BluetoothWriteLocalAddressFromRegistry();
+#endif
     
 private:
     static bool windowServerDidAppear( void * target, void * refCon, IOService * newService, IONotifier * notifier );
@@ -922,7 +934,7 @@ protected:
     UInt16 mControllerOutstandingCalls; //1284
     UInt8 unknown1d; //1286
     bool mSupportDPLE; //1287
-    os_log_t mInternalOSLogObject; //1288
+    os_log_t mInternalOSLogObject; //1288, good up to this point
     
     bool mAutoResumeSet; //1296
     bool mACLPacketCausedFullWake; //1297
