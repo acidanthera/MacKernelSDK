@@ -46,7 +46,7 @@
 } while (0)
 
 #define BluetoothFamilyLogPacketWithOSLog(obj, family, packetType, fmt...) do {     \
-    os_log(obj, fmt...)                                                             \
+    os_log(obj, fmt...);                                                            \
     BluetoothFamilyLogPacket(family, packetType, fmt...);                           \
 } while (0)
 

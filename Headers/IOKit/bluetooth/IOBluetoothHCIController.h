@@ -35,6 +35,7 @@
 #define _IOKIT_IOBLUETOOTHHCICONTROLLER_H
 
 #include <IOKit/bluetooth/Bluetooth.h>
+#include <IOKit/bluetooth/IOBluetoothHostController.h>
 #include <IOKit/usb/IOUSBHostDevice.h>
 #include <os/log.h>
 
@@ -169,7 +170,7 @@ public:
     virtual IOReturn SwitchBluetoothHardware(BluetoothHardwareListType *);
     virtual void PrintBluetoothHardwareList(bool);
     
-    virtual bool SearchForTransportEventTimeOutHandler();
+    virtual void SearchForTransportEventTimeOutHandler();
     virtual bool WriteActiveControllerInfoToNVRAM(UInt16 productID, UInt16 vendorID, UInt8 * deviceAddress, UInt32 locationID, UInt16 activeConnections);
     virtual bool ReadActiveControllerInfoFromNVRAM(UInt16 * productID, UInt16 * vendorID, UInt8 * deviceAddress, UInt32 * locationID, UInt16 * activeConnections);
     virtual IOReturn UpdateNVRAMControllerInfo();

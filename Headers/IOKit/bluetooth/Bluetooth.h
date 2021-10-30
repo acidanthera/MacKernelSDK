@@ -1980,7 +1980,20 @@ typedef struct BluetoothHCICommandPacket
     UInt8                       data[ 255 ];
 } BluetoothHCICommandPacket;
 
+typedef struct BluetoothHCICommandPacketHeader
+{
+    BluetoothHCICommandOpCode   opCode;
+    UInt8                       dataSize;
+} BluetoothHCICommandPacketHeader;
+
 typedef uint8_t  BluetoothHCIEventCode;
+
+typedef struct BluetoothHCIEventPacketHeader
+{
+    BluetoothHCIEventCode       eventCode;
+    UInt8                       dataSize;
+} BluetoothHCIEventPacketHeader;
+
 typedef uint8_t  BluetoothLinkType;
 enum BluetoothLinkTypes
 {

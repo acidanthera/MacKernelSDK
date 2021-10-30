@@ -280,7 +280,7 @@ protected:
     IOService * mProvider; //152
     IOWorkLoop * mWorkLoop; //160
     IOCommandGate * mCommandGate; //168
-    UInt16 mPowerMask; //176
+    UInt16 mControllerVendorType; //176
     
     bool mUSBControllerSupportsSuspend; //178
     UInt8 mTerminateState; //179
