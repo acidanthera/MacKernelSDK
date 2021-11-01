@@ -873,7 +873,7 @@ protected:
     UInt32 mTransportSleepType; //892
     
     bool mCanDoHardReset; //896
-    bool mPowerStateNotChanging; //897
+    bool mTransportPowerOn; //897
     
     IOBluetoothHCIControllerPowerOptions mControllerPowerOptions; //900
     IOBluetoothHCIControllerConfigState mControllerConfigState; //904

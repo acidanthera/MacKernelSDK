@@ -51,9 +51,9 @@
 
 extern void BluetoothSleepTimeOutOccurred( OSObject * owner, IOTimerEventSource * sender );
 
-const char * gInternalPowerStateString[7] = { "OFF", "ON", "SLEEP", "IDLE", "OFF", "IDLE", "ON" };
-const char * gOrdinalPowerStateString[3] = { "OFF", "IDLE", "ON" };
-const char * gPowerManagerSleepTypeString[9] =
+static const char * gInternalPowerStateString[7] = { "OFF", "ON", "SLEEP", "IDLE", "OFF", "IDLE", "ON" };
+static const char * gOrdinalPowerStateString[3] = { "OFF", "IDLE", "ON" };
+static const char * gPowerManagerSleepTypeString[9] =
 {
     "kIOPMSleepTypeInvalid",
     "kIOPMSleepTypeAbortedSleep",
@@ -65,7 +65,7 @@ const char * gPowerManagerSleepTypeString[9] =
     "kIOPMSleepTypeDeepIdle",
     "kIOPMSleepTypeLast"
 };
-const char * gPowerManagerSleepTypeShortString[9] =
+static const char * gPowerManagerSleepTypeShortString[9] =
 {
     "SleepTypeInvalid",
     "SleepTypeAbortedSleep",

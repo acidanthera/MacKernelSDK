@@ -360,7 +360,7 @@ protected:
     bool mNVRAMControllerInfoUpdated; //384
     UInt32 mCheckACPIMethodsAvailabilitiesCallTime; //388
     bool mUserClientsAttached; //392
-    IOOptionBits mTranspotPowerStateOptions; //396
+    IOOptionBits mTransportPowerStateOptions; //396
     UInt16 mNumCommandSleepsInWorkLoop; //400, +1 when commandSleep is called in FamilyCommandSleep and -1 when it's done
     
     UInt32 mActivityTickleCallTime; //404
