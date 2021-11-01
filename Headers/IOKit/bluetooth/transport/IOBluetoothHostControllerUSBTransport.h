@@ -63,7 +63,7 @@ public:
     virtual unsigned long maxCapabilityForDomainState( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
     virtual unsigned long initialPowerStateForDomainState( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn setPowerStateWL( unsigned long powerStateOrdinal, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn RequestTransportPowerStateChange( IOBluetoothHCIControllerInternalPowerState powerState, char * name ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn RequestTransportPowerStateChange( IOBluetoothHCIControllerInternalPowerState powerState, char * calledByFunction ) APPLE_KEXT_OVERRIDE;
     virtual void CompletePowerStateChange( char * ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn ProcessPowerStateChangeAfterResumed( char * ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn powerStateWillChangeTo( IOPMPowerFlags capabilities, unsigned long stateNumber, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
@@ -82,8 +82,8 @@ public:
     virtual bool TransportWillReEnumerate() APPLE_KEXT_OVERRIDE;
     
     static IOReturn MessageReceiver(void * target, void * refCon, UInt32 messageType, IOService * provider, void * messageArgument, vm_size_t argSize);
-    virtual IOReturn HandleMessage(UInt32, IOService *, void *, unsigned long);
-    static bool HandleMessageAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5, void * arg6);
+    virtual IOReturn HandleMessage(UInt32 messageType, IOService * provider, void * messageArgument, vm_size_t argSize);
+    static IOReturn HandleMessageAction(OSObject * owner, void * arg0, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
     
     virtual IOReturn SendHCIRequest(UInt8 * buffer, IOByteCount size) APPLE_KEXT_OVERRIDE;
     static void DeviceRequestCompleteHandler(void * owner, void * parameter, IOReturn status, uint32_t bytesTransferred);
@@ -178,7 +178,6 @@ private:
     
     
 protected:
-    //328 bytes inherited
     IOUSBHostDevice * mBluetoothUSBHostDevice; //328
     IOUSBHostDevice * mBluetoothUSBHub; //336
     UInt16 unknown11; //344
@@ -255,7 +254,7 @@ protected:
     bool v; //1724 pm state
     bool n; //1725 pm state
     bool mHostDeviceStarted; //1726
-    bool mProviderDeviceStarted; //1727
+    bool mHubStarted; //1727
     struct ExpansionData
     {
         UInt64 reserved;
