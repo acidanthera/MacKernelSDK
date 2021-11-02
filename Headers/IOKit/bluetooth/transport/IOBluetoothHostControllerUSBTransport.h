@@ -43,7 +43,9 @@ class IOBluetoothMemoryDescriptorRetainer;
 class IOBluetoothHostControllerUSBTransport : public IOBluetoothHostControllerTransport
 {
     OSDeclareAbstractStructors(IOBluetoothHostControllerUSBTransport)
-    
+
+    friend class IOBluetoothHostController;
+
 public:
     virtual bool init( OSDictionary * dictionary = NULL ) APPLE_KEXT_OVERRIDE;
     virtual void free() APPLE_KEXT_OVERRIDE;
@@ -177,7 +179,7 @@ private:
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerUSBTransport, 23);
     
     
-protected:
+public:
     IOUSBHostDevice * mBluetoothUSBHostDevice; //328
     IOUSBHostDevice * mBluetoothUSBHub; //336
     UInt16 unknown11; //344
@@ -232,9 +234,8 @@ protected:
     UInt8 xxxxxx; //1669
     IONotifier * mMessageReceiverNotifier; //1672
     UInt64 what1; //1680 = 1656
-    //1688
+    UInt64 x_x; //1688
     UInt8 mInterruptDataLength; //1696
-    uint8_t __reserved3[3]; //1697
     UInt32 mInterruptDataPosition; //1700
     UInt16 mStopInterruptPipeReadCounter; //1704
     bool mInterfaceFound; //1706
