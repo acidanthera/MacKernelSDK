@@ -939,7 +939,9 @@ protected:
     bool mACLPacketCausedFullWake; //1297
     UInt32 mHardResetCounter; //1300, good up to this point
     UInt8 unknown1e; //1304
+#if __MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_15
     bool mSupportLighthouseFeature; //1305
+#endif
     UInt8 unknown1f; //1306
     UInt8 mAllowedNumberOfTimedOutHCICommands; //1307
     UInt32 mCreateLEDeviceCallTime; //1308
