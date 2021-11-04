@@ -226,10 +226,9 @@ protected:
     UInt32 mIsochOutPipeNumFrames; //1648
     UInt64 mIsochOutFrameNumber; //1656
 
-    //good till here
-    UInt32 waht1; //1664 = 1648
-    UInt8 xxxx; //1668
-    UInt8 xxxxxx; //1669
+    UInt32 mPreviousIsochOutPipeNumFrames; //1664
+    UInt8 mInterruptReadNumRetries; //1668
+    UInt8 mBulkInReadNumRetries; //1669
     IONotifier * mMessageReceiverNotifier; //1672
     UInt64 mPreviousIsochOutFrameNumber; //1680
 
@@ -241,7 +240,7 @@ protected:
     bool mInterfaceFound; //1706
     bool mIsochInterfaceFound; //1707
     bool yy; //1708
-    uint8_t __reserved4; //1709
+    uint8_t __reserved1; //1709
     bool isServiceRegistered; //1710
     bool xx; //1711
     UInt8 xxx; //1712
