@@ -122,7 +122,7 @@ public:
     virtual bool StopAllPipes();
     virtual bool StartAllPipes();
     virtual void WaitForAllIOsToBeAborted();
-    virtual bool ReceiveInterruptData(void *, UInt32, bool);
+    virtual void ReceiveInterruptData(void * data, UInt32 dataSize, bool);
     
     virtual IOReturn TransportBulkOutWrite(void * buffer) APPLE_KEXT_OVERRIDE;
     virtual IOReturn BulkOutWrite(IOMemoryDescriptor *);
@@ -177,12 +177,11 @@ private:
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerUSBTransport, 21);
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerUSBTransport, 22);
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerUSBTransport, 23);
-    
-    
-public:
+
+protected:
     IOUSBHostDevice * mBluetoothUSBHostDevice; //328
     IOUSBHostDevice * mBluetoothUSBHub; //336
-    UInt16 unknown11; //344
+    UInt16 mActiveDeviceRequestIOCount; //344
     UInt16 mVendorID; //346
     UInt16 mProductID; //348
     IOUSBHostInterface * mInterface; //352
@@ -194,9 +193,8 @@ public:
     IOUSBHostPipe * mInterruptPipe; //1392
     Descriptor * mInterruptDescriptor; //1400
     IOBufferMemoryDescriptor * mInterruptReadDataBuffer; //1408
-    IOUSBHostCompletion mInterruptCompletion; //1416 + 24
+    IOUSBHostCompletion mInterruptCompletion; //1416 (size = 24)
     bool mInterruptPipeStarted; //1440
-    bool __reserved1; //1441
     UInt16 mInterruptPipeOutstandingIOCount; //1442
     
     IOUSBHostPipe * mBulkInPipe; //1448
@@ -204,7 +202,6 @@ public:
     IOBufferMemoryDescriptor * mBulkInReadDataBuffer; //1464
     IOUSBHostCompletion mBulkInCompletion; //1472, 24
     bool mBulkInPipeStarted; //1496
-    bool __reserved2; //1497
     UInt16 mBulkInPipeOutstandingIOCount; //1498
     
     IOUSBHostPipe * mBulkOutPipe; //1504
@@ -228,16 +225,19 @@ public:
     IOUSBHostIsochronousFrame * mIsochOutFrames; //1640
     UInt32 mIsochOutPipeNumFrames; //1648
     UInt64 mIsochOutFrameNumber; //1656
-    
+
+    //good till here
     UInt32 waht1; //1664 = 1648
     UInt8 xxxx; //1668
     UInt8 xxxxxx; //1669
     IONotifier * mMessageReceiverNotifier; //1672
-    UInt64 what1; //1680 = 1656
-    UInt64 x_x; //1688
+    UInt64 mPreviousIsochOutFrameNumber; //1680
+
+    UInt8 * mInterruptData; //1688
     UInt8 mInterruptDataLength; //1696
     UInt32 mInterruptDataPosition; //1700
     UInt16 mStopInterruptPipeReadCounter; //1704
+
     bool mInterfaceFound; //1706
     bool mIsochInterfaceFound; //1707
     bool yy; //1708
@@ -247,7 +247,7 @@ public:
     UInt8 xxx; //1712
     bool __reserved5; //1713
     bool mMatchedOnInterface; //1714
-    unsigned int mInterruptSleepMs; //1716
+    UInt32 mInterruptSleepMs; //1716
     bool mAbortPipesAndCloseCalled; //1720
     bool u; //1721
     bool mIOClassIsAppleUSBXHCIPCI; //1722
@@ -256,9 +256,10 @@ public:
     bool n; //1725 pm state
     bool mHostDeviceStarted; //1726
     bool mHubStarted; //1727
+
     struct ExpansionData
     {
-        UInt64 reserved;
+        void * mRefCon;
     };
     ExpansionData * mExpansionData; //1728
 };
