@@ -33,16 +33,10 @@ To start using **MacKernelSDK** do the following steps:
     ```
 
     Otherwise Xcode will link to the original libkmod.
-    
-5. Add the Headers folder to the **Header Search Paths**.
 
-    ```
-    Headers Search Paths = $(PROJECT_DIR)/MacKernelSDK/Headers
-    ```
+5. Optionally add `/MacKernelSDK` to `.gitignore`.
 
-6. Optionally add `/MacKernelSDK` to `.gitignore`.
-
-7. To make sure that you use the right SDK check for `__ACIDANTHERA_MAC_SDK` macro in `Availability.h`.
+6. To make sure that you use the right SDK check for `__ACIDANTHERA_MAC_SDK` macro in `Availability.h`.
 
 ## Targeting `i386`
 
