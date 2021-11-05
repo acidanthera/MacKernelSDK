@@ -189,7 +189,7 @@ protected:
     UInt8 mInterfaceNumber; //368
     UInt8 mIsochInterfaceNumber; //369
     
-    uint8_t xxxxxxxxxxxxx[1021]; //370
+    uint8_t mEmptyInterruptReadData[1021]; //370, an empty buffer used to determine if the buffer stored in mInterruptReadDataBuffer is empty
     IOUSBHostPipe * mInterruptPipe; //1392
     Descriptor * mInterruptDescriptor; //1400
     IOBufferMemoryDescriptor * mInterruptReadDataBuffer; //1408
