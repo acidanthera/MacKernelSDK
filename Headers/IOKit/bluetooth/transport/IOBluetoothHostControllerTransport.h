@@ -315,7 +315,7 @@ protected:
     bool mSupportWoBT; //250
     UInt8 mCurrentPMMethod; //251
     UInt64 mTransportCounter; //256, retain/released in Retain/ReleaseTransport
-    SInt16 mTransportOutstandingCalls; //264
+    UInt16 mTransportOutstandingCalls; //264
     bool reserved7; //266
     IOTimerEventSource * mBluetoothSleepTimerEventSource; //272
     bool mBluetoothSleepTimerStarted; //280
