@@ -243,20 +243,20 @@ protected:
 
     bool mInterfaceFound; //1706
     bool mIsochInterfaceFound; //1707
-    bool yy; //1708
+    bool unknown1; //1708
     uint8_t __reserved1; //1709
     bool isServiceRegistered; //1710
-    bool xx; //1711
-    UInt8 xxx; //1712
-    bool __reserved5; //1713
+    bool unknown2; //1711
+    UInt8 unknown3; //1712
+    bool __reserved2; //1713
     bool mMatchedOnInterface; //1714
     UInt32 mInterruptSleepMs; //1716
     bool mAbortPipesAndCloseCalled; //1720
-    bool u; //1721
+    bool unknown4; //1721
     bool mIOClassIsAppleUSBXHCIPCI; //1722
     bool mPipesStarted; //1723
-    bool v; //1724 pm state
-    bool n; //1725 pm state
+    bool unknown5; //1724 pm state
+    bool unknown6; //1725 pm state
     bool mHostDeviceStarted; //1726
     bool mHubStarted; //1727
 
