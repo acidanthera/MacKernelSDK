@@ -34,6 +34,7 @@
 #ifndef _IOKIT_IOBLUETOOTHMEMORYBLOCK_H
 #define _IOKIT_IOBLUETOOTHMEMORYBLOCK_H
 
+#include <IOKit/bluetooth/Bluetooth.h>
 #include <IOKit/IOMemoryDescriptor.h>
 #include <IOKit/IOTimerEventSource.h>
 
