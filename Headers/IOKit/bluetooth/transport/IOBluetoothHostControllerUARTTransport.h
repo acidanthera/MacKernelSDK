@@ -35,7 +35,7 @@
 #define _IOKIT_IOBLUETOOTHHOSTCONTROLLERUARTTRANSPORT_H
 
 #include <IOKit/bluetooth/transport/IOBluetoothHostControllerTransport.h>
-#include <IOKit/bluetooth/serial/IOBluetoothSerialClient.h>
+#include <IOKit/bluetooth/serial/IOBluetoothSerialManager.h>
 #include <IOKit/IOInterruptEventSource.h>
 
 #ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
@@ -44,28 +44,13 @@
 
 extern void TimeOutHandler( OSObject * owner, IOTimerEventSource * sender );
 
-struct UARTPacket // guessed name... will try to refine it with the UART protocol
+enum BluetoothUARTPacketTypes
 {
-    UInt8 type;
-    UInt8 data[65540];
-};
-
-struct ACLDataPacketHeader
-{
-    UInt16 offset; //0
-    UInt16 dataSize; //2
-};
-
-struct SCODataPacketHeader
-{
-    UInt16 offset; //0
-    UInt8 dataSize; //2
-};
-
-struct EventDataPacketHeader
-{
-    UInt8 offset; //0
-    UInt8 dataSize; //1
+    kBluetoothUARTPacketTypeHCIRequest   = 1,
+    kBluetoothUARTPacketTypeBulk         = 2,
+    kBluetoothUARTPacketTypeIsoch        = 3,
+    kBluetoothUARTPacketTypeEvent        = 4,
+    kBluetoothUARTPacketTypeLMP          = 7
 };
 
 class IOBluetoothHostControllerUARTTransport : public IOBluetoothHostControllerTransport
@@ -90,12 +75,12 @@ public:
     virtual UInt16 GetControllerVendorID() APPLE_KEXT_OVERRIDE;
     virtual UInt16 GetControllerProductID() APPLE_KEXT_OVERRIDE;
     
-    virtual IOReturn SendHCIRequest( UInt8 *, UInt64 ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn TransportBulkOutWrite( void * ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn TransportIsochOutWrite( void *, void *, IOOptionBits ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn SendHCIRequest( UInt8 * data, IOByteCount size ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn TransportBulkOutWrite( void * data ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn TransportIsochOutWrite( void * data, void * retainer, IOOptionBits options ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn TransportSendSCOData( void * ) APPLE_KEXT_OVERRIDE;
     
-    virtual IOReturn SendUART(UInt8 * buffer, UInt32 size);
+    virtual IOReturn SendUART(UInt8 * data, UInt32 size);
     static IOReturn StaticProcessACLSCOEventData(void *, int);
     virtual IOReturn ProcessACLSCOEventData();
     virtual void GetInfo(void * outInfo) APPLE_KEXT_OVERRIDE;
@@ -117,17 +102,17 @@ public:
 #endif
     
 protected:
-    UARTPacket * mPacket; //328
-    UInt8 * mDataPacket; //336
+    UInt8 * mDataToSend; //328, the UART packet sent through SendUART()
+    UInt8 * mDataReceived; //336, obtained from mProvider->DequeueData()
     IORS232SerialStreamSync * mProvider; //344
-    //352
-    //360
-    //364
-    //368
+    void * mIsochOutWriteRetainer; //352, second param of TransportIsochOutWrite
+    bool mReadyToReceive; //360
+    UInt32 mIsochOutWriteCounter; //364
+    bool mPowerStateChangeInProgress; //368
     bool mSkipBluetoothFirmwareBoot; //369
     IOWorkLoop * mUARTTransportWorkLoop; //376
-    IOInterruptEventSource::Action mDequeueDataInterruptAction; //384
-    IOInterruptEventSource * mDequeueDataInterrupt; //392
+    IOInterruptEventSource::Action mDequeueDataInterruptEventAction; //384
+    IOInterruptEventSource * mDequeueDataInterruptEvent; //392
     IOWorkLoop * mUARTTransportTimerWorkLoop; //400
     IOCommandGate * mUARTTransportTimerCommandGate; //408
     IOTimerEventSource * mUARTTransportTimer; //416
