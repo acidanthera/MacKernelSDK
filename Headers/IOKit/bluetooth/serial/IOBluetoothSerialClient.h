@@ -95,12 +95,12 @@ typedef struct Stats_t
 
 typedef struct PortInfo_t
 {
-    UInt32 Instance; //0
-    unsigned const char * PortName; //8
-    UInt32 State; //16
-    UInt32 WatchStateMask; //20
-    IOSimpleLock * WatchLock; //24
-    IOSimpleLock * serialRequestLock; //32
+    UInt32          Instance; //0
+    const UInt8 *   PortName; //8
+    UInt32          State; //16
+    UInt32          WatchStateMask; //20
+    IOSimpleLock *  WatchLock; //24
+    IOSimpleLock *  serialRequestLock; //32
 
     // queue control structures:
     CirQueue RX; //40
@@ -109,122 +109,66 @@ typedef struct PortInfo_t
     BufferMarks RXStats; //152
     BufferMarks TXStats; //168
 
-    //184
-    //192
-    //200
-
     // dbdma memory control
-    IOLock            *IODBDMARxLock;
-    IOLock            *IODBDMATrLock;
+    IOLock * IODBDMARxLock; //184
+    IOLock * IODBDMATrLock; //192
 
     // UART configuration info:
-    UInt32            Base;
-    //UInt32            IRQ;
-    /* No Longer used ejk     */
-    //UInt32            Type;
-    UInt32            CharLength;
-    UInt32            StopBits;
-    UInt32            TX_Parity;
-    UInt32            RX_Parity;
-    UInt32            BreakLength;
-    UInt32            BaudRate;
-    unsigned short        DLRimage;
-    UInt8            LCRimage;
-    UInt8            FCRimage;
-    UInt8            IERmask;
-    UInt8            RBRmask;
-    UInt32            MasterClock;
-    bool                    MinLatency;
-    bool            WaitingForTXIdle;
-    //bool                  JustDoneInterrupt;
-    //bool            PCMCIA;
-    //bool            PCMCIA_yanked;
+    UInt32 Base; //200
+    UInt32 CharLength; //204
+    UInt32 StopBits; //208
+    UInt32 TXParity; //212
+    UInt32 RXParity; //216
+    UInt32 BreakLength; //220
+    UInt32 BaudRate; //224
+    UInt16 DLRimage; //228
+    UInt8  LCRimage; //230
+    UInt8  FCRimage; //231
+    UInt8  IERmask; //232
+    UInt8  RBRmask; //233
+    UInt32 MasterClock; //236
+    bool   MinLatency; //237
+    bool   WaitingForTXIdle; //238
+    bool   JustDoneInterrupt; //239
+    bool   PCMCIA; //240
+    bool   PCMCIAYanked; //241
 
     // flow control state & configuration:
-    UInt8                    XONchar;
-    UInt8                    XOFFchar;
-    UInt32                    SWspecial[(0x100)>>SPECIAL_SHIFT];
-    UInt32                    FlowControl;    // notify-on-delta & auto_control
-    UInt32                    FlowControlState;
-    bool                    DCDState;
-    bool                    CTSState;
-    /* Indicates our receive state.
-    */
-    int                        RXOstate;
-    /* Indicates our transmit state, if we have received any Flow Control.
-    */
-    int                        TXOstate;
-    UInt8                    xOffSent;        /* ejk     */
+    UInt8  XONchar; //242
+    UInt8  XOFFchar; //243
+    UInt32 SWspecial[8]; //244
+    UInt32 FlowControl; //276 notify-on-delta & auto_control
+    UInt32 FlowControlState; //280
+    int    RXOstate; // receive state 284
+    int    TXOstate; // transmit state if any Flow Control is received 288
 
-    /* Globals in the Copeland Version.
-    */
-    UInt32                     GlobalRecvChars;
-    UInt32                  OverRunChars;
-    //UInt32 TrChars;
+    UInt8  xOffSent; //292
+
+    // Globals in the Copeland Version
+    UInt32 GlobalRecvChars; //296
+    UInt32 OverRunChars; //300
 
     // callout entries:
-    IOThread                FrameTOEntry;
-    IOThread                DataLatTOEntry;
-    IOThread                DelayTOEntry;
-    IOThread                HeartBeatTOEntry;
-    mach_timespec            FrameInterval;
-    mach_timespec            DataLatInterval;
-    mach_timespec            CharLatInterval;
-    mach_timespec            HeartBeatInterval;
+    IOThread       FrameTOEntry; //304
+    IOThread       DataLatTOEntry; //312
+    IOThread       DelayTOEntry; //320
+    IOThread       HeartBeatTOEntry; //328
+    mach_timespec  FrameInterval; //336
+    mach_timespec  DataLatInterval; //344
+    mach_timespec  CharLatInterval; //352
+    mach_timespec  HeartBeatInterval; //360
+
     // Statistics
-    Stats_t                    Stats;
-    bool                    AreTransmitting;
-    bool                    GotTXInterrupt;
+    Stats_t        Stats; //368
+    bool           AreTransmitting; //392
+    bool           GotTXInterrupt; //393
 
-    // chip dependent
-    bool                    baudRateGeneratorEnable;
-    UInt8                    baudRateGeneratorLo;
-    UInt8                    baudRateGeneratorHi;
-    UInt32                    rtxcFrequency;
-    UInt8                    lastWR[ kNumSCCWR ];
-
-    UInt8                    *ControlRegister;
-    UInt8                    *DataRegister;
-    IOPhysicalAddress        ChipBaseAddress;
-    UInt32                    ConfigWriteRegister;
-    SerialPortSelector        whichPort;
-    IOPhysicalAddress        TxDMABase;
-    UInt32                    TxDMALength;
-    IOPhysicalAddress        RxDMABase;
-    UInt32                    RxDMALength;
-
-    UInt8                    InterruptNumbers[MaxInterrupts];
-
-    // enable bits
-    UInt8                    ourReceiveBits;
-    UInt8                    ourTransmitBits;
-    UInt8                    ourClockSource;
-    bool                    haveQueuedRxSIH;
-    bool                    haveQueuedTxSIH;
-
-    /*
-     *gDBDMAChannelAddress, gChannelCommandArea reference the DBDMA channel
-     *command area. This is a kernel memory area.
-     */
-    SerialDBDMAStatusInfo    TxDBDMAChannel;
-    SerialDBDMAStatusInfo    RxDBDMAChannel;
-
-    bool                    DTRAsserted;
-    bool                    aboveRxHighWater;
-
-    bool                    lastCTSState;
-    UInt32                    lastCTSTime;
-    UInt32                    ctsTransitionCount;
-
-
-    IOTimerEventSource*        rxTimer;
-    // for DCP -- begin
-
-    bool                    gDCPUserClientSet;
-    bool                    gDCPModemFound;
-    DCPModemSupport            *DCPModemSupportPtr;
-
-    // for DCP -- end
+    IOService *                 mProvider; //400
+    IOBluetoothRFCOMMChannel *  mRFCOMMChannel; //408
+    IOLock *                    mTransmitLock; //416
+    bool                        mBlockConsideredRead; //424
+    thread_call_t               mSetUpTransmitThreadCall; //432
+    bool                        mNeedToSendBlock; //440
 } PortInfo_t;
 
 class IOBluetoothSerialClientModemStreamSync : public IOModemSerialStreamSync
@@ -264,8 +208,8 @@ public:
     static UInt32 readPortState(PortInfo_t * port);
     static void CheckQueues(PortInfo_t * port);
     static bool BlockIsGone(IOBluetoothMemoryBlock * block, int, UInt64, UInt64, UInt64, UInt64, UInt64);
-    bool SendNextBlock(PortInfo_t * port);
-    bool SetUpTransmit(void * port, void * refCon);
+    static bool SendNextBlock(PortInfo_t * port);
+    static bool SetUpTransmit(void * port, void * refCon);
     static void detachRFCOMMLink(PortInfo_t * port);
 
     static void SetStructureDefaults(PortInfo_t * port, bool init);
@@ -299,7 +243,6 @@ public:
 
 protected:
     PortInfo_t mSerialPort; //136
-    IOService * mProvider; //536
 };
 
 #endif
