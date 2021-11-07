@@ -41,13 +41,13 @@
 
 typedef struct CirQueue
 {
-    UInt8 * Start;
-    UInt8 * End;
-    UInt8 * NextChar;
-    UInt8 * LastChar;
+    UInt8 *     Start;
+    UInt8 *     End;
+    UInt8 *     NextChar;
+    UInt8 *     LastChar;
     IOByteCount Size;
     IOByteCount InQueue;
-    IOLock * InUse;
+    IOLock *    InUse;
 } CirQueue;
 
 typedef enum QueueStatus
@@ -58,22 +58,30 @@ typedef enum QueueStatus
     queueMaxStatus
 } QueueStatus;
 
-QueueStatus             InitQueue(CirQueue * Queue, UInt8 * Buffer, size_t Size);
-QueueStatus             CloseQueue(CirQueue * Queue);
-size_t                  AddtoQueue(CirQueue * Queue, UInt8 * Buffer, size_t Size);
-size_t                  FreeSpaceinQueue(CirQueue * Queue);
-QueueStatus             PrivateAddBytetoQueue(CirQueue * Queue, char Value);
-size_t                  GetSingleBlockPointer(CirQueue * Queue, size_t MaxSize, UInt8 ** Pointer);
-size_t                  ConsiderThisBlockRead(CirQueue * Queue, UInt8 * Buffer, size_t Size);
+QueueStatus InitQueue(CirQueue * Queue, UInt8 * Buffer, size_t Size);
+QueueStatus CloseQueue(CirQueue * Queue);
+size_t      AddtoQueue(CirQueue * Queue, UInt8 * Buffer, size_t Size);
+size_t      FreeSpaceinQueue(CirQueue * Queue);
+QueueStatus PrivateAddBytetoQueue(CirQueue * Queue, char Value);
+size_t      GetSingleBlockPointer(CirQueue * Queue, size_t MaxSize, UInt8 ** Pointer);
+size_t      ConsiderThisBlockRead(CirQueue * Queue, UInt8 * Buffer, size_t Size);
 
-size_t                  FillBlockWithQueue(CirQueue * Queue, IOBluetoothMemoryBlock * Block);
-size_t                  RemovefromQueue(CirQueue * Queue, UInt8 * Buffer, size_t Size);
-QueueStatus             PrivateGetBytetoQueue(CirQueue * Queue, UInt8 * Value);
-size_t                  UsedSpaceinQueue(CirQueue * Queue);
-size_t                  GetQueueSize(CirQueue * Queue);
-QueueStatus             AddBytetoQueue(CirQueue * Queue, char Value);
-QueueStatus             GetBytetoQueue(CirQueue * Queue, UInt8 * Value);
-QueueStatus             GetQueueStatus(CirQueue * Queue);
+size_t      FillBlockWithQueue(CirQueue * Queue, IOBluetoothMemoryBlock * Block);
+size_t      RemovefromQueue(CirQueue * Queue, UInt8 * Buffer, size_t Size);
+QueueStatus PrivateGetBytetoQueue(CirQueue * Queue, UInt8 * Value);
+size_t      UsedSpaceinQueue(CirQueue * Queue);
+size_t      GetQueueSize(CirQueue * Queue);
+QueueStatus AddBytetoQueue(CirQueue * Queue, char Value);
+QueueStatus GetBytetoQueue(CirQueue * Queue, UInt8 * Value);
+QueueStatus GetQueueStatus(CirQueue * Queue);
+
+typedef struct BufferMarks
+{
+    UInt32  BufferSize;
+    UInt32  HighWater;
+    UInt32  LowWater;
+    bool    OverRun;
+} BufferMarks;
 
 typedef struct Stats_t
 {
@@ -84,14 +92,6 @@ typedef struct Stats_t
     UInt32 txChars;
     UInt32 rxChars;
 } Stats_t;
-
-typedef struct BufferMarks
-{
-    UInt32    BufferSize;
-    UInt32    HighWater;
-    UInt32    LowWater;
-    bool    OverRun;
-} BufferMarks;
 
 typedef struct PortInfo_t
 {
@@ -110,12 +110,12 @@ typedef struct PortInfo_t
     BufferMarks TXStats; //168
 
     //184
+    //192
+    //200
 
     // dbdma memory control
     IOLock            *IODBDMARxLock;
     IOLock            *IODBDMATrLock;
-
-    IOLock            *SCCAccessLock;
 
     // UART configuration info:
     UInt32            Base;
@@ -259,48 +259,47 @@ public:
     virtual bool attach(IOService * provider) APPLE_KEXT_OVERRIDE;
     virtual void detach(IOService * provider) APPLE_KEXT_OVERRIDE;
 
+    static void changeState(PortInfo_t * port, UInt32 state, UInt32 mask);
+    static void dataInFunction(IOService * target, UInt16, void *);
+    static UInt32 readPortState(PortInfo_t * port);
+    static void CheckQueues(PortInfo_t * port);
+    static bool BlockIsGone(IOBluetoothMemoryBlock * block, int, UInt64, UInt64, UInt64, UInt64, UInt64);
+    bool SendNextBlock(PortInfo_t * port);
+    bool SetUpTransmit(void * port, void * refCon);
+    static void detachRFCOMMLink(PortInfo_t * port);
+
+    static void SetStructureDefaults(PortInfo_t * port, bool init);
+    bool createSerialStream();
+
+    static bool allocateRingBuffer(CirQueue * Queue, size_t BufferSize);
+    static void freeRingBuffer(CirQueue * Queue);
+
+    virtual IOReturn acquirePort(bool sleep, void * refCon) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn releasePort(void * refCon) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn setState(UInt32 state, UInt32 mask, void * refCon) APPLE_KEXT_OVERRIDE;
+    virtual UInt32 getState(void * refCon) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn watchState(UInt32 * state, UInt32 mask, void * refCon) APPLE_KEXT_OVERRIDE;
+    static IOReturn watchState(PortInfo_t * port, UInt32 * state, UInt32 mask);
+    virtual UInt32 nextEvent(void * refCon) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn executeEvent(UInt32 event, UInt32 data, void * refCon) APPLE_KEXT_OVERRIDE;
+    static IOReturn executeEvent(PortInfo_t *, UInt32 event, UInt32 data, UInt32 * oldState, UInt32 * newState);
+    virtual IOReturn requestEvent(UInt32 event, UInt32 * data, void * refCon) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn enqueueEvent(UInt32 event, UInt32 data, bool sleep, void * refCon) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn dequeueEvent(UInt32 * event, UInt32 * data, bool sleep, void * refCon) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn enqueueData(UInt8 * buffer, UInt32 size, UInt32 * count, bool sleep, void * refCon) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn dequeueData(UInt8 * buffer, UInt32 size, UInt32 * count, UInt32 min, void * refCon) APPLE_KEXT_OVERRIDE;
+
+    static IOReturn activatePort(PortInfo_t * port);
+    static void deactivatePort(PortInfo_t * port);
+
+    static void dataLatTOHandler(PortInfo_t * port);
+    static void frameTOHandler(PortInfo_t * port);
+    static void delayTOHandler(PortInfo_t * port);
+    static void heartBeatTOHandler(PortInfo_t * port);
+
 protected:
-    //136
+    PortInfo_t mSerialPort; //136
     IOService * mProvider; //536
 };
-
-/*
-IOBluetoothSerialClient::changeState(PortInfo_t *,uint,uint)
-IOBluetoothSerialClient::dataInFunction(IOService *,ushort,void *)
-IOBluetoothSerialClient::readPortState(PortInfo_t *)
-IOBluetoothSerialClient::CheckQueues(PortInfo_t *)
-IOBluetoothSerialClient::BlockIsGone(IOBluetoothMemoryBlock *,int,ulong long,ulong long,ulong long,ulong long,ulong long)
-IOBluetoothSerialClient::SendNextBlock(PortInfo_t *)
-IOBluetoothSerialClient::SetUpTransmit(void *,void *)
-IOBluetoothSerialClient::detachRFCOMMLink(PortInfo_t *)
-
-IOBluetoothSerialClient::SetStructureDefaults(PortInfo_t *,bool)
-IOBluetoothSerialClient::allocateRingBuffer(CirQueue *,ulong)
-IOBluetoothSerialClient::createSerialStream(void)
-
-IOBluetoothSerialClient::deactivatePort(PortInfo_t *)
-
-IOBluetoothSerialClient::freeRingBuffer(CirQueue *)
-
-IOBluetoothSerialClient::acquirePort(bool,void *)
-IOBluetoothSerialClient::releasePort(void *)
-IOBluetoothSerialClient::setState(uint,uint,void *)
-IOBluetoothSerialClient::getState(void *)
-IOBluetoothSerialClient::watchState(uint *,uint,void *)
-IOBluetoothSerialClient::watchState(PortInfo_t *,uint *,uint)
-IOBluetoothSerialClient::nextEvent(void *)
-IOBluetoothSerialClient::executeEvent(uint,uint,void *)
-IOBluetoothSerialClient::executeEvent(PortInfo_t *,uint,uint,uint *,uint *)
-IOBluetoothSerialClient::requestEvent(uint,uint *,void *)
-IOBluetoothSerialClient::enqueueEvent(uint,uint,bool,void *)
-IOBluetoothSerialClient::dequeueEvent(uint *,uint *,bool,void *)
-IOBluetoothSerialClient::enqueueData(uchar *,uint,uint *,bool,void *)
-IOBluetoothSerialClient::dequeueData(uchar *,uint,uint *,uint,void *)
-IOBluetoothSerialClient::activatePort(PortInfo_t *)
-IOBluetoothSerialClient::dataLatTOHandler(PortInfo_t *)
-IOBluetoothSerialClient::frameTOHandler(PortInfo_t *)
-IOBluetoothSerialClient::delayTOHandler(PortInfo_t *)
-IOBluetoothSerialClient::heartBeatTOHandler(PortInfo_t *)
-*/
 
 #endif

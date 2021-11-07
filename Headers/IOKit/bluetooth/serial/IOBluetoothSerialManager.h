@@ -54,7 +54,6 @@ class IOBluetoothSerialManager : public IOService
     } SecurityParameters;
 
 protected:
-
     static bool staticChannelGoesAway(void * target, void * refCon, IOService * newService, IONotifier * notifier);
     static bool staticNewChannelShowsUp(void * target, void * refCon, IOService * newService, IONotifier * notifier);
     static void newRFCOMMChannelMain(void *, void *);
