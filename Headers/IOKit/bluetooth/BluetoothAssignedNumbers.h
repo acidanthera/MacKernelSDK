@@ -46,7 +46,7 @@ extern "C"
 */
 
 enum BluetoothCompanyIdentifers
-    {
+{
     kBluetoothCompanyIdentiferEricssonTechnologyLicensing                       = 0,
     kBluetoothCompanyIdentiferNokiaMobilePhones                                 = 1,
     kBluetoothCompanyIdentiferIntel                                             = 2,

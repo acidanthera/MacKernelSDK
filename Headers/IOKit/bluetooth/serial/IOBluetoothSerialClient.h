@@ -39,6 +39,20 @@
 #include <IOKit/serial/IOSerialDriverSync.h>
 #include <IOKit/bluetooth/IOBluetoothMemoryBlock.h>
 
+class IOBluetoothRFCOMMChannel;
+
+enum ParityType
+{
+    NoParity = 0,
+    OddParity,
+    EvenParity,
+    MaxParity
+};
+
+#define kDefaultBaudRate        9600
+#define kMaxBaudRate            3000000
+#define kMaxCircularBufferSize  4096
+
 typedef struct CirQueue
 {
     UInt8 *     Start;
