@@ -177,7 +177,7 @@ typedef struct PortInfo_t
     bool           AreTransmitting; //392
     bool           GotTXInterrupt; //393
 
-    IOService *                 mProvider; //400
+    IOBluetoothSerialManager *  mProvider; //400
     IOBluetoothRFCOMMChannel *  mRFCOMMChannel; //408
     IOLock *                    mTransmitLock; //416
     bool                        mBlockConsideredRead; //424
