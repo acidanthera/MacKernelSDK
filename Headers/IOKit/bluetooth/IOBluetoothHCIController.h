@@ -58,11 +58,11 @@ struct BluetoothHardwareListType
 {
     IOBluetoothHostControllerTransport  * mBluetoothTransport; //0
     IOBluetoothHostController           * mBluetoothHostController; //8
-    UInt8 unknown1; //16
-    UInt8 unknown2; //17
-    UInt8 unknown3; //18
-    UInt8 mHardResetCounter; //19
-    UInt8 unknown4; //20
+    bool                                  mFoundWithTransport; //16
+    bool                                  mCreated; //17
+    bool                                  unknown3; //18
+    UInt8                                 mHardResetCounter; //19
+    UInt8                                 unknown4; //20
     BluetoothHardwareListType           * mNextHardware; //24
     BluetoothHardwareListType           * mPreviousHardware; //32
 };
@@ -157,13 +157,13 @@ public:
     
     virtual BluetoothHardwareListType * FindFirstBluetoothHardwareHasTransport();
     virtual BluetoothHardwareListType * FindBluetoothHardware(BluetoothDeviceAddress *);
-    virtual BluetoothHardwareListType * FindBluetoothHardware(UInt16, UInt16, UInt32);
+    virtual BluetoothHardwareListType * FindBluetoothHardware(UInt16 vendorID, UInt16 productID, UInt32 locationID);
     virtual BluetoothHardwareListType * FindBluetoothHardware(IOBluetoothHostController *);
     virtual BluetoothHardwareListType * FindBluetoothHardware(IOBluetoothHostControllerTransport *);
     virtual BluetoothHardwareListType * FindBluetoothHardware(BluetoothHardwareListType *);
     virtual BluetoothHardwareListType * FindBluetoothHardware(UInt32);
     
-    virtual IOBluetoothHostController * FindInternalBluetoothController();
+    virtual BluetoothHardwareListType * FindInternalBluetoothController();
     
     virtual IOReturn AddBluetoothHardware(BluetoothHardwareListType *);
     virtual IOReturn RemoveBluetoothHardware(BluetoothHardwareListType *, bool);
@@ -400,7 +400,7 @@ protected:
     bool mBluetoothObjects[0xFFFF]; //508
     IOLock * mBluetoothObjectsLock; //66048
     UInt8 mNumHCIEventListeners; //66056
-    bool mTriedToRecoverX238EModule; //66057
+    bool mNotTriedToRecoverX238EModule; //66057
     
     struct ExpansionData
     {

@@ -320,7 +320,7 @@ protected:
     IOTimerEventSource * mBluetoothSleepTimerEventSource; //272
     bool mBluetoothSleepTimerStarted; //280
     os_log_t mInternalOSLogObject; //288
-    bool reserved8; //296
+    bool mBootFromROM; //296
     UInt16 mUARTProductID; //298
     IOBluetoothACPIMethods * mACPIMethods; //304
     bool reserved10; //312
