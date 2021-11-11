@@ -30,95 +30,95 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
- 
+
 #ifndef _IOKIT_IOBLUETOOTHHOSTCONTROLLERUARTTRANSPORT_H
 #define _IOKIT_IOBLUETOOTHHOSTCONTROLLERUARTTRANSPORT_H
 
-#include <IOKit/bluetooth/transport/IOBluetoothHostControllerTransport.h>
-#include <IOKit/bluetooth/serial/IOBluetoothSerialManager.h>
 #include <IOKit/IOInterruptEventSource.h>
+#include <IOKit/bluetooth/serial/IOBluetoothSerialManager.h>
+#include <IOKit/bluetooth/transport/IOBluetoothHostControllerTransport.h>
 
 #ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
 #error "Missing macOS target version"
 #endif
 
-extern void TimeOutHandler( OSObject * owner, IOTimerEventSource * sender );
+extern void TimeOutHandler(OSObject * owner, IOTimerEventSource * sender);
 
 enum BluetoothUARTPacketTypes
 {
-    kBluetoothUARTPacketTypeHCIRequest   = 1,
-    kBluetoothUARTPacketTypeBulk         = 2,
-    kBluetoothUARTPacketTypeIsoch        = 3,
-    kBluetoothUARTPacketTypeEvent        = 4,
-    kBluetoothUARTPacketTypeLMP          = 7
+    kBluetoothUARTPacketTypeHCIRequest = 1,
+    kBluetoothUARTPacketTypeBulk       = 2,
+    kBluetoothUARTPacketTypeIsoch      = 3,
+    kBluetoothUARTPacketTypeEvent      = 4,
+    kBluetoothUARTPacketTypeLMP        = 7
 };
 
 class IOBluetoothHostControllerUARTTransport : public IOBluetoothHostControllerTransport
 {
-    OSDeclareAbstractStructors(IOBluetoothHostControllerUARTTransport)
-    
+    OSDeclareAbstractStructors(IOBluetoothHostControllerUARTTransport);
+
 public:
-    virtual bool init( OSDictionary * dictionary = NULL ) APPLE_KEXT_OVERRIDE;
-    virtual void free() APPLE_KEXT_OVERRIDE;
-    virtual IOService * probe( IOService * provider, SInt32 * score ) APPLE_KEXT_OVERRIDE;
-    virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
-    virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
-    virtual bool terminateWL( IOOptionBits options = 0 ) APPLE_KEXT_OVERRIDE;
-    
-    virtual bool ConfigurePM( IOService * policyMaker ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn setPowerStateWL( unsigned long powerStateOrdinal, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
-    virtual void CompletePowerStateChange( char * ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn powerStateWillChangeToWL( IOOptionBits options, void * ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn RequestTransportPowerStateChange( IOBluetoothHCIControllerInternalPowerState powerState, char * ) APPLE_KEXT_OVERRIDE;
-    virtual void systemWillShutdownWL( IOOptionBits options, void * ) APPLE_KEXT_OVERRIDE;
-    
+    virtual bool        init(OSDictionary * dictionary = NULL) APPLE_KEXT_OVERRIDE;
+    virtual void        free() APPLE_KEXT_OVERRIDE;
+    virtual IOService * probe(IOService * provider, SInt32 * score) APPLE_KEXT_OVERRIDE;
+    virtual bool        start(IOService * provider) APPLE_KEXT_OVERRIDE;
+    virtual void        stop(IOService * provider) APPLE_KEXT_OVERRIDE;
+    virtual bool        terminateWL(IOOptionBits options = 0) APPLE_KEXT_OVERRIDE;
+
+    virtual bool     ConfigurePM(IOService * policyMaker) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn setPowerStateWL(unsigned long powerStateOrdinal, IOService * whatDevice) APPLE_KEXT_OVERRIDE;
+    virtual void     CompletePowerStateChange(char *) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn powerStateWillChangeToWL(IOOptionBits options, void *) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn RequestTransportPowerStateChange(IOBluetoothHCIControllerInternalPowerState powerState, char *) APPLE_KEXT_OVERRIDE;
+    virtual void     systemWillShutdownWL(IOOptionBits options, void *) APPLE_KEXT_OVERRIDE;
+
     virtual UInt16 GetControllerVendorID() APPLE_KEXT_OVERRIDE;
     virtual UInt16 GetControllerProductID() APPLE_KEXT_OVERRIDE;
-    
-    virtual IOReturn SendHCIRequest( UInt8 * data, IOByteCount size ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn TransportBulkOutWrite( void * data ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn TransportIsochOutWrite( void * data, void * retainer, IOOptionBits options ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn TransportSendSCOData( void * ) APPLE_KEXT_OVERRIDE;
-    
+
+    virtual IOReturn SendHCIRequest(UInt8 * data, IOByteCount size) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn TransportBulkOutWrite(void * data) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn TransportIsochOutWrite(void * data, void * retainer, IOOptionBits options) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn TransportSendSCOData(void *) APPLE_KEXT_OVERRIDE;
+
     virtual IOReturn SendUART(UInt8 * data, UInt32 size);
-    static IOReturn StaticProcessACLSCOEventData(void *, int);
+    static IOReturn  StaticProcessACLSCOEventData(void *, int);
     virtual IOReturn ProcessACLSCOEventData();
-    virtual void GetInfo(void * outInfo) APPLE_KEXT_OVERRIDE;
+    virtual void     GetInfo(void * outInfo) APPLE_KEXT_OVERRIDE;
     virtual IOReturn AcquirePort(bool);
     virtual IOReturn ReleasePort();
     virtual IOReturn WaitForReceiveToBeReady(bool);
-    virtual void NewSCOConnection() APPLE_KEXT_OVERRIDE;
-    
+    virtual void     NewSCOConnection() APPLE_KEXT_OVERRIDE;
+
     virtual IOReturn SetLMPLogging();
-    virtual bool StartLMPLogging() APPLE_KEXT_OVERRIDE;
-    virtual bool StopLMPLogging();
-    virtual IOReturn ToggleLMPLogging( UInt8 * ) APPLE_KEXT_OVERRIDE;
-    
-    virtual IOReturn DoDeviceReset( UInt16 ) APPLE_KEXT_OVERRIDE;
+    virtual bool     StartLMPLogging() APPLE_KEXT_OVERRIDE;
+    virtual bool     StopLMPLogging();
+    virtual IOReturn ToggleLMPLogging(UInt8 *) APPLE_KEXT_OVERRIDE;
+
+    virtual IOReturn DoDeviceReset(UInt16) APPLE_KEXT_OVERRIDE;
     virtual IOReturn DequeueDataInterruptEventGated(IOInterruptEventSource * sender, int count);
-    
+
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
     virtual void DumpTransportProviderState() APPLE_KEXT_OVERRIDE;
 #endif
-    
+
 protected:
-    UInt8 * mDataToSend; //328, the UART packet sent through SendUART()
-    UInt8 * mDataReceived; //336, obtained from mProvider->DequeueData()
-    IORS232SerialStreamSync * mProvider; //344
-    void * mIsochOutWriteRetainer; //352, second param of TransportIsochOutWrite
-    bool mReadyToReceive; //360
-    UInt32 mIsochOutWriteCounter; //364
-    bool mPowerStateChangeInProgress; //368
-    bool mSkipBluetoothFirmwareBoot; //369
-    IOWorkLoop * mUARTTransportWorkLoop; //376
-    IOInterruptEventSource::Action mDequeueDataInterruptEventAction; //384
-    IOInterruptEventSource * mDequeueDataInterruptEvent; //392
-    IOWorkLoop * mUARTTransportTimerWorkLoop; //400
-    IOCommandGate * mUARTTransportTimerCommandGate; //408
-    IOTimerEventSource * mUARTTransportTimer; //416
-    bool mUARTTransportTimerHasTimeout; //424
-    UInt32 mSlowEnqueueData; //428
-    UInt32 mLongestEnqueueDataCallMicroseconds; //432
+    UInt8 *                        mDataToSend;                         // 328, the UART packet sent through SendUART()
+    UInt8 *                        mDataReceived;                       // 336, obtained from mProvider->DequeueData()
+    IORS232SerialStreamSync *      mProvider;                           // 344
+    void *                         mIsochOutWriteRetainer;              // 352, second param of TransportIsochOutWrite
+    bool                           mReadyToReceive;                     // 360
+    UInt32                         mIsochOutWriteCounter;               // 364
+    bool                           mPowerStateChangeInProgress;         // 368
+    bool                           mSkipBluetoothFirmwareBoot;          // 369
+    IOWorkLoop *                   mUARTTransportWorkLoop;              // 376
+    IOInterruptEventSource::Action mDequeueDataInterruptEventAction;    // 384
+    IOInterruptEventSource *       mDequeueDataInterruptEvent;          // 392
+    IOWorkLoop *                   mUARTTransportTimerWorkLoop;         // 400
+    IOCommandGate *                mUARTTransportTimerCommandGate;      // 408
+    IOTimerEventSource *           mUARTTransportTimer;                 // 416
+    bool                           mUARTTransportTimerHasTimeout;       // 424
+    UInt32                         mSlowEnqueueData;                    // 428
+    UInt32                         mLongestEnqueueDataCallMicroseconds; // 432
 };
 
 #endif

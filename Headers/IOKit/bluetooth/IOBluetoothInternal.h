@@ -35,85 +35,87 @@
 
 typedef enum IOBluetoothHCIControllerConfigState
 {
-    kIOBluetoothHCIControllerConfigStateOnline,                         // Controller is configured and ready for clients
-    kIOBluetoothHCIControllerConfigStateKernelSetupPending,             // New controller - kernel setup in progress
-    kIOBluetoothHCIControllerConfigStateDaemonSetupPending,             // New controller - daemon setup in progress
-    kIOBluetoothHCIControllerConfigStateDaemonSetupComplete,            // New controller - daemon setup complete
-    kIOBluetoothHCIControllerConfigStateResetPending,                   // HCI reset has been issued
-    kIOBluetoothHCIControllerConfigStateKernelPostResetSetupPending,    // HCI reset complete - kernel setup in progress
-    kIOBluetoothHCIControllerConfigStateDaemonPostResetSetupPending,    // HCI reset complete - daemon setup in progress
-    kIOBluetoothHCIControllerConfigStateDaemonPostResetSetupComplete,   // HCI reset complete - daemon setup complete
+    kIOBluetoothHCIControllerConfigStateOnline,                       // Controller is configured and ready for clients
+    kIOBluetoothHCIControllerConfigStateKernelSetupPending,           // New controller - kernel setup in progress
+    kIOBluetoothHCIControllerConfigStateDaemonSetupPending,           // New controller - daemon setup in progress
+    kIOBluetoothHCIControllerConfigStateDaemonSetupComplete,          // New controller - daemon setup complete
+    kIOBluetoothHCIControllerConfigStateResetPending,                 // HCI reset has been issued
+    kIOBluetoothHCIControllerConfigStateKernelPostResetSetupPending,  // HCI reset complete - kernel setup in progress
+    kIOBluetoothHCIControllerConfigStateDaemonPostResetSetupPending,  // HCI reset complete - daemon setup in progress
+    kIOBluetoothHCIControllerConfigStateDaemonPostResetSetupComplete, // HCI reset complete - daemon setup complete
     kIOBluetoothHCIControllerConfigStateUninitialized
 } IOBluetoothHCIControllerConfigState;
 
 typedef UInt32 IOBluetoothHCIControllerPowerOptions;
 enum
 {
-    kIOBluetoothHCIControllerPowerOptionPowerOffSupported                       = 0x00000001,
-    kIOBluetoothHCIControllerPowerOptionWakeFromExistingConnectionSupported     = 0x00000002,
-    kIOBluetoothHCIControllerPowerOptionWakeFromNewConnectionSupported          = 0x00000004,
-    kIOBluetoothHCIControllerPowerOptionIdleWithConnectionSupported             = 0x00000008,
-    kIOBluetoothHCIControllerPowerOptionIdleWhenInternalPower                   = 0x00000010
+    kIOBluetoothHCIControllerPowerOptionPowerOffSupported                   = 0x00000001,
+    kIOBluetoothHCIControllerPowerOptionWakeFromExistingConnectionSupported = 0x00000002,
+    kIOBluetoothHCIControllerPowerOptionWakeFromNewConnectionSupported      = 0x00000004,
+    kIOBluetoothHCIControllerPowerOptionIdleWithConnectionSupported         = 0x00000008,
+    kIOBluetoothHCIControllerPowerOptionIdleWhenInternalPower               = 0x00000010
 };
 
 enum IOBluetoothHCIControllerSleepOptions
 {
-    kIOBluetoothHCIControllerAllowWakeFromExistingConnection                    = 0x00000001,
-    kIOBluetoothHCIControllerAllowWakeFromNewConnection                         = 0x00000002,
-    kIOBluetoothHCIControllerTemporaryOnFromIdle                                = 0x00000004
+    kIOBluetoothHCIControllerAllowWakeFromExistingConnection = 0x00000001,
+    kIOBluetoothHCIControllerAllowWakeFromNewConnection      = 0x00000002,
+    kIOBluetoothHCIControllerTemporaryOnFromIdle             = 0x00000004
 };
 
-#define HCI_CONTROLLER_POWER_OFF_SUPPORTED(_controllerPowerOptions) ((_controllerPowerOptions & kIOBluetoothHCIControllerPowerOptionPowerOffSupported) == kIOBluetoothHCIControllerPowerOptionPowerOffSupported)
-#define HCI_CONTROLLER_SLEEP_SUPPORTED(_controllerPowerOptions)     ((_controllerPowerOptions & (kIOBluetoothHCIControllerPowerOptionWakeFromExistingConnectionSupported | kIOBluetoothHCIControllerPowerOptionWakeFromNewConnectionSupported)))
+#define HCI_CONTROLLER_POWER_OFF_SUPPORTED(_controllerPowerOptions)                                                                                                                                    \
+    ((_controllerPowerOptions & kIOBluetoothHCIControllerPowerOptionPowerOffSupported) == kIOBluetoothHCIControllerPowerOptionPowerOffSupported)
+#define HCI_CONTROLLER_SLEEP_SUPPORTED(_controllerPowerOptions)                                                                                                                                        \
+    ((_controllerPowerOptions & (kIOBluetoothHCIControllerPowerOptionWakeFromExistingConnectionSupported | kIOBluetoothHCIControllerPowerOptionWakeFromNewConnectionSupported)))
 
 typedef enum IOBluetoothHCIControllerInternalPowerState
 {
-    kIOBluetoothHCIControllerInternalPowerStateOff      = 0,
-    kIOBluetoothHCIControllerInternalPowerStateOn       = 1,
-    kIOBluetoothHCIControllerInternalPowerStateSleep    = 2,
-    kIOBluetoothHCIControllerInternalPowerStateIdle     = 3
+    kIOBluetoothHCIControllerInternalPowerStateOff   = 0,
+    kIOBluetoothHCIControllerInternalPowerStateOn    = 1,
+    kIOBluetoothHCIControllerInternalPowerStateSleep = 2,
+    kIOBluetoothHCIControllerInternalPowerStateIdle  = 3
 } IOBluetoothHCIControllerInternalPowerState;
 
 enum IOBluetoothHCIControllerPowerStateOrdinal
 {
-    kIOBluetoothHCIControllerPowerStateOrdinalOff       = 0,
-    kIOBluetoothHCIControllerPowerStateOrdinalIdle      = 1,
-    kIOBluetoothHCIControllerPowerStateOrdinalOn        = 2
+    kIOBluetoothHCIControllerPowerStateOrdinalOff  = 0,
+    kIOBluetoothHCIControllerPowerStateOrdinalIdle = 1,
+    kIOBluetoothHCIControllerPowerStateOrdinalOn   = 2
 };
 
 typedef UInt32 IOBluetoothHCIControllerFeatureFlags;
 enum
 {
-    kIOBluetoothHCIControllerFeatureFlagVendorCommandFlowControl    = 0x00000001,
-    kIOBluetoothHCIControllerFeatureFlagSCOSupported                = 0x00000002,
-    kIOBluetoothHCIControllerFeatureFlagSerializeCommands           = 0x10000000
+    kIOBluetoothHCIControllerFeatureFlagVendorCommandFlowControl = 0x00000001,
+    kIOBluetoothHCIControllerFeatureFlagSCOSupported             = 0x00000002,
+    kIOBluetoothHCIControllerFeatureFlagSerializeCommands        = 0x10000000
 };
 
 typedef struct IOBluetoothHCIUnifiedInquiryResult
 {
     BluetoothHCIInquiryResult originalInquiryResult;
 
-/*! @var eventCode
- *   This value should be kBluetoothHCIEventInquiryResult, kBluetoothHCIEventInquiryResultWithRSSI, or kBluetoothHCIEventExtendedInquiryResult. */
+    /*! @var eventCode
+     *   This value should be kBluetoothHCIEventInquiryResult, kBluetoothHCIEventInquiryResultWithRSSI, or kBluetoothHCIEventExtendedInquiryResult. */
 
     BluetoothHCIEventCode eventCode;
 
-/*! @var extendedInquiryResponse
- *   This value should be kBluetoothHCIEventExtendedInquiryResult only. */
+    /*! @var extendedInquiryResponse
+     *   This value should be kBluetoothHCIEventExtendedInquiryResult only. */
 
     BluetoothHCIExtendedInquiryResponse extendedInquiryResponse;
 
     UInt8 reserved;
-	
-/*! @var RSSIValue
- *   This value should be kBluetoothHCIEventExtendedInquiryResult or kBluetoothHCIEventInquiryResultWithRSSI only. */
-	
+
+    /*! @var RSSIValue
+     *   This value should be kBluetoothHCIEventExtendedInquiryResult or kBluetoothHCIEventInquiryResultWithRSSI only. */
+
     BluetoothHCIRSSIValue RSSIValue;
 } IOBluetoothHCIUnifiedInquiryResult;
 
 enum BluetoothHCIExtendedInquiryResponseDataTypesAppleSpecificInfo
 {
-    kBluetoothHCIExtendedInquiryResponseDataTypeAppleSpecificInfoReserved                   = 0x00,
-    kBluetoothHCIExtendedInquiryResponseDataTypeAppleSpecificInfoModelIdentifier            = 0x01,     /* UTF8String char data */
-    kBluetoothHCIExtendedInquiryResponseDataTypeAppleSpecificInfoThirdPartyAdvertising      = 0x02,
+    kBluetoothHCIExtendedInquiryResponseDataTypeAppleSpecificInfoReserved              = 0x00,
+    kBluetoothHCIExtendedInquiryResponseDataTypeAppleSpecificInfoModelIdentifier       = 0x01, /* UTF8String char data */
+    kBluetoothHCIExtendedInquiryResponseDataTypeAppleSpecificInfoThirdPartyAdvertising = 0x02,
 };

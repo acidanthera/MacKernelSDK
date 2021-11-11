@@ -44,66 +44,66 @@
 
 class IOWorkQueue : public IOEventSource
 {
-    OSDeclareAbstractStructors(IOWorkQueue)
-    
+    OSDeclareAbstractStructors(IOWorkQueue);
+
     typedef IOReturn (*Action)(OSObject * owner, void * arg0, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
-    
-    //TO-DO: Make this clear
+
+    // TO-DO: Make this clear
     typedef int IOWorkQueueOperationMode;
     enum IOWorkQueueOperationModes
     {
-        kIOWorkQueueOperationModeWorkAvailable = 0,
+        kIOWorkQueueOperationModeWorkAvailable    = 0,
         kIOWorkQueueOperationModeWorkNotAvailable = 1,
         kIOWorkQueueOperationModeCount
     };
-    
+
     struct IOWorkQueueCall
     {
-        Action action; //0
-        void * arg0; //8
-        void * arg1; //16
-        void * arg2; //24
-        void * arg3; //32
-        void * arg4; //40
-        void * arg5; //48
-        
-        IOWorkQueueCall * nextCall; //56
-        IOWorkQueueCall * previousCall; //64
+        Action action; // 0
+        void * arg0;   // 8
+        void * arg1;   // 16
+        void * arg2;   // 24
+        void * arg3;   // 32
+        void * arg4;   // 40
+        void * arg5;   // 48
+
+        IOWorkQueueCall * nextCall;     // 56
+        IOWorkQueueCall * previousCall; // 64
     };
-    
+
 public:
     virtual void unusedCall002(IOWorkQueueCall **, IOWorkQueueCall **, IOWorkQueueCall *);
     virtual void unusedCall003(IOWorkQueueCall **, IOWorkQueueCall **);
-    
-    virtual void enqueueWorkCall(IOWorkQueueCall *);
+
+    virtual void              enqueueWorkCall(IOWorkQueueCall *);
     virtual IOWorkQueueCall * dequeueWorkCall();
-    
+
     virtual void unusedCall000(IOWorkQueueCall *);
     virtual void unusedCall001();
-    
-    virtual bool checkForWork() APPLE_KEXT_OVERRIDE;
+
+    virtual bool     checkForWork() APPLE_KEXT_OVERRIDE;
     virtual IOReturn executeWorkCall(IOWorkQueueCall *);
-    
-    virtual void processWorkCallFromSeparateThread(IOWorkQueueCall *);
-    virtual void processWorkCallFromSeparateThreadWL();
+
+    virtual void  processWorkCallFromSeparateThread(IOWorkQueueCall *);
+    virtual void  processWorkCallFromSeparateThreadWL();
     static void * ThreadCallMain(void *, wait_result_t);
-    
+
     virtual void unusedCall004(IOWorkQueueCall *);
-    
+
     static IOWorkQueue * withCapacity(OSObject * owner, UInt32 size, IOWorkQueueOperationMode mode, bool isDebug, char * workQueueName);
-    virtual bool initWithCapacity(OSObject * owner, UInt32 size, IOWorkQueueOperationMode mode, bool isDebug, char * workQueueName);
-    
+    virtual bool         initWithCapacity(OSObject * owner, UInt32 size, IOWorkQueueOperationMode mode, bool isDebug, char * workQueueName);
+
     virtual void free() APPLE_KEXT_OVERRIDE;
-    
+
     virtual IOReturn enqueueAction(Action action, void * arg0, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
-    
+
     virtual void setCountedActionLimit(UInt32 limit);
     virtual bool allDoneProcessing();
     virtual void setEnqueueEnable(bool enabled);
     virtual void removeAllEntries();
     virtual void disable() APPLE_KEXT_OVERRIDE;
     virtual void disableWL();
-    
+
     OSMetaClassDeclareReservedUnused(IOWorkQueue, 0);
     OSMetaClassDeclareReservedUnused(IOWorkQueue, 1);
     OSMetaClassDeclareReservedUnused(IOWorkQueue, 2);
@@ -124,36 +124,36 @@ public:
     OSMetaClassDeclareReservedUnused(IOWorkQueue, 17);
     OSMetaClassDeclareReservedUnused(IOWorkQueue, 18);
     OSMetaClassDeclareReservedUnused(IOWorkQueue, 19);
-    
-protected:    
-    IOWorkQueueCall *           mWorkQueueHeadCall; //72
-    IOWorkQueueCall *           mWorkQueueTailCall; //80
-    IOSimpleLock *              mWorkQueueCallSimpleLock; //88
-    
+
+protected:
+    IOWorkQueueCall * mWorkQueueHeadCall;       // 72
+    IOWorkQueueCall * mWorkQueueTailCall;       // 80
+    IOSimpleLock *    mWorkQueueCallSimpleLock; // 88
+
     struct ExpansionData
     {
-        IOWorkLoop *            eWorkLoop; //0
-        IOCommandGate *         eCommandGate; //8
-        bool                    eStop; //16
-        IOThread                eThread[20]; //24
-        uint8_t                 eThreadLimit[20]; //184
+        IOWorkLoop *    eWorkLoop;        // 0
+        IOCommandGate * eCommandGate;     // 8
+        bool            eStop;            // 16
+        IOThread        eThread[20];      // 24
+        uint8_t         eThreadLimit[20]; // 184
     };
-    ExpansionData *             mExpansionData; //96
-    
-#define eWorkLoop               IOWorkQueue::mExpansionData->eWorkLoop
-#define eCommandGate            IOWorkQueue::mExpansionData->eCommandGate
-#define eStop                   IOWorkQueue::mExpansionData->eStop
-#define eThread                 IOWorkQueue::mExpansionData->eThread
-#define eThreadLimit            IOWorkQueue::mExpansionData->eThreadLimit
-    
-    void *                      mUnusedPointer; //104
-    
-    IOWorkQueueOperationMode    mOperationMode; //112
-    SInt32                      mThreadCounter; //116
-    UInt32                      mCountedActionLimit; //120
-    bool                        mDebug; //124
-    bool                        mEnqueueEnabled; //125
-    char                        mWorkQueueName[0x64]; //126
+    ExpansionData * mExpansionData; // 96
+
+#define eWorkLoop    IOWorkQueue::mExpansionData->eWorkLoop
+#define eCommandGate IOWorkQueue::mExpansionData->eCommandGate
+#define eStop        IOWorkQueue::mExpansionData->eStop
+#define eThread      IOWorkQueue::mExpansionData->eThread
+#define eThreadLimit IOWorkQueue::mExpansionData->eThreadLimit
+
+    void * mUnusedPointer; // 104
+
+    IOWorkQueueOperationMode mOperationMode;       // 112
+    SInt32                   mThreadCounter;       // 116
+    UInt32                   mCountedActionLimit;  // 120
+    bool                     mDebug;               // 124
+    bool                     mEnqueueEnabled;      // 125
+    char                     mWorkQueueName[0x64]; // 126
 };
 
 #endif

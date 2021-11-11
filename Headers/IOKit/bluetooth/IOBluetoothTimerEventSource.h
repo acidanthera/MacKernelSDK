@@ -38,39 +38,40 @@
 
 struct IOBluetoothTimer
 {
-    AbsoluteTime abstime; //0
-    UInt32 index; //8
-    void * refcon; //16
-    bool enabled; //24
-    IOBluetoothTimer * timerChainNext; //32
+    AbsoluteTime       abstime;        // 0
+    UInt32             index;          // 8
+    void *             refcon;         // 16
+    bool               enabled;        // 24
+    IOBluetoothTimer * timerChainNext; // 32
 };
 
 class IOBluetoothTimerEventSource : public IOTimerEventSource
 {
     OSDeclareDefaultStructors(IOBluetoothTimerEventSource);
-    
+
 public:
     static IOBluetoothTimerEventSource * timerEventSource(OSObject * owner, Action action = NULL);
-    static void timerAction( OSObject * owner, IOBluetoothTimerEventSource * sender );
-    virtual void timerFired( IOBluetoothTimerEventSource * sender );
+
+    static void  timerAction(OSObject * owner, IOBluetoothTimerEventSource * sender);
+    virtual void timerFired(IOBluetoothTimerEventSource * sender);
     virtual bool init(OSObject * owner, Action action = NULL) APPLE_KEXT_OVERRIDE;
     virtual void free() APPLE_KEXT_OVERRIDE;
     virtual bool addTimer(AbsoluteTime abstime, UInt32 index, void * refcon);
     virtual bool removeTimer(UInt32 index);
     virtual bool removeAllTimers();
-    
+
     virtual IOReturn setTimeoutMS(UInt32, UInt32, void *);
     virtual IOReturn setTimeoutUS(UInt32, UInt32, void *);
     virtual IOReturn setTimeout(UInt32, UInt32, UInt32, void *);
     virtual IOReturn setTimeout(AbsoluteTime abstime, UInt32, void *);
-    virtual void cancelTimeout(UInt32);
-    virtual void cancelTimeout() APPLE_KEXT_OVERRIDE;
-    
+    virtual void     cancelTimeout(UInt32);
+    virtual void     cancelTimeout() APPLE_KEXT_OVERRIDE;
+
 protected:
-    IOBluetoothTimer * mCurrentTimer; //96
-    OSObject * mOwner; //104
-    Action mTimeoutHandler; //112
-    IOBluetoothTimer * mFiringTimer; //120
+    IOBluetoothTimer * mCurrentTimer;   // 96
+    OSObject *         mOwner;          // 104
+    Action             mTimeoutHandler; // 112
+    IOBluetoothTimer * mFiringTimer;    // 120
 };
 
 #endif
