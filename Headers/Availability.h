@@ -139,9 +139,8 @@
 #define __API_TO_BE_DEPRECATED 100000
 #endif
 
-#include <AvailabilityInternal.h>
-#include <AvailabilityMacros.h>
 #include <AvailabilityVersions.h>
+#include <AvailabilityInternal.h>
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
     #define __OSX_AVAILABLE_STARTING(_osx, _ios) __AVAILABILITY_INTERNAL##_ios

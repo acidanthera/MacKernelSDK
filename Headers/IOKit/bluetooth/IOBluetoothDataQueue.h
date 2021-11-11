@@ -34,8 +34,8 @@
 #ifndef _IOKIT_IOBLUETOOTHDATAQUEUE_H
 #define _IOKIT_IOBLUETOOTHDATAQUEUE_H
 
-#include <IOKit/IOSharedDataQueue.h>
 #include <IOKit/IOMemoryDescriptor.h>
+#include <IOKit/IOSharedDataQueue.h>
 
 #ifdef enqueue
 #undef enqueue
@@ -44,38 +44,39 @@
 /*!
  * @class IOBluetoothDataQueue : public IOSharedDataQueue
  * @abstract A generic data queue providing utilities specific to the IOBluetoothFamily.
- * @discussion The IOBluetoothDataQueue is a subclass of IOSharedDataQueue that provides some functions that would be used by other IOBluetoothFamily classes. It should be used and only used in this family.
-*/
+ * @discussion The IOBluetoothDataQueue is a subclass of IOSharedDataQueue that provides some functions that would be used by other IOBluetoothFamily classes. It should be used and only used in this
+ * family.
+ */
 
 class IOBluetoothDataQueue : public IOSharedDataQueue
 {
-    OSDeclareDefaultStructors(IOBluetoothDataQueue)
+    OSDeclareDefaultStructors(IOBluetoothDataQueue);
 
 public:
     static IOBluetoothDataQueue * withCapacity(UInt32 size);
     static IOBluetoothDataQueue * withEntries(UInt32 numEntries, UInt32 entrySize);
     static IOBluetoothDataQueue * withBuffer(void * buffer, UInt32 size);
     static IOBluetoothDataQueue * withClientBuffer(mach_vm_address_t address, UInt32 length, task_t task);
-    
-    virtual void free() APPLE_KEXT_OVERRIDE;
-    virtual void sendDataAvailableNotification() APPLE_KEXT_OVERRIDE;
-    virtual void setNotificationPort(mach_port_t port) APPLE_KEXT_OVERRIDE;
-    virtual bool setQueueSize(UInt32 size, bool isWithBuffer);
-    virtual bool initWithCapacity(UInt32 size) APPLE_KEXT_OVERRIDE;
-    virtual bool initWithBuffer(void * buffer, UInt32 size);
-    virtual bool initWithClientBuffer(mach_vm_address_t address, UInt32 length, task_t task);
-    virtual bool enqueue(void * data, UInt32 dataSize) APPLE_KEXT_OVERRIDE;
+
+    virtual void   free() APPLE_KEXT_OVERRIDE;
+    virtual void   sendDataAvailableNotification() APPLE_KEXT_OVERRIDE;
+    virtual void   setNotificationPort(mach_port_t port) APPLE_KEXT_OVERRIDE;
+    virtual bool   setQueueSize(UInt32 size, bool isWithBuffer);
+    virtual bool   initWithCapacity(UInt32 size) APPLE_KEXT_OVERRIDE;
+    virtual bool   initWithBuffer(void * buffer, UInt32 size);
+    virtual bool   initWithClientBuffer(mach_vm_address_t address, UInt32 length, task_t task);
+    virtual bool   enqueue(void * data, UInt32 dataSize) APPLE_KEXT_OVERRIDE;
     virtual UInt32 numberOfFreeBlocks(UInt64 offset);
     virtual UInt32 freeSpaceInQueue();
-    virtual void setDataQueueOwnerName(char * name);
-    
+    virtual void   setDataQueueOwnerName(char * name);
+
 protected:
-    bool mInitializedWithBuffer; //40, determines if the data queue should be freed
-    char mDataQueueOwnerName[0x30]; //41
-    IOMemoryMap * mMemoryMap; //96
-    IOMemoryDescriptor * mMemoryDescriptor; //104
-    bool mInitializedWithClientBuffer; //112, will setTag(3) in free if it is true, set to true in initWithClientBuffer
-    UInt32 mNotifyMsgSize; //116
+    bool                 mInitializedWithBuffer;       // 40, determines if the data queue should be freed
+    char                 mDataQueueOwnerName[0x30];    // 41
+    IOMemoryMap *        mMemoryMap;                   // 96
+    IOMemoryDescriptor * mMemoryDescriptor;            // 104
+    bool                 mInitializedWithClientBuffer; // 112, will setTag(3) in free if it is true, set to true in initWithClientBuffer
+    UInt32               mNotifyMsgSize;               // 116
 };
 
 #endif
