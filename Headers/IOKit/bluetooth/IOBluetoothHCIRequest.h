@@ -41,7 +41,7 @@
 #import <IOKit/system.h>
 
 // Forward declaration to avoid the need to include IOBluetoothHCIUserLibShared.h
-typedef struct BluetoothHCINotificationMessage;
+typedef struct BluetoothHCINotificationMessage BluetoothHCINotificationMessage;
 
 enum
 {
