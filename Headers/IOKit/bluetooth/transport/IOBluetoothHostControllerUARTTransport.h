@@ -97,7 +97,7 @@ public:
     virtual IOReturn DoDeviceReset(UInt16) APPLE_KEXT_OVERRIDE;
     virtual IOReturn DequeueDataInterruptEventGated(IOInterruptEventSource * sender, int count);
 
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual void DumpTransportProviderState() APPLE_KEXT_OVERRIDE;
 #endif
 

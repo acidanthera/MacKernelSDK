@@ -459,7 +459,7 @@ public:
     virtual IOReturn IgnoreUSBReset(bool);
     virtual IOReturn HardResetController(UInt16);
     virtual bool     WillResetModule();
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual IOReturn EnqueueHardResetControllerAction(UInt16);
 #endif
     virtual IOReturn ResetTransportHardwareStatus();
@@ -488,7 +488,7 @@ public:
     virtual IOReturn SetLighthouseDebugQuery(UInt8);
     virtual void     WakeUpLEConnectionCompleteOutOfSequenceThread();
     virtual IOReturn RecoverX238EModule();
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual void SetControllerSleepMode();
 #endif
     virtual void                  TakeAHexDump(const void * inData, UInt32 inDataSize);
@@ -713,7 +713,7 @@ public:
     virtual IOReturn BluetoothHCIBroadcomLighthouseDebugQuery(UInt32, UInt8);
     virtual IOReturn BluetoothHCIBroadcomMasterSkipSniffMode(UInt16, UInt8, UInt8, UInt16, UInt16);
     virtual IOReturn BluetoothHCIBroadcomLoadPwrRegulatoryFile(UInt8 *, UInt8);
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual IOReturn BluetoothWriteLocalAddressFromRegistry();
 #endif
 

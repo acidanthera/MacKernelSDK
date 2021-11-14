@@ -233,7 +233,7 @@ public:
 
     virtual IOReturn HardReset();
 
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual void DumpTransportProviderState();
 #endif
 

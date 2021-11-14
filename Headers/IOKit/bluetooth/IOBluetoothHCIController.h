@@ -133,7 +133,7 @@ public:
 
     virtual bool GetNvramPacketLoggerBufferSize(UInt32 *);
 
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual bool NeedToWaitForControllerToShowUp();
 #endif
 
@@ -237,7 +237,7 @@ public:
     virtual bool     USBBluetoothModuleWithROMBootCapability();
     virtual IOReturn RecoverX238EModule(BluetoothHardwareListType *);
 
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual void     RecoveryTimeOutHandler();
     virtual IOReturn StartRecoveryTimer();
     virtual void     CancelRecoveryTimer();
@@ -391,7 +391,7 @@ protected:
     IOUSBHostDevice *                       mHardResetUSBHub;        // 480
     IOBluetoothACPIMethods *                mACPIMethods;            // 488
 
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_VERSION_11_0
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     IOTimerEventSource * mRecoveryTimer;           // 496
     bool                 mRecoveryTimerHasTimeout; // 504
 #endif
