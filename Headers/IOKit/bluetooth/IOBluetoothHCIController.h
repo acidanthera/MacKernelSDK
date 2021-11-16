@@ -45,6 +45,7 @@
 #error "Missing macOS target version"
 #endif
 
+class IOACPIPlatformDevice;
 class IOWorkQueue;
 class IODisplayWrangler;
 class IOBluetoothACPIMethods;
@@ -367,7 +368,7 @@ protected:
     IOBluetoothPacketLogger * mPacketLogger;                // 176
     IONotifier *              mPacketLoggerPublishNotifier; // 184
 #else
-    BLueotothPacketLogData * mPacketLogBuffer;             /// 168
+    BluetoothPacketLogData * mPacketLogBuffer;             /// 168
     UInt32                   mPacketLogBufferSize;         /// 176
     OSArray *                mLogPackets;                  /// 184
     UInt32                   mMaxNumberOfPreStoredPackets; /// 192
