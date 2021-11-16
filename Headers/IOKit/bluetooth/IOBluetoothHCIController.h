@@ -93,7 +93,9 @@ extern UInt32 IOBluetoothRingBufferWriteAtOffset(UInt32 *, void *, UInt32, UInt6
 
 extern bool SearchForTransportEventTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
 extern void FullWakeTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
-extern void RecoveryWakeTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
+extern void RecoveryTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
+#endif
 
 class IOBluetoothHCIController : public IOService
 {
@@ -135,7 +137,7 @@ public:
     static bool PacketLoggerPublishNotificationHandler(void *, void *, IOService *, IONotifier *);
     static bool HandlePacketLoggerPublishNotification(void *, IOService *);
 #else
-    static void HardResetEntry(OSObject * owner);
+    static void HardwareResetEntry(OSObject * owner);
 #endif
     static bool DisplayManagerPublishNotificationHandler(void *, void *, IOService *, IONotifier *);
     static bool HandleDisplayManagerPublishNotification(void *, IOService *);
@@ -166,7 +168,6 @@ public:
     virtual void PacketLogSetBufferEmptiedFlag();
     virtual void PacketLogClientClosed(IOBluetoothHCIPacketLogUserClient * client);
 #endif
-
     virtual void LogPacket(UInt8 packetType, void * packetData, size_t packetSize);
 #if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
     static IOReturn LogPacketAction(OSObject * owner, void * arg0, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);

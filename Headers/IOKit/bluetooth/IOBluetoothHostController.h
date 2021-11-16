@@ -201,6 +201,9 @@ public:
 #else
     virtual IOReturn SetupController();
 #endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
+    virtual IOReturn CallSetupController();
+#endif
     virtual IOReturn SetupGeneralController();
 #if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
     virtual IOReturn CallSetupContorller();
@@ -232,13 +235,21 @@ public:
     virtual IOReturn                  SetupPowerStateReporter();
 
     virtual void DesyncIncomingData(IOBluetoothIncomingDataAction action, UInt8 * inDataPtr, UInt32 inDataSize);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
+    static void  DesyncIncomingDataAction(IOBluetoothHostController * hostController, void * action, void * inDataPtr, UInt32 inDataSize, UInt32 sequenceNumber);
+#else
     static void  DesyncIncomingDataAction(IOBluetoothHostController * hostController, IOBluetoothIncomingDataAction action, void * inDataPtr, UInt32 inDataSize, UInt32 sequenceNumber);
+#endif
     virtual void SynchronizePacketSequence(UInt32 sequenceNumber);
     virtual void SynchronizeSCOPacketSequence(UInt32 sequenceNumber);
 
     virtual IOBluetoothDevice * FindDeviceWithHandle(BluetoothConnectionHandle inConnectionHandle);
     virtual IOBluetoothDevice * FindDeviceWithSCOHandle(BluetoothConnectionHandle inConnectionHandle);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual IOBluetoothDevice * FindDeviceWithAddress(const BluetoothDeviceAddress * inDeviceAddress, bool);
+#else
+    virtual IOBluetoothDevice * FindDeviceWithAddress(const BluetoothDeviceAddress * inDeviceAddress);
+#endif
 
     virtual HearingDeviceListType * FindHearingDeviceWithAddress(const BluetoothDeviceAddress * inDeviceAddress);
     virtual IOReturn                AddHearingDevice(IOBluetoothDevice * inDevice);
@@ -317,8 +328,8 @@ public:
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual bool    NeedToSetupController();
-    static IOReturn NeedToSetupControllerAction(IOBluetoothHostController *);
-    virtual bool    FullWake(char *);
+    static IOReturn NeedToSetupControllerAction(IOBluetoothHostController * target);
+    virtual bool    FullWake(char * calledByFunction);
 #endif
 
     virtual void     ProcessLMPData(UInt8 * data, UInt32 dataSize);
@@ -384,7 +395,11 @@ public:
     virtual IOReturn KillAllPendingRequests(bool destroy, bool includeIdleRequests);
     virtual IOReturn CallKillAllPendingRequests(bool destroy, bool includeIdleRequests);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual IOReturn IncrementHCICommandTimeOutCounter(UInt16 inOpCode);
+#else
+    virtual IOReturn IncrementHCICommandTimeOutCounter();
+#endif
     virtual void     ResetHCICommandTimeOutCounter();
 
     virtual void IncrementActiveConnections();
@@ -482,10 +497,12 @@ public:
     virtual IOReturn WriteLocalSupportedFeatures(UInt32, void *);
     virtual IOReturn WriteBufferSize();
     virtual IOReturn DisableScan();
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
+    virtual IOReturn EnableScan();
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual IOReturn CallBluetoothHCIReset(bool, char *);
 #else
-    virtual IOReturn EnableScan();
     virtual IOReturn CallBluetoothHCIReset(bool);
 #endif
 
@@ -504,6 +521,7 @@ public:
     virtual void     ResetHardResetCounter();
 #endif
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
+    static IOReturn  HardResetControllerAction(OSObject * target, UInt16);
     virtual IOReturn EnqueueHardResetControllerAction(UInt16);
 #endif
     virtual IOReturn ResetTransportHardwareStatus();
