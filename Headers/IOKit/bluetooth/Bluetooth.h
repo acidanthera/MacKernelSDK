@@ -1360,12 +1360,14 @@ typedef struct BluetoothHCILinkQualityInfo
     BluetoothHCILinkQuality   qualityValue;
 } BluetoothHCILinkQualityInfo;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
 typedef uint8_t BluetoothHCIEncryptionKeySize;
 typedef struct BluetoothHCIEncryptionKeySizeInfo
 {
     BluetoothConnectionHandle     handle;
     BluetoothHCIEncryptionKeySize keySize;
 } BluetoothHCIEncryptionKeySizeInfo;
+#endif
 
 typedef uint8_t BluetoothHCIRole;
 typedef struct BluetoothHCIRoleInfo
@@ -1475,10 +1477,17 @@ typedef struct BluetoothHCIEnhancedAcceptSynchronousConnectionRequestParams
     uint32_t receiveBandwidth;
     uint64_t transmitCodingFormat;
     uint64_t receiveCodingFormat;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     uint16_t transmitCodecFrameSize;
     uint16_t receiveCodecFrameSize;
     uint32_t inputBandwidth;
     uint32_t outputBandwidth;
+#else
+    uint8_t  transmitCodecFrameSize;
+    uint8_t  receiveCodecFrameSize;
+    uint16_t inputBandwidth;
+    uint16_t outputBandwidth;
+#endif
     uint64_t inputCodingFormat;
     uint64_t outputCodingFormat;
     uint16_t inputCodedDataSize;
@@ -1492,8 +1501,14 @@ typedef struct BluetoothHCIEnhancedAcceptSynchronousConnectionRequestParams
     uint8_t  inputTransportUnitSize;
     uint8_t  outputTransportUnitSize;
     uint16_t maxLatency;
-    uint16_t packetType;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_14
+    uint16_t voiceSetting;
     uint8_t  retransmissionEffort;
+#endif
+    uint16_t packetType;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
+    uint8_t  retransmissionEffort;
+#endif
 } BluetoothHCIEnhancedAcceptSynchronousConnectionRequestParams;
 
 typedef uint8_t BluetoothHCILoopbackMode;
@@ -2366,6 +2381,7 @@ typedef struct BluetoothHCIEventLEConnectionCompleteResults
     uint8_t                   masterClockAccuracy;
 } __attribute__((packed)) BluetoothHCIEventLEConnectionCompleteResults;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
 typedef struct BluetoothHCIEventLEEnhancedConnectionCompleteResults
 {
     BluetoothConnectionHandle connectionHandle;
@@ -2379,6 +2395,7 @@ typedef struct BluetoothHCIEventLEEnhancedConnectionCompleteResults
     uint16_t                  supervisionTimeout;
     uint8_t                   masterClockAccuracy;
 } __attribute__((packed)) BluetoothHCIEventLEEnhancedConnectionCompleteResults;
+#endif
 
 typedef struct BluetoothHCIEventLEConnectionUpdateCompleteResults
 {
