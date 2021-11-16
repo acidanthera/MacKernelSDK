@@ -231,7 +231,7 @@ public:
     virtual bool     WaitForSystemReadyForSleep(char *);
     virtual IOReturn StartBluetoothSleepTimer();
     virtual void     CancelBluetoothSleepTimer();
-#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_14
     virtual bool     StopAllReads();
 #endif
     virtual os_log_t CreateOSLogObject();
