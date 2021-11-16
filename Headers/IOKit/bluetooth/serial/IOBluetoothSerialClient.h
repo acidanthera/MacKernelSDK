@@ -40,6 +40,7 @@
 #include <IOKit/serial/IOSerialDriverSync.h>
 
 class IOBluetoothRFCOMMChannel;
+class IOBluetoothSerialManager;
 
 enum ParityType
 {
