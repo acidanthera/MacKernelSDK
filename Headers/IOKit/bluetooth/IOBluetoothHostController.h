@@ -1033,7 +1033,9 @@ protected:
     os_log_t mInternalOSLogObject;                // 1288
     bool     mAutoResumeSet;                      // 1296
     bool     mACLPacketCausedFullWake;            // 1297
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     UInt8    __reserved1;                         // 1298
+#endif
     UInt32   mHardResetCounter;                   // 1300
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     bool     mHardResetDuringBoot;                // 1304
