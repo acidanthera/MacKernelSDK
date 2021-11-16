@@ -57,10 +57,8 @@ extern void BluetoothSleepTimeOutOccurred(OSObject * owner, IOTimerEventSource *
 
 static const char * gInternalPowerStateString[7]         = { "OFF", "ON", "SLEEP", "IDLE", "OFF", "IDLE", "ON" };
 static const char * gOrdinalPowerStateString[3]          = { "OFF", "IDLE", "ON" };
-static const char * gPowerManagerSleepTypeString[9]      = { "kIOPMSleepTypeInvalid", "kIOPMSleepTypeAbortedSleep", "kIOPMSleepTypeNormalSleep", "kIOPMSleepTypeSafeSleep", "kIOPMSleepTypeHibernate",
-                                                        "kIOPMSleepTypeStandby", "kIOPMSleepTypePowerOff",     "kIOPMSleepTypeDeepIdle",    "kIOPMSleepTypeLast" };
-static const char * gPowerManagerSleepTypeShortString[9] = { "SleepTypeInvalid", "SleepTypeAbortedSleep", "SleepTypeNormalSleep", "SleepTypeSafeSleep", "SleepTypeHibernate",
-                                                             "SleepTypeStandby", "SleepTypePowerOff",     "SleepTypeDeepIdle",    "SleepTypeLast" };
+static const char * gPowerManagerSleepTypeString[9]      = { "kIOPMSleepTypeInvalid", "kIOPMSleepTypeAbortedSleep", "kIOPMSleepTypeNormalSleep", "kIOPMSleepTypeSafeSleep", "kIOPMSleepTypeHibernate", "kIOPMSleepTypeStandby", "kIOPMSleepTypePowerOff", "kIOPMSleepTypeDeepIdle", "kIOPMSleepTypeLast" };
+static const char * gPowerManagerSleepTypeShortString[9] = { "SleepTypeInvalid", "SleepTypeAbortedSleep", "SleepTypeNormalSleep", "SleepTypeSafeSleep", "SleepTypeHibernate", "SleepTypeStandby", "SleepTypePowerOff", "SleepTypeDeepIdle", "SleepTypeLast" };
 
 extern const IORegistryPlane * gIODTPlane;
 
