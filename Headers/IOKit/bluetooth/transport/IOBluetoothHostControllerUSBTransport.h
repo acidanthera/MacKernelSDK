@@ -166,7 +166,11 @@ public:
     virtual bool     NeedToTurnOnUSBDebug();
 #endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual IOReturn HardReset() APPLE_KEXT_OVERRIDE;
+#else
+    virtual IOReturn PerformHardReset() APPLE_KEXT_OVERRIDE;
+#endif
 
 private:
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerUSBTransport, 0);
