@@ -126,7 +126,9 @@ public:
     virtual void AbortPipesAndClose(bool, bool);
     virtual bool HostSupportsSleepOnUSB();
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual bool StartLMPLogging();
+#endif
     virtual bool StartLMPLoggingBulkPipeRead();
     virtual bool StartInterruptPipeRead();
     virtual bool StopInterruptPipeRead();
@@ -159,8 +161,10 @@ public:
     virtual IOReturn ProcessPowerStateChangeAfterResumed(char *);
 
     virtual IOReturn setAggressiveness(unsigned long type, unsigned long newLevel) APPLE_KEXT_OVERRIDE;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     static IOReturn  setAggressivenessAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4);
     virtual bool     setAggressivenessWL(unsigned long type, unsigned long newLevel);
+#endif
 
     virtual IOReturn powerStateWillChangeTo(IOPMPowerFlags capabilities, unsigned long stateNumber, IOService * whatDevice) APPLE_KEXT_OVERRIDE;
     static IOReturn  powerStateWillChangeToAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4);
@@ -203,7 +207,11 @@ public:
     virtual UInt16   GetControllerTransportType();
     virtual bool     SupportNewIdlePolicy();
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual void     CheckACPIMethodsAvailabilities();
+#else
+    virtual void     CheckSpecialGPIO();
+#endif
     virtual IOReturn SetBTRS();
     virtual IOReturn SetBTPU();
     virtual IOReturn SetBTPD();
@@ -226,7 +234,7 @@ public:
     virtual IOReturn StartBluetoothSleepTimer();
     virtual void     CancelBluetoothSleepTimer();
 #if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
-    virtual bool     StopAllReads()
+    virtual bool     StopAllReads();
 #endif
     virtual os_log_t CreateOSLogObject();
 
@@ -318,7 +326,9 @@ protected:
     os_log_t                 mInternalOSLogObject;            // 288
     bool                     mBootFromROM;                    // 296
     UInt16                   mUARTProductID;                  // 298
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     IOBluetoothACPIMethods * mACPIMethods;                    // 304
+#endif
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     bool                     reserved10;                      // 312
 #endif
