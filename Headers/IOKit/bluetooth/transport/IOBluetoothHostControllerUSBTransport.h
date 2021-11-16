@@ -68,6 +68,9 @@ public:
     virtual bool          ConfigurePM(IOService * provider) APPLE_KEXT_OVERRIDE;
     virtual unsigned long maxCapabilityForDomainState(IOPMPowerFlags domainState) APPLE_KEXT_OVERRIDE;
     virtual unsigned long initialPowerStateForDomainState(IOPMPowerFlags domainState) APPLE_KEXT_OVERRIDE;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_14
+    virtual IOReturn setAggressiveness(unsigned long type, unsigned long newLevel) APPLE_KEXT_OVERRIDE;
+#endif
     virtual IOReturn      setPowerStateWL(unsigned long powerStateOrdinal, IOService * whatDevice) APPLE_KEXT_OVERRIDE;
     virtual IOReturn      RequestTransportPowerStateChange(IOBluetoothHCIControllerInternalPowerState powerState, char * calledByFunction) APPLE_KEXT_OVERRIDE;
     virtual void          CompletePowerStateChange(char *) APPLE_KEXT_OVERRIDE;
@@ -105,7 +108,9 @@ public:
     virtual IOUSBHostPipe *      FindNextPipe(IOUSBHostInterface *, UInt8, UInt8, Descriptor *);
     virtual bool                 FindInterfaces();
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual bool     StartLMPLogging() APPLE_KEXT_OVERRIDE;
+#endif
     virtual bool     StartLMPLoggingBulkPipeRead() APPLE_KEXT_OVERRIDE;
     virtual IOReturn ToggleLMPLogging(UInt8 *) APPLE_KEXT_OVERRIDE;
     virtual IOReturn TransportLMPLoggingBulkOutWrite(UInt8, UInt8) APPLE_KEXT_OVERRIDE;
@@ -125,6 +130,10 @@ public:
 
     virtual bool StopAllPipes();
     virtual bool StartAllPipes();
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
+    virtual bool StopAllReads() APPLE_KEXT_OVERRIDE;
+#endif
+
     virtual void WaitForAllIOsToBeAborted();
     virtual void ReceiveInterruptData(void * data, UInt32 dataSize, bool);
 
