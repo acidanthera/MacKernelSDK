@@ -965,13 +965,22 @@ protected:
     os_log_t mInternalOSLogObject;                // 1288
     bool     mAutoResumeSet;                      // 1296
     bool     mACLPacketCausedFullWake;            // 1297
-    UInt32   mHardResetCounter;                   // 1300, good up to this point
-    UInt8    unknown1e;                           // 1304
+    UInt8    __reserved1;                         // 1298
+    UInt32   mHardResetCounter;                   // 1300
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
+    bool     mHardResetDuringBoot;                // 1304
     bool     mSupportLighthouseFeature;           // 1305
-    UInt8    unknown1f;                           // 1306
+    bool     mSendExitHIDSuspendPacket;           // 1306
     UInt8    mAllowedNumberOfTimedOutHCICommands; // 1307
     UInt32   mCreateLEDeviceCallTime;             // 1308
     bool     mBluetoothdNotFound;                 // 1312
+#else
+    UInt8    __reserved1;                         /// 1304, same as above
+    UInt32   mCreateLEDeviceCallTime;             /// 1308
+    bool     mHardResetDuringBoot;                /// 1312
+    bool     mSupportLighthouseFeature;           /// 1313
+    bool     mSendExitHIDSuspendPacket;           /// 1314
+#endif
 
     struct ExpansionData
     {
