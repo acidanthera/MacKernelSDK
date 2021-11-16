@@ -177,9 +177,16 @@ public:
     virtual IOWorkLoop *    getWorkLoop() const APPLE_KEXT_OVERRIDE;
     virtual IOCommandGate * getCommandGate() const;
 
-    virtual void BroadcastEventNotification(BluetoothHCIRequestID inID, BluetoothHCIEventCode inEventCode, IOReturn eventStatus, UInt8 * inDataToSendPtr, IOByteCount inDataSize,
-                                            BluetoothHCICommandOpCode inOpCode, bool, UInt8);
-    virtual void BroadcastNotification(BluetoothHCIRequestID inID, IOBluetoothHCIControllerConfigState oldState, IOBluetoothHCIControllerConfigState newState);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
+    virtual void BroadcastEventNotification(BluetoothHCIRequestID inID, BluetoothHCIEventCode inEventCode, IOReturn eventStatus, UInt8 * inDataToSendPtr, IOByteCount inDataSize, BluetoothHCICommandOpCode inOpCode, bool, UInt8);
+    virtual void BroadcastNotification(UInt32 type, IOBluetoothHCIControllerConfigState oldState, IOBluetoothHCIControllerConfigState newState);
+#else
+    virtual void BroadcastEventNotification(BluetoothHCIRequestID inID, BluetoothHCIEventCode inEventCode, IOReturn eventStatus, UInt8 * inDataToSendPtr, IOByteCount inDataSize, BluetoothHCICommandOpCode inOpCode);
+    virtual void BroadcastConfigStateChangeNotification(IOBluetoothHCIControllerConfigState oldState, IOBluetoothHCIControllerConfigState newState);
+    virtual void BroadcastWoBTReconnectionNotification();
+    virtual void BroadcastCommandTimeoutNotification();
+    virtual void BroadcastUSBPipeStallNotification();
+#endif
 
     virtual void WaitForBluetoothd();
     virtual void FoundBluetoothd();
@@ -189,8 +196,15 @@ public:
     virtual void                                 setConfigState(IOBluetoothHCIControllerConfigState configState);
 
     virtual bool     InitializeController();
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual IOReturn SetupController(bool *);
+#else
+    virtual IOReturn SetupController();
+#endif
     virtual IOReturn SetupGeneralController();
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
+    virtual IOReturn CallSetupContorller();
+#endif
     virtual IOReturn SetupCommonHardware();
     virtual bool     ControllerSetupIsComplete();
     virtual void     ControllerSetupComplete(int);
@@ -230,13 +244,17 @@ public:
     virtual IOReturn                AddHearingDevice(IOBluetoothDevice * inDevice);
     virtual IOReturn                RemoveHearingDevice(IOBluetoothDevice * inDevice, bool all);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual LEDeviceListType * FindLEDeviceWithConnectionHandle(BluetoothConnectionHandle inConnectionHandle);
     virtual IOReturn           AddLEDevice(BluetoothConnectionHandle inConnectionHandle);
     virtual IOReturn           RemoveLEDevice(BluetoothConnectionHandle inConnectionHandle, bool all);
+#endif
 
     virtual IOReturn AddDevice(IOBluetoothDevice * inDevice);
     virtual IOReturn RemoveDevice(IOBluetoothDevice * inDevice);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual void     PrintDeviceList();
+#endif
 
     virtual IOReturn SetDevicePublishNotificationState(const BluetoothDeviceAddress *, UInt16);
     virtual UInt16   GetDevicePublishNotificationState(const BluetoothDeviceAddress *);
@@ -297,9 +315,11 @@ public:
 
     virtual UInt16 getSynchronousConnectionPacketTypeProperty();
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual bool    NeedToSetupController();
     static IOReturn NeedToSetupControllerAction(IOBluetoothHostController *);
     virtual bool    FullWake(char *);
+#endif
 
     virtual void     ProcessLMPData(UInt8 * data, UInt32 dataSize);
     virtual IOReturn ProcessLMPDataAction(IOBluetoothHostController * hostController, UInt8 * data, UInt32 dataSize);
@@ -319,8 +339,11 @@ public:
     virtual void    NotifyDataClientsForEventData(IOBluetoothHCIRequest * hciRequest, UInt32, UInt8 *);
 
     virtual bool     GetCompleteCodeForCommand(BluetoothHCICommandOpCode inOpCode, BluetoothHCIEventCode * outEventCode);
-    virtual IOReturn GetOpCodeAndEventCode(UInt8 * inDataPtr, UInt32 inDataSize, BluetoothHCICommandOpCode * outOpCode, BluetoothHCIEventCode * eventCode, BluetoothHCIEventStatus * outStatus, UInt8 *,
-                                           BluetoothDeviceAddress * outDeviceAddress, BluetoothConnectionHandle * outConnectionHandle, bool *);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
+    virtual IOReturn GetOpCodeAndEventCode(UInt8 * inDataPtr, UInt32 inDataSize, BluetoothHCICommandOpCode * outOpCode, BluetoothHCIEventCode * eventCode, BluetoothHCIEventStatus * outStatus, UInt8 *, BluetoothDeviceAddress * outDeviceAddress, BluetoothConnectionHandle * outConnectionHandle, bool *);
+#else
+    virtual IOReturn GetOpCodeAndEventCode(UInt8 * inDataPtr, BluetoothHCICommandOpCode * outOpCode, BluetoothHCIEventCode * eventCode, BluetoothHCIEventStatus * outStatus, UInt8 *, BluetoothDeviceAddress * outDeviceAddress, BluetoothConnectionHandle * outConnectionHandle);
+#endif
 
     virtual IOReturn FindConnectionCompleteType(BluetoothDeviceAddress * inDeviceAddress, BluetoothHCICommandOpCode * outOpCode);
     virtual IOReturn FindSynchronousConnectionCompleteType(BluetoothDeviceAddress * inDeviceAddress, BluetoothHCICommandOpCode * outOpCode);
@@ -390,6 +413,10 @@ public:
     virtual void           RemoveAllowedIncomingRFCOMMChannel(OSObject * channelID);
     virtual void           RemoveAllowedIncomingRFCOMMChannel(BluetoothRFCOMMChannelID incomingChannelID);
     virtual bool           IsSecureIncomingRFCOMMChannel(BluetoothRFCOMMChannelID incomingChannelID);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
+    virtual bool           IsSecureIncomingRFCOMMChannel(OSNumber * incomingChannelID);
+    virtual void           SetEnabledIncomingRFCOMMChannel(OSNumber * incomingChannelID, bool ShouldBeEnabled);
+#endif
     virtual void           SetEnabledIncomingRFCOMMChannel(BluetoothRFCOMMChannelID incomingChannelID, bool ShouldBeEnabled);
 
     virtual bool IsAllowedIncomingL2CAPChannelForDevice(BluetoothL2CAPPSM incomingPSM, IOBluetoothDevice * device);
@@ -454,17 +481,37 @@ public:
     virtual IOReturn WriteDeviceAddress(BluetoothHCIRequestID inID, BluetoothDeviceAddress * inAddress);
     virtual IOReturn WriteLocalSupportedFeatures(UInt32, void *);
     virtual IOReturn WriteBufferSize();
-    virtual bool     DisableScan();
+    virtual IOReturn DisableScan();
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual IOReturn CallBluetoothHCIReset(bool, char *);
+#else
+    virtual IOReturn EnableScan();
+    virtual IOReturn CallBluetoothHCIReset(bool);
+#endif
+
     virtual IOReturn IgnoreUSBReset(bool);
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual IOReturn HardResetController(UInt16);
+#else
+    virtual IOReturn BluetoothResetDevice(UInt16);
+    virtual IOReturn BluetoothResetController();
+    virtual IOReturn BluetoothResetHub();
+    virtual IOReturn DoReset();
+#endif
     virtual bool     WillResetModule();
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
+    virtual void     ResetHardResetCounter();
+#endif
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual IOReturn EnqueueHardResetControllerAction(UInt16);
 #endif
     virtual IOReturn ResetTransportHardwareStatus();
     virtual IOReturn GetTransportHardwareStatus(UInt32 *);
     virtual void     TransportTerminating(IOBluetoothHostControllerTransport *);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
+    virtual IOReturn ForceHardwareReset();
+#endif
     virtual IOReturn GetTransportInfo(BluetoothTransportInfo *);
     virtual bool     SupportWoBT();
     virtual bool     IsTBFCSupported();
@@ -487,18 +534,25 @@ public:
     virtual IOReturn SetLighthouseParameters(UInt16, UInt16, UInt16, UInt8, UInt8, SInt8, UInt8);
     virtual IOReturn SetLighthouseDebugQuery(UInt8);
     virtual void     WakeUpLEConnectionCompleteOutOfSequenceThread();
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual IOReturn RecoverX238EModule();
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
-    virtual void SetControllerSleepMode();
 #endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
+    virtual void     SetControllerSleepMode();
+#endif
+
     virtual void                  TakeAHexDump(const void * inData, UInt32 inDataSize);
     virtual void                  PrintAllHCIRequests();
     virtual void                  PrintDeviceListAddress();
     virtual void                  PrintClassVariablesContent();
     virtual os_log_t              CreateOSLogObject();
     virtual BluetoothHCIRequestID GetMaxRequestID(); // return 500
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual IOReturn              TestLEAdvertisingReportEvent(UInt8);
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual bool                  IsClassicSecureConnectionsSupported();
+#endif
 
     virtual IOReturn BluetoothHCIInquiry(BluetoothHCIRequestID inID, BluetoothLAP inLAP, BluetoothHCIInquiryLength inInquiryLength, BluetoothHCIResponseCount inMaxResponseCount,
                                          BluetoothHCIInquiryResults * outResults);
@@ -574,7 +628,11 @@ public:
     virtual IOReturn BluetoothHCILESetAdvertiseEnable(BluetoothHCIRequestID inID, UInt8);
     virtual IOReturn BluetoothHCILEReadLocalSupportedFeatures(BluetoothHCIRequestID inID, BluetoothHCISupportedFeatures * outFeatures);
     virtual IOReturn BluetoothHCILEReadRemoteUsedFeatures(BluetoothHCIRequestID inID, UInt16, BluetoothHCISupportedFeatures * outFeatures);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual IOReturn BluetoothHCIReset(BluetoothHCIRequestID inID, char * name);
+#else
+    virtual IOReturn BluetoothHCIReset(BluetoothHCIRequestID inID);
+#endif
     virtual IOReturn BluetoothHCISetEventFilter(BluetoothHCIRequestID inID, UInt8, UInt8, BluetoothEventFilterCondition *);
     virtual IOReturn BluetoothHCIFlush(BluetoothHCIRequestID inID, BluetoothConnectionHandle inHandle);
     virtual IOReturn BluetoothHCIReadPINType(BluetoothHCIRequestID inID, BluetoothPINType * outType);
@@ -595,7 +653,11 @@ public:
     virtual IOReturn BluetoothHCIReadPageTimeout(BluetoothHCIRequestID inID, BluetoothHCIPageTimeout * outDataPtr);
     virtual IOReturn BluetoothHCIWritePageTimeout(BluetoothHCIRequestID inID, BluetoothHCIPageTimeout inTimeout);
     virtual IOReturn BluetoothHCIReadScanEnable(BluetoothHCIRequestID inID, BluetoothHCIPageScanEnableState * outState);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual IOReturn BluetoothHCIWriteScanEnable(BluetoothHCIRequestID inID, BluetoothHCIPageScanEnableState inState, bool);
+#else
+    virtual IOReturn BluetoothHCIWriteScanEnable(BluetoothHCIRequestID inID, BluetoothHCIPageScanEnableState inState);
+#endif
     virtual IOReturn BluetoothHCIReadPageScanActivity(BluetoothHCIRequestID inID, BluetoothHCIScanActivity * outActivityInfo);
     virtual IOReturn BluetoothHCIWritePageScanActivity(BluetoothHCIRequestID inID, BluetoothHCIScanActivity * inActivityInfo);
     virtual IOReturn BluetoothHCIReadInquiryScanActivity(BluetoothHCIRequestID inID, BluetoothHCIScanActivity * outActivityInfo);
@@ -669,7 +731,9 @@ public:
     virtual IOReturn BluetoothHCIReadRSSI(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothHCIRSSIInfo * outRSSIInfo);
     virtual IOReturn BluetoothHCIReadAFHChannelMap(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothAFHResults * outAFHResults);
     virtual IOReturn BluetoothHCIReadClock(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, UInt8, BluetoothReadClockInfo * outClockInfo);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual IOReturn BluetoothHCIReadEncryptionKeySize(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothHCIEncryptionKeySizeInfo * outEncryptionKeySizeInfo);
+#endif
     virtual IOReturn BluetoothHCICreateConnectionCancel(BluetoothHCIRequestID inID, const BluetoothDeviceAddress *, BluetoothDeviceAddress *);
     virtual IOReturn BluetoothHCIRemoteNameRequestCancel(BluetoothHCIRequestID inID, const BluetoothDeviceAddress *, BluetoothDeviceAddress *);
     virtual IOReturn BluetoothHCIReadLMPHandle(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothHCIReadLMPHandleResults * outLMPHandleResults);
@@ -711,8 +775,10 @@ public:
     virtual IOReturn BluetoothHCIBroadcomLighthouseControl(UInt32, UInt8);
     virtual IOReturn BluetoothHCIBroadcomLighthouseSetParameters(UInt32, UInt16, UInt16, UInt16, UInt8, UInt8, SInt8, UInt8);
     virtual IOReturn BluetoothHCIBroadcomLighthouseDebugQuery(UInt32, UInt8);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual IOReturn BluetoothHCIBroadcomMasterSkipSniffMode(UInt16, UInt8, UInt8, UInt16, UInt16);
     virtual IOReturn BluetoothHCIBroadcomLoadPwrRegulatoryFile(UInt8 *, UInt8);
+#endif
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual IOReturn BluetoothWriteLocalAddressFromRegistry();
 #endif
@@ -871,8 +937,10 @@ protected:
     bool                  mLESetScanEnabled;        // 793
 
     OSSet *                              mHostControllerClients; // 800
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     LEDeviceListType *                   mLEDeviceListHead;      // 808
     LEDeviceListType *                   mLEDeviceListTail;      // 816
+#endif
     IOBluetoothHCIController *           mBluetoothFamily;       // 824
     IOBluetoothHostControllerTransport * mBluetoothTransport;    // 832
     IOWorkQueue *                        mControllerWorkQueue;   // 840
@@ -976,10 +1044,14 @@ protected:
     bool     mBluetoothdNotFound;                 // 1312
 #else
     UInt8    __reserved1;                         /// 1304, same as above
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     UInt32   mCreateLEDeviceCallTime;             /// 1308
     bool     mHardResetDuringBoot;                /// 1312
+#endif
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     bool     mSupportLighthouseFeature;           /// 1313
     bool     mSendExitHIDSuspendPacket;           /// 1314
+#endif
 #endif
 
     struct ExpansionData
