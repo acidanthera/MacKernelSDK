@@ -155,14 +155,14 @@ protected:
 
 public:
     // Standard IOService Methods
-    virtual IOService * probe(IOService * provider, SInt32 * score);
-    virtual bool        init(OSDictionary * properties);
-    virtual void        free();
-    virtual bool        willTerminate(IOService * provider, IOOptionBits options);
+    virtual IOService * probe(IOService * provider, SInt32 * score) APPLE_KEXT_OVERRIDE;
+    virtual bool        init(OSDictionary * properties) APPLE_KEXT_OVERRIDE;
+    virtual void        free() APPLE_KEXT_OVERRIDE;
+    virtual bool        willTerminate(IOService * provider, IOOptionBits options) APPLE_KEXT_OVERRIDE;
 
     // Starting & Stopping
-    virtual bool handleStart(IOService * provider);
-    virtual void handleStop(IOService * provider);
+    virtual bool handleStart(IOService * provider) APPLE_KEXT_OVERRIDE;
+    virtual void handleStop(IOService * provider) APPLE_KEXT_OVERRIDE;
     virtual void deviceReady();
     virtual void closeDownServices();
 
@@ -173,23 +173,23 @@ public:
     virtual void handleRestart();  // Does nothing
 
     // HID Properties
-    virtual OSString * newTransportString() const;
-    virtual OSString * newManufacturerString() const;
-    virtual OSString * newProductString() const;
-    virtual OSNumber * newVendorIDSourceNumber() const;
-    virtual OSNumber * newVendorIDNumber() const;
-    virtual OSNumber * newProductIDNumber() const;
-    virtual OSNumber * newVersionNumber() const;
-    virtual IOReturn   newReportDescriptor(IOMemoryDescriptor ** descriptor) const;
-    virtual OSString * newSerialNumberString() const;
-    virtual OSNumber * newLocationIDNumber() const;
-    virtual OSNumber * newCountryCodeNumber() const;
-    virtual OSNumber * newReportIntervalNumber() const;
+    virtual OSString * newTransportString() const APPLE_KEXT_OVERRIDE;
+    virtual OSString * newManufacturerString() const APPLE_KEXT_OVERRIDE;
+    virtual OSString * newProductString() const APPLE_KEXT_OVERRIDE;
+    virtual OSNumber * newVendorIDSourceNumber() const APPLE_KEXT_OVERRIDE;
+    virtual OSNumber * newVendorIDNumber() const APPLE_KEXT_OVERRIDE;
+    virtual OSNumber * newProductIDNumber() const APPLE_KEXT_OVERRIDE;
+    virtual OSNumber * newVersionNumber() const APPLE_KEXT_OVERRIDE;
+    virtual IOReturn   newReportDescriptor(IOMemoryDescriptor ** descriptor) const APPLE_KEXT_OVERRIDE;
+    virtual OSString * newSerialNumberString() const APPLE_KEXT_OVERRIDE;
+    virtual OSNumber * newLocationIDNumber() const APPLE_KEXT_OVERRIDE;
+    virtual OSNumber * newCountryCodeNumber() const APPLE_KEXT_OVERRIDE;
+    virtual OSNumber * newReportIntervalNumber() const APPLE_KEXT_OVERRIDE;
 
     // Main UserLand Entry Points
-    virtual IOReturn getReport(IOMemoryDescriptor * report, IOHIDReportType reportType, IOOptionBits options = 0);
-    virtual IOReturn setReport(IOMemoryDescriptor * report, IOHIDReportType reportType, IOOptionBits options = 0);
-    virtual IOReturn setProperties(OSObject * properties);
+    virtual IOReturn getReport(IOMemoryDescriptor * report, IOHIDReportType reportType, IOOptionBits options = 0) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn setReport(IOMemoryDescriptor * report, IOHIDReportType reportType, IOOptionBits options = 0) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn setProperties(OSObject * properties) APPLE_KEXT_OVERRIDE;
 
     // General IO
     virtual IOReturn sendData(IOBluetoothL2CAPChannel * theChannel, void * theData, IOByteCount theSize);
@@ -210,7 +210,7 @@ public:
     virtual bool isMouse();
 
     // Misc
-    virtual IOReturn setPowerState(unsigned long powerStateOrdinal, IOService * whatDevice);
+    virtual IOReturn setPowerState(unsigned long powerStateOrdinal, IOService * whatDevice) APPLE_KEXT_OVERRIDE;
     virtual IOReturn createCommandGate(IOService * provider);
     virtual IOReturn getDeviceProperties(IOService * provider);
     virtual bool     readDeviceName();
