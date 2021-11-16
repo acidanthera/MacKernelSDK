@@ -225,13 +225,20 @@ public:
     virtual bool     WaitForSystemReadyForSleep(char *);
     virtual IOReturn StartBluetoothSleepTimer();
     virtual void     CancelBluetoothSleepTimer();
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
+    virtual bool     StopAllReads()
+#endif
     virtual os_log_t CreateOSLogObject();
 
     virtual IOReturn setProperties(OSObject * properties) APPLE_KEXT_OVERRIDE;
     static IOReturn  setPropertiesAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4);
     virtual IOReturn setPropertiesWL(OSObject * properties);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual IOReturn HardReset();
+#else
+    virtual IOReturn PerformHardReset();
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual void DumpTransportProviderState();
@@ -268,6 +275,9 @@ protected:
     IOService *                 mProvider;             // 152
     IOWorkLoop *                mWorkLoop;             // 160
     IOCommandGate *             mCommandGate;          // 168
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
+    IOWorkQueue *               mTransportWorkQueue;   ///176
+#endif
     UInt16                      mControllerVendorType; // 176
 
     bool    mUSBControllerSupportsSuspend; // 178
@@ -309,7 +319,10 @@ protected:
     bool                     mBootFromROM;                    // 296
     UInt16                   mUARTProductID;                  // 298
     IOBluetoothACPIMethods * mACPIMethods;                    // 304
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     bool                     reserved10;                      // 312
+#endif
+
     struct ExpansionData
     {
         UInt16 reserved;
