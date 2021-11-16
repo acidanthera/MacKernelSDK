@@ -42,7 +42,9 @@
 #error "Missing macOS target version"
 #endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
 extern void TimeOutHandler(OSObject * owner, IOTimerEventSource * sender);
+#endif
 
 enum BluetoothUARTPacketTypes
 {
@@ -63,8 +65,11 @@ public:
     virtual IOService * probe(IOService * provider, SInt32 * score) APPLE_KEXT_OVERRIDE;
     virtual bool        start(IOService * provider) APPLE_KEXT_OVERRIDE;
     virtual void        stop(IOService * provider) APPLE_KEXT_OVERRIDE;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual bool        terminateWL(IOOptionBits options = 0) APPLE_KEXT_OVERRIDE;
-
+#else
+    virtual bool        terminate(IOOptionBits options = 0) APPLE_KEXT_OVERRIDE;
+#endif
     virtual bool     ConfigurePM(IOService * policyMaker) APPLE_KEXT_OVERRIDE;
     virtual IOReturn setPowerStateWL(unsigned long powerStateOrdinal, IOService * whatDevice) APPLE_KEXT_OVERRIDE;
     virtual void     CompletePowerStateChange(char *) APPLE_KEXT_OVERRIDE;
@@ -81,21 +86,33 @@ public:
     virtual IOReturn TransportSendSCOData(void *) APPLE_KEXT_OVERRIDE;
 
     virtual IOReturn SendUART(UInt8 * data, UInt32 size);
-    static IOReturn  StaticProcessACLSCOEventData(void *, int);
+    static IOReturn  StaticProcessACLSCOEventData(void * data, int size);
     virtual IOReturn ProcessACLSCOEventData();
     virtual void     GetInfo(void * outInfo) APPLE_KEXT_OVERRIDE;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual IOReturn AcquirePort(bool);
+#else
+    virtual IOReturn AcquirePort();
+#endif
     virtual IOReturn ReleasePort();
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual IOReturn WaitForReceiveToBeReady(bool);
+#else
+    virtual IOReturn WaitForReceiveToBeReady();
+#endif
     virtual void     NewSCOConnection() APPLE_KEXT_OVERRIDE;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual IOReturn SetLMPLogging();
     virtual bool     StartLMPLogging() APPLE_KEXT_OVERRIDE;
     virtual bool     StopLMPLogging();
+#endif
     virtual IOReturn ToggleLMPLogging(UInt8 *) APPLE_KEXT_OVERRIDE;
 
     virtual IOReturn DoDeviceReset(UInt16) APPLE_KEXT_OVERRIDE;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     virtual IOReturn DequeueDataInterruptEventGated(IOInterruptEventSource * sender, int count);
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual void DumpTransportProviderState() APPLE_KEXT_OVERRIDE;
@@ -110,6 +127,7 @@ protected:
     UInt32                         mIsochOutWriteCounter;               // 364
     bool                           mPowerStateChangeInProgress;         // 368
     bool                           mSkipBluetoothFirmwareBoot;          // 369
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     IOWorkLoop *                   mUARTTransportWorkLoop;              // 376
     IOInterruptEventSource::Action mDequeueDataInterruptEventAction;    // 384
     IOInterruptEventSource *       mDequeueDataInterruptEvent;          // 392
@@ -119,6 +137,7 @@ protected:
     bool                           mUARTTransportTimerHasTimeout;       // 424
     UInt32                         mSlowEnqueueData;                    // 428
     UInt32                         mLongestEnqueueDataCallMicroseconds; // 432
+#endif
 };
 
 #endif
