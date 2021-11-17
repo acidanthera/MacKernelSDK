@@ -140,9 +140,8 @@ public:
     virtual IOReturn writeFCS(UInt16);
 
 protected:
-    UInt8  mRequestSequenceNumber; // 110
-    UInt8  mReceiveSequenceNumber; // 111
-    UInt16 mFrameCheckSequence;    // 112
+    UInt16 mStandardControlField; // 110
+    UInt16 mFrameCheckSequence;   // 112
 };
 
 class IOBluetoothL2CAPInformationFrameMemoryBlock : public IOBluetoothL2CAPSupervisoryFrameMemoryBlock
@@ -152,13 +151,14 @@ class IOBluetoothL2CAPInformationFrameMemoryBlock : public IOBluetoothL2CAPSuper
     typedef UInt16 SegmentationAndReassemblyMask;
 
 public:
-    static IOBluetoothL2CAPInformationFrameMemoryBlock * withDataFromBlock(IOBluetoothL2CAPInformationFrameMemoryBlock * block, UInt64, UInt64, UInt32);
-    virtual bool                                         initWithDataFromBlock(IOBluetoothL2CAPInformationFrameMemoryBlock * block, UInt64, UInt64, UInt32);
-    virtual bool                                         init() APPLE_KEXT_OVERRIDE;
-    virtual void                                         free() APPLE_KEXT_OVERRIDE;
+    static IOBluetoothL2CAPInformationFrameMemoryBlock * withDataFromBlock(IOBluetoothL2CAPInformationFrameMemoryBlock * block, IOByteCount offset, IOByteCount size, IODirection direction);
+    virtual bool                                         initWithDataFromBlock(IOBluetoothL2CAPInformationFrameMemoryBlock * block, IOByteCount offset, IOByteCount size, IODirection direction);
 
-    virtual UInt64                   readBytes(UInt64 offset, void * bytes, UInt64 length) APPLE_KEXT_OVERRIDE;
-    virtual UInt64                   writeBytes(UInt64 offset, void * bytes, UInt64 length) APPLE_KEXT_OVERRIDE;
+    virtual bool init() APPLE_KEXT_OVERRIDE;
+    virtual void free() APPLE_KEXT_OVERRIDE;
+
+    virtual UInt64                   readBytes(IOByteCount offset, void * bytes, IOByteCount length) APPLE_KEXT_OVERRIDE;
+    virtual UInt64                   writeBytes(IOByteCount offset, void * bytes, IOByteCount length) APPLE_KEXT_OVERRIDE;
     virtual UInt64                   getLength() APPLE_KEXT_OVERRIDE;
     virtual IOBluetoothMemoryBlock * getBlock() APPLE_KEXT_OVERRIDE;
 
@@ -177,9 +177,9 @@ public:
     virtual int    acked(int);
 
 protected:
-    UInt16 unknown2; // 114
-    UInt16 mPayload; // 116
-    UInt16 mSDU;     // 118
+    UInt16 mInfoPacketOffset; // 114
+    UInt16 mInfoPacketSize;   // 116
+    UInt16 mSDU;              // 118
 };
 
 class IOBluetoothRFCOMMMemoryBlock : public IOBluetoothMemoryBlock
@@ -207,11 +207,11 @@ public:
     virtual UInt64 writeBytes(UInt64 offset, void * bytes, UInt64 length);
 
 protected:
-    UInt8  mAddressByte; // 108
-    UInt8  mControlByte; // 109
-    UInt16 unknown1;     // 110
-    UInt8  mHeaderBytes; // 112
-    UInt8  mFCFByte;     // 113
+    UInt8  mAddressByte;     // 108
+    UInt8  mControlByte;     // 109
+    UInt16 mHeaderBytes;     // 110
+    UInt8  mHeaderBytesSize; // 112
+    UInt8  mFCFByte;         // 113
 };
 
 class IOBluetoothACLMemoryDescriptor : public IOGeneralMemoryDescriptor
@@ -245,34 +245,39 @@ public:
     bool prepareHCIBlock();
 
 protected:
-    IOBluetoothL2CAPMemoryBlock * mBlock;            // 176
-    IOByteCount                   mBuffersOffset;    // 184
-    IOByteCount                   mLength;           // 192
-    BluetoothConnectionHandle     mConnectionHandle; // 200
-    UInt16                        unknown2;          // 202
-    UInt32                        unknown3;          // 204
-    bool                          mAsReference;      // 208
-    IOOptionBits                  mPacketSentStatus; // 212
-    void *                        mBuffers;          // 216
-    IOByteCount                   mBuffersSize;      // 224
-    uint64_t                      reserved2[2];      // 232
-    uint16_t                      reserved3;         // 248
-    uint8_t                       reserved4;         // 250
+    IOBluetoothMemoryBlock *  mBlock;            // 176
+    IOByteCount               mBuffersOffset;    // 184
+    IOByteCount               mLength;           // 192
+    BluetoothConnectionHandle mConnectionHandle; // 200
+    UInt16                    mHeaderBytes;      // 202
+    UInt32                    unknown1;          // 204
+    bool                      mAsReference;      // 208
+    IOOptionBits              mPacketSentStatus; // 212
+    void *                    mData;             // 216
+    IOByteCount               mDataSize;         // 224
+    uint64_t                  reserved1[2];      // 232
+    uint16_t                  reserved2;         // 248
+    uint8_t                   reserved3;         // 250
 };
 
 class IOBluetoothMemoryDescriptorRetainer : public OSObject
 {
     OSDeclareDefaultStructors(IOBluetoothMemoryDescriptorRetainer)
 
+    struct MemoryDescriptorCallBack
+    {
+        IOMemoryDescriptor * buffer; // 0
+        void *               data;   // 24
+        void *               owner;  // 32
+        IOTimerEventSource * timer;  // 40
+    };
+
 public:
     virtual bool init() APPLE_KEXT_OVERRIDE;
     virtual void free() APPLE_KEXT_OVERRIDE;
 
 protected:
-    IOMemoryDescriptor * reserved1; // 16
-    IOMemoryDescriptor * reserved2; // 24
-    void *               owner;     // 32
-    IOTimerEventSource * timer;     // 40
+    MemoryDescriptorCallBack mMemoryDescriptorCallBack; // 16
 };
 
 class IOBluetoothSCOMemoryDescriptorRetainer : public IOBluetoothMemoryDescriptorRetainer
@@ -284,7 +289,7 @@ public:
     virtual void free() APPLE_KEXT_OVERRIDE;
 
 protected:
-    UInt64 __reserved[4];
+    MemoryDescriptorCallBack mSCOMemoryDescriptorCallBack; // 48
 };
 
 #endif
