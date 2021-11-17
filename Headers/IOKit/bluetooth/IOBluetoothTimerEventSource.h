@@ -47,7 +47,7 @@ struct IOBluetoothTimer
 
 class IOBluetoothTimerEventSource : public IOTimerEventSource
 {
-    OSDeclareDefaultStructors(IOBluetoothTimerEventSource);
+    OSDeclareDefaultStructors(IOBluetoothTimerEventSource)
 
 public:
     static IOBluetoothTimerEventSource * timerEventSource(OSObject * owner, Action action = NULL);

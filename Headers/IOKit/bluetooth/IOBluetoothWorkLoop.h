@@ -50,7 +50,7 @@
 
 class IOBluetoothLocalUtilityEventSource : public IOEventSource
 {
-    OSDeclareDefaultStructors(IOBluetoothLocalUtilityEventSource);
+    OSDeclareDefaultStructors(IOBluetoothLocalUtilityEventSource)
 
 public:
     /*! @function ioBluetoothLocalUtilityEventSource
@@ -92,7 +92,7 @@ public:
 
 class IOBluetoothWorkLoop : public IOWorkLoop
 {
-    OSDeclareDefaultStructors(IOBluetoothWorkLoop);
+    OSDeclareDefaultStructors(IOBluetoothWorkLoop)
 
 public:
     /*! @function workLoop

@@ -99,7 +99,7 @@ extern void RecoveryTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer
 
 class IOBluetoothHCIController : public IOService
 {
-    OSDeclareDefaultStructors(IOBluetoothHCIController);
+    OSDeclareDefaultStructors(IOBluetoothHCIController)
 
     friend class IOBluetoothHostController;
     friend class IOBluetoothHostControllerTransport;

@@ -40,7 +40,7 @@
 
 class IOBluetoothMemoryBlock : public OSObject
 {
-    OSDeclareAbstractStructors(IOBluetoothMemoryBlock);
+    OSDeclareAbstractStructors(IOBluetoothMemoryBlock)
 
     typedef void (*IOBluetoothMemoryBlockCallBack)(IOBluetoothMemoryBlock * target, IOOptionBits options, UInt64 arg0, UInt64 arg1, UInt64 arg2, UInt64 arg3, UInt64 arg4);
 
@@ -82,7 +82,7 @@ protected:
 
 class IOBluetoothL2CAPMemoryBlock : public IOBluetoothMemoryBlock
 {
-    OSDeclareAbstractStructors(IOBluetoothL2CAPMemoryBlock);
+    OSDeclareAbstractStructors(IOBluetoothL2CAPMemoryBlock)
 
 public:
     static IOBluetoothL2CAPMemoryBlock * withAddress(void * address, IOByteCount withLength, IODirection withDirection);
@@ -107,7 +107,7 @@ extern UInt16 IOBluetoothL2CAPFCS(UInt16, UInt8);
 
 class IOBluetoothL2CAPSupervisoryFrameMemoryBlock : public IOBluetoothL2CAPMemoryBlock
 {
-    OSDeclareDefaultStructors(IOBluetoothL2CAPSupervisoryFrameMemoryBlock);
+    OSDeclareDefaultStructors(IOBluetoothL2CAPSupervisoryFrameMemoryBlock)
 
     typedef UInt8 SupervisoryFunctionMask;
 
@@ -147,7 +147,7 @@ protected:
 
 class IOBluetoothL2CAPInformationFrameMemoryBlock : public IOBluetoothL2CAPSupervisoryFrameMemoryBlock
 {
-    OSDeclareDefaultStructors(IOBluetoothL2CAPInformationFrameMemoryBlock);
+    OSDeclareDefaultStructors(IOBluetoothL2CAPInformationFrameMemoryBlock)
 
     typedef UInt16 SegmentationAndReassemblyMask;
 
@@ -184,7 +184,7 @@ protected:
 
 class IOBluetoothRFCOMMMemoryBlock : public IOBluetoothMemoryBlock
 {
-    OSDeclareDefaultStructors(IOBluetoothRFCOMMMemoryBlock);
+    OSDeclareDefaultStructors(IOBluetoothRFCOMMMemoryBlock)
 
 public:
     static IOBluetoothRFCOMMMemoryBlock * withAddress(void * address, IOByteCount withLength, IODirection withDirection);
@@ -216,7 +216,7 @@ protected:
 
 class IOBluetoothACLMemoryDescriptor : public IOGeneralMemoryDescriptor
 {
-    OSDeclareDefaultStructors(IOBluetoothACLMemoryDescriptor);
+    OSDeclareDefaultStructors(IOBluetoothACLMemoryDescriptor)
 
 public:
     static IOBluetoothACLMemoryDescriptor * withL2CAPMemoryBlock(IOBluetoothL2CAPMemoryBlock * block, UInt64, UInt64 withOffset, UInt16, IOOptionBits options, bool asReference = false);
@@ -262,7 +262,7 @@ protected:
 
 class IOBluetoothMemoryDescriptorRetainer : public OSObject
 {
-    OSDeclareDefaultStructors(IOBluetoothMemoryDescriptorRetainer);
+    OSDeclareDefaultStructors(IOBluetoothMemoryDescriptorRetainer)
 
 public:
     virtual bool init() APPLE_KEXT_OVERRIDE;
@@ -277,7 +277,7 @@ protected:
 
 class IOBluetoothSCOMemoryDescriptorRetainer : public IOBluetoothMemoryDescriptorRetainer
 {
-    OSDeclareDefaultStructors(IOBluetoothSCOMemoryDescriptorRetainer);
+    OSDeclareDefaultStructors(IOBluetoothSCOMemoryDescriptorRetainer)
 
 public:
     virtual bool init() APPLE_KEXT_OVERRIDE;

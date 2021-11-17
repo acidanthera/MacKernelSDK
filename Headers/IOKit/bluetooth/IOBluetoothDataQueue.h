@@ -50,7 +50,7 @@
 
 class IOBluetoothDataQueue : public IOSharedDataQueue
 {
-    OSDeclareDefaultStructors(IOBluetoothDataQueue);
+    OSDeclareDefaultStructors(IOBluetoothDataQueue)
 
 public:
     static IOBluetoothDataQueue * withCapacity(UInt32 size);

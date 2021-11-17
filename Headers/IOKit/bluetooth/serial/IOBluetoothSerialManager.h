@@ -47,7 +47,7 @@ class IOBluetoothSerialManager : public IOService
 {
     OSDeclareDefaultStructors(IOBluetoothSerialManager)
 
-        typedef struct SecurityParameters
+    typedef struct SecurityParameters
     {
         bool  authenticationRequired;
         UInt8 encryptionType;

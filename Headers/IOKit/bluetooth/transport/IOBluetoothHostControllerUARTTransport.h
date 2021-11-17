@@ -57,7 +57,7 @@ enum BluetoothUARTPacketTypes
 
 class IOBluetoothHostControllerUARTTransport : public IOBluetoothHostControllerTransport
 {
-    OSDeclareAbstractStructors(IOBluetoothHostControllerUARTTransport);
+    OSDeclareAbstractStructors(IOBluetoothHostControllerUARTTransport)
 
 public:
     virtual bool        init(OSDictionary * dictionary = NULL) APPLE_KEXT_OVERRIDE;

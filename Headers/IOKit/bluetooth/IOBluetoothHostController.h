@@ -121,7 +121,7 @@ struct BluetoothHCIACLPacket
 
 class IOBluetoothHostController : public IOService
 {
-    OSDeclareAbstractStructors(IOBluetoothHostController);
+    OSDeclareAbstractStructors(IOBluetoothHostController)
 
     typedef IOReturn (*IOBluetoothIncomingDataAction)(IOBluetoothHostController * hostController, UInt8 * inDataPtr, UInt32 inDataSize, UInt32 inSequenceNumber);
 

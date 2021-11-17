@@ -38,7 +38,7 @@
 
 class IOBluetoothInactivityTimerEventSource : public IOTimerEventSource
 {
-    OSDeclareDefaultStructors(IOBluetoothInactivityTimerEventSource);
+    OSDeclareDefaultStructors(IOBluetoothInactivityTimerEventSource)
 
 public:
     virtual void updateTimer();

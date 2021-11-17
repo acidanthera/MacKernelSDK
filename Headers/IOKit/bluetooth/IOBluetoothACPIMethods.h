@@ -46,7 +46,7 @@ class IOACPIPlatformDevice;
 
 class IOBluetoothACPIMethods : public IOService
 {
-    OSDeclareDefaultStructors(IOBluetoothACPIMethods);
+    OSDeclareDefaultStructors(IOBluetoothACPIMethods)
 
     friend class IOBluetoothHCIController;
     friend class IOBluetoothHostControllerTransport;

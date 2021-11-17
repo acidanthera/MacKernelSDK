@@ -49,7 +49,7 @@ class IOWorkQueue;
 
 class IOBluetoothHIDDriver : public IOHIDDevice
 {
-    OSDeclareDefaultStructors(IOBluetoothHIDDriver);
+    OSDeclareDefaultStructors(IOBluetoothHIDDriver)
 
 protected:
     IOWorkLoop *    _workLoop;

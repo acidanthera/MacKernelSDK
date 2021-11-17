@@ -190,21 +190,24 @@ class IOBluetoothSerialClientModemStreamSync : public IOModemSerialStreamSync
 {
     OSDeclareDefaultStructors(IOBluetoothSerialClientModemStreamSync)
 
-        public : virtual bool compareName(OSString * name, OSString ** matched = NULL) const APPLE_KEXT_OVERRIDE;
+public:
+    virtual bool compareName(OSString * name, OSString ** matched = NULL) const APPLE_KEXT_OVERRIDE;
 };
 
 class IOBluetoothSerialClientSerialStreamSync : public IORS232SerialStreamSync
 {
     OSDeclareDefaultStructors(IOBluetoothSerialClientSerialStreamSync)
 
-        public : virtual bool compareName(OSString * name, OSString ** matched = NULL) const APPLE_KEXT_OVERRIDE;
+public:
+    virtual bool compareName(OSString * name, OSString ** matched = NULL) const APPLE_KEXT_OVERRIDE;
 };
 
 class IOBluetoothSerialClient : public IOSerialDriverSync
 {
     OSDeclareDefaultStructors(IOBluetoothSerialClient)
 
-        public : static void serialSignalsCallBack(IOService * provider, int);
+public:
+    static void serialSignalsCallBack(IOService * provider, int);
 
     virtual void free() APPLE_KEXT_OVERRIDE;
     virtual bool requestTerminate(IOService * provider, IOOptionBits options) APPLE_KEXT_OVERRIDE;

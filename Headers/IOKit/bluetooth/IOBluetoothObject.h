@@ -55,9 +55,8 @@ class IOBluetoothObject : public IOService
 {
     OSDeclareAbstractStructors(IOBluetoothObject)
 
-        public :
-
-        virtual bool start(IOService * provider) APPLE_KEXT_OVERRIDE;
+public:
+    virtual bool start(IOService * provider) APPLE_KEXT_OVERRIDE;
 
     virtual void free() APPLE_KEXT_OVERRIDE;
 

@@ -70,7 +70,7 @@ extern const IORegistryPlane * gIODTPlane;
 
 class IOBluetoothHostControllerTransport : public IOService
 {
-    OSDeclareAbstractStructors(IOBluetoothHostControllerTransport);
+    OSDeclareAbstractStructors(IOBluetoothHostControllerTransport)
 
     friend class IOBluetoothHCIController;
     friend class IOBluetoothHostController;

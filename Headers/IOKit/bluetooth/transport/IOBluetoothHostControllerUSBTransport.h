@@ -46,7 +46,7 @@ class IOBluetoothMemoryDescriptorRetainer;
 
 class IOBluetoothHostControllerUSBTransport : public IOBluetoothHostControllerTransport
 {
-    OSDeclareAbstractStructors(IOBluetoothHostControllerUSBTransport);
+    OSDeclareAbstractStructors(IOBluetoothHostControllerUSBTransport)
 
     friend class IOBluetoothHostController;
 

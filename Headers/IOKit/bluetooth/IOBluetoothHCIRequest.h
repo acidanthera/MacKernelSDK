@@ -67,7 +67,7 @@ enum BluetoothHCIRequestStates
 
 class IOBluetoothHCIRequest : public OSObject
 {
-    OSDeclareDefaultStructors(IOBluetoothHCIRequest);
+    OSDeclareDefaultStructors(IOBluetoothHCIRequest)
 
     friend class IOBluetoothHostController;
 

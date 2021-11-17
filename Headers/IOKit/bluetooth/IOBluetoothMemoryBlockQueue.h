@@ -49,7 +49,7 @@ struct IOBluetoothMemoryBlockQueueNode
 
 class IOBluetoothMemoryBlockQueue : public OSObject
 {
-    OSDeclareDefaultStructors(IOBluetoothMemoryBlockQueue);
+    OSDeclareDefaultStructors(IOBluetoothMemoryBlockQueue)
 
 public:
     virtual bool init() APPLE_KEXT_OVERRIDE;
