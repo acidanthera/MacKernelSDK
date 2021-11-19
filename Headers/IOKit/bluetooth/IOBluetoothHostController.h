@@ -330,7 +330,7 @@ public:
 #endif
 
     virtual void     ProcessLMPData(UInt8 * data, UInt32 dataSize);
-    virtual IOReturn ProcessLMPDataAction(IOBluetoothHostController * hostController, UInt8 * data, UInt32 dataSize);
+    static IOReturn  ProcessLMPDataAction(IOBluetoothHostController * hostController, UInt8 * data, UInt32 dataSize);
     virtual void     ProcessLMPDataWL(UInt8 * data, UInt32 dataSize);
 
     virtual void    ProcessACLData(UInt8 * data, UInt32 dataSize);
@@ -464,7 +464,7 @@ public:
     virtual IOBluetoothHCIControllerInternalPowerState GetControllerPowerState();
     virtual IOReturn                                   GetTransportCurrentPowerState(IOBluetoothHCIControllerInternalPowerState * outPowerState);
     virtual IOReturn                                   GetTransportPendingPowerState(IOBluetoothHCIControllerInternalPowerState * outPowerState);
-    virtual IOReturn                                   ChangeTransportPowerStateTo(UInt64, bool, IOBluetoothHCIControllerInternalPowerState, char *);
+    virtual IOReturn                                   ChangeTransportPowerStateTo(size_t, bool, IOBluetoothHCIControllerInternalPowerState, char *);
     virtual IOReturn                                   WaitForTransportPowerStateChange(IOBluetoothHCIControllerInternalPowerState, char *);
     virtual bool                                       SystemReadyForSleep();
     virtual void                                       SetChangingPowerState(bool);
@@ -599,7 +599,7 @@ public:
                                                              BluetoothHCIEventReadRemoteSupportedFeaturesResults * outFeatures);
     virtual IOReturn BluetoothHCIReadRemoteExtendedFeatures(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothHCIExtendedInquiryResponseDataType inDataType,
                                                             BluetoothHCIEventReadRemoteExtendedFeaturesResults * outFeatures);
-    virtual IOReturn BluetoothHCIReadRemoteVersionInformation(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothHCIVersionInfo * outVersionInfo);
+    virtual IOReturn BluetoothHCIReadRemoteVersionInformation(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothHCIEventReadRemoteVersionInfoResults * outVersionInfo);
     virtual IOReturn BluetoothHCIReadClockOffset(BluetoothHCIRequestID inID, BluetoothConnectionHandle inConnectionHandle, BluetoothClockOffset * outClockOffset);
 
     virtual IOReturn BluetoothHCIIOCapabilityRequestReply(BluetoothHCIRequestID inID, const BluetoothDeviceAddress * inAddressPtr, UInt8, UInt8, UInt8);
@@ -700,7 +700,7 @@ public:
     virtual IOReturn BluetoothHCIWriteSCOFlowControlEnable(BluetoothHCIRequestID inID, BluetoothHCIFlowControlState inState);
     virtual IOReturn BluetoothHCISetHostControllerToHostFlowControl(BluetoothHCIRequestID inID, BluetoothHCIFlowControlState inState);
     virtual IOReturn BluetoothHCIHostBufferSize(BluetoothHCIRequestID inID, BluetoothHCIBufferSize * inSize);
-    virtual IOReturn BluetoothHCIHostNumberOfCompletePackets(BluetoothHCIRequestID inID, UInt8, UInt16 *, UInt16 *);
+    virtual IOReturn BluetoothHCIHostNumberOfCompletedPackets(BluetoothHCIRequestID inID, UInt8, UInt16 *, UInt16 *);
     virtual IOReturn BluetoothHCIReadLinkSupervisionTimeout(BluetoothHCIRequestID inID, BluetoothConnectionHandle inHandle, BluetoothHCILinkSupervisionTimeout * outInfo);
     virtual IOReturn BluetoothHCIWriteLinkSupervisionTimeout(BluetoothHCIRequestID inID, BluetoothHCILinkSupervisionTimeout * inInfo, BluetoothConnectionHandle * outHandle);
     virtual IOReturn BluetoothHCIReadNumberOfSupportedIAC(BluetoothHCIRequestID inID, BluetoothHCISupportedIAC * outNumSupported);
