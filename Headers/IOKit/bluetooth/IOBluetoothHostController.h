@@ -55,11 +55,11 @@ class IOReportLegend;
 class IOStateReporter;
 class IOSimpleReporter;
 class IOBluetoothDevice;
-class BluetoothDeviceReporter;
 class IOBluetoothInactivityTimerEventSource;
 class IOBluetoothACLMemoryDescriptor;
 class IOBluetoothSCOMemoryDescriptorRetainer;
 
+struct BluetoothDeviceReporter;
 struct BluetoothBroadcomBFCReconnectData;
 struct BluetoothBroadcomBFCParams;
 struct BluetoothBroadcomBFCRemoteBPCSFeatures;
@@ -205,9 +205,6 @@ public:
     virtual IOReturn CallSetupController();
 #endif
     virtual IOReturn SetupGeneralController();
-#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_15
-    virtual IOReturn CallSetupContorller();
-#endif
     virtual IOReturn SetupCommonHardware();
     virtual bool     ControllerSetupIsComplete();
     virtual void     ControllerSetupComplete(int);
@@ -246,7 +243,7 @@ public:
     virtual IOBluetoothDevice * FindDeviceWithHandle(BluetoothConnectionHandle inConnectionHandle);
     virtual IOBluetoothDevice * FindDeviceWithSCOHandle(BluetoothConnectionHandle inConnectionHandle);
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
-    virtual IOBluetoothDevice * FindDeviceWithAddress(const BluetoothDeviceAddress * inDeviceAddress, bool);
+    virtual IOBluetoothDevice * FindDeviceWithAddress(const BluetoothDeviceAddress * inDeviceAddress, bool all);
 #else
     virtual IOBluetoothDevice * FindDeviceWithAddress(const BluetoothDeviceAddress * inDeviceAddress);
 #endif
