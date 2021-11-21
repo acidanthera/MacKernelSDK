@@ -357,7 +357,7 @@ public:
     virtual IOReturn FindSynchronousConnectionCompleteType(BluetoothDeviceAddress * inDeviceAddress, BluetoothHCICommandOpCode * outOpCode);
 
     virtual IOReturn HandleSpecialOpcodes(BluetoothHCICommandOpCode opCode);
-    virtual IOReturn HCIRequestCreate(BluetoothHCIRequestID * outRequestID, bool inDoAsyncNotify = true, UInt32 inTimeout = 5, BluetoothHCIRequestCallbackInfo * inCallbackInfo = NULL,
+    virtual IOReturn HCIRequestCreate(BluetoothHCIRequestID * outRequestID, bool inDoAsyncNotify = true, UInt32 inTimeout = 5000, BluetoothHCIRequestCallbackInfo * inCallbackInfo = NULL,
                                       task_t inTaskID = NULL, UInt32 inControlFlags = 0);
     virtual IOReturn HCIRequestDelete(task_t inTask, BluetoothHCIRequestID inID);
     virtual IOReturn LookupRequest(BluetoothHCIRequestID inID, IOBluetoothHCIRequest ** outRequestPtr);
