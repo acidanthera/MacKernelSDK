@@ -152,22 +152,16 @@ public:
 
     // Require and Receive Events
 
-    UInt8 __reserved1; // 2788
-
+    bool unknown; // 2788
     UInt32 mExpectedEvent;                          // 2792
     UInt8  mNumberOfExpectedExplicitCompleteEvents; // 2796
-    UInt32 __reserved4;                             // 2800
+    UInt32 mExpectedExplicitCompleteEvents[5];      // 2800
 
-    UInt64 __reserved5;                         // 2808
-    UInt32 __reserved6;                         // 2816
     UInt32 mReceivedEvent;                      // 2820
     UInt8  mExplictCompleteEvent;               // 2824
-    UInt8  mNumberOfPossibleIntermediateEvents; // 2828
-    UInt8  mPossibleIntermediateEvents;         // 2832
-    UInt64 __reserved10;                        // 2840
-    UInt32 __reserved11;                        // 2848
-    UInt32 mReceivedIntermediateEvents;         // 2852
-    UInt64 __reserved13;                        // 2864
+    UInt32 mNumberOfPossibleIntermediateEvents; // 2828
+    UInt32 mPossibleIntermediateEvents[5];      // 2832
+    UInt32 mReceivedIntermediateEvents[5];      // 2852
 };
 
 #endif
