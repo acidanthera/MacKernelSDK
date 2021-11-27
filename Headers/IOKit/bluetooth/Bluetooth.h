@@ -2004,7 +2004,7 @@ typedef struct BluetoothHCICommandPacket
 {
     BluetoothHCICommandOpCode opCode;
     UInt8                     dataSize;
-    UInt8                     data[255];
+    UInt8                     data[ kBluetoothHCIMaxCommandPacketSize ];
 } BluetoothHCICommandPacket;
 
 typedef uint8_t BluetoothHCIEventCode;

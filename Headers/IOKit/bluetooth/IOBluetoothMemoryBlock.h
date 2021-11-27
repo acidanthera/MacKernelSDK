@@ -266,17 +266,16 @@ class IOBluetoothMemoryDescriptorRetainer : public OSObject
 
     struct MemoryDescriptorCallBack
     {
-        IOMemoryDescriptor * buffer; // 0
-        void *               data;   // 24
-        void *               owner;  // 32
-        IOTimerEventSource * timer;  // 40
+        IOMemoryDescriptor * buffer;
+        void *               data;
+        void *               owner;
+        IOTimerEventSource * timer;
     };
 
 public:
     virtual bool init() APPLE_KEXT_OVERRIDE;
     virtual void free() APPLE_KEXT_OVERRIDE;
 
-protected:
     MemoryDescriptorCallBack mMemoryDescriptorCallBack; // 16
 };
 

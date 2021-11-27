@@ -357,8 +357,7 @@ public:
     virtual IOReturn FindSynchronousConnectionCompleteType(BluetoothDeviceAddress * inDeviceAddress, BluetoothHCICommandOpCode * outOpCode);
 
     virtual IOReturn HandleSpecialOpcodes(BluetoothHCICommandOpCode opCode);
-    virtual IOReturn HCIRequestCreate(BluetoothHCIRequestID * outRequestID, bool inDoAsyncNotify = true, UInt32 inTimeout = 5000, BluetoothHCIRequestCallbackInfo * inCallbackInfo = NULL,
-                                      task_t inTaskID = NULL, UInt32 inControlFlags = 0);
+    virtual IOReturn HCIRequestCreate(BluetoothHCIRequestID * outRequestID, bool inDoAsyncNotify = false, UInt32 inTimeout = 5000, BluetoothHCIRequestCallbackInfo * inCallbackInfo = NULL, task_t inTaskID = NULL, UInt32 inControlFlags = 0);
     virtual IOReturn HCIRequestDelete(task_t inTask, BluetoothHCIRequestID inID);
     virtual IOReturn LookupRequest(BluetoothHCIRequestID inID, IOBluetoothHCIRequest ** outRequestPtr);
     virtual IOReturn PrepareRequestForNewCommand(BluetoothHCIRequestID inID, const BluetoothDeviceAddress * inDeviceAddress, BluetoothConnectionHandle inConnectionHandle);
@@ -943,6 +942,7 @@ protected:
     IOByteCount mTotalSCOBytesReceived;        // 744
     bool        mKillAllPendingRequestsCalled; // 752
     bool        mScanEnabled;                  // 753
+	uint8_t 	__reserved0[6];				   // 754
 
     BluetoothSetEventMask mSetEventMask;            // 760
     BluetoothSetEventMask mPreviousSetEventMask;    // 768
@@ -996,12 +996,13 @@ protected:
     UInt16                               mActiveConnections;                 // 928
     UInt8                                mNextNewSynchronousConnectionType;  // 930
 
+public:
     bool                    mNeedToGetCurrentUSBIsochFrameNumber; // 931
     UInt16                  unknown9;                             // 932, setted to 256
-    UInt16                  unknowna;                             // 934, param in SetMaxPowerForConnection
+    UInt16                  mMaxPower;                            // 934
     UInt16                  unknownb;                             // 936
     UInt16                  unknownc;                             // 938
-    BluetoothHCIVersionInfo mCSRLocalVersionInfo;                 // 940
+    BluetoothHCIVersionInfo mLocalVersionInfo;                    // 940
 
     UInt8 mNumConfiguredHIDDevices; // 956
     UInt8 unknownd;                 // 957
@@ -1019,6 +1020,7 @@ protected:
     UInt8  unknown15;                              // 971
     bool   mWaitingForCompletedHCICommandsToSleep; // 972 calls transport completepowerstatechange
 
+protected:
     int64_t mAppleBTLEAdvertisingReport[15];               // 976
     int64_t mTotalnumberofBTLEAdvertisingReportsReceived;  // 1096
     int64_t mTotalNumberOfTimesBluetoothIdleTimerExpired;  // 1104

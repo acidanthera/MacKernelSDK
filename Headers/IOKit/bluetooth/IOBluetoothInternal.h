@@ -119,3 +119,16 @@ enum BluetoothHCIExtendedInquiryResponseDataTypesAppleSpecificInfo
     kBluetoothHCIExtendedInquiryResponseDataTypeAppleSpecificInfoModelIdentifier       = 0x01, /* UTF8String char data */
     kBluetoothHCIExtendedInquiryResponseDataTypeAppleSpecificInfoThirdPartyAdvertising = 0x02,
 };
+
+#define BluetoothFamilyLogPacket(family, type, format, ...) do {                                \
+	static const char _pkt_log_fmt[] = format;       										    \
+	snprintf((char *) _pkt_log_fmt, sizeof(_pkt_log_fmt), format, ##__VA_ARGS__);			    \
+	if (family) {																				\
+		family->LogPacket(type, (void *) _pkt_log_fmt, strlen(_pkt_log_fmt)); }  				\
+	__asm__(""); /* avoid tailcall */                                                           \
+} while (0)
+
+#define OSLogAndLogPacket(log, family, type, format, ...) do {									\
+	os_log(log, format, ##__VA_ARGS__);															\
+	BluetoothFamilyLogPacket(family, type, format, ##__VA_ARGS__);								\
+} while (0)
