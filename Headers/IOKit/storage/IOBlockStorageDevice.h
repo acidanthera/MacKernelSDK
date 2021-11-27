@@ -429,6 +429,7 @@ public:
                              UInt32                       extentsCount,
                              IOStorageUnmapOptions        options = 0); /* 10.6.6 */
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_10
     /*!
      * @function doSetPriority
      * @abstract
@@ -444,7 +445,9 @@ public:
     virtual IOReturn doSetPriority(IOBlockStorageDeviceExtent * extents,
                                    UInt32                       extentsCount,
                                    IOStoragePriority            priority); /* 10.10.0 */
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_11
     /*!
      * @function doSynchronize
      * @abstract
@@ -462,7 +465,9 @@ public:
     virtual IOReturn	doSynchronize(UInt64                      block,
                                       UInt64                      nblks,
                                       IOStorageSynchronizeOptions options = 0); /* 10.11.0 */
+#endif
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12
     /*!
      * @function doGetProvisionStatus
      * @discussion
@@ -487,11 +492,28 @@ public:
                                           UInt32 *                              extentsCount,
                                           IOBlockStorageProvisionDeviceExtent * extents,
                                           IOStorageGetProvisionStatusOptions    options = 0); /* 10.12.0 */
+#endif
 
-    OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,  0);
-    OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,  1);
-    OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,  2);
-    OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,  3);
+    OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,    0);
+  
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_10
+    OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,    1);
+#else
+    OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  1);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_11
+    OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,    2);
+#else
+    OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  2);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12
+    OSMetaClassDeclareReservedUsed(IOBlockStorageDevice,    3);
+#else
+    OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  3);
+#endif
+
     OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  4);
     OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  5);
     OSMetaClassDeclareReservedUnused(IOBlockStorageDevice,  6);
