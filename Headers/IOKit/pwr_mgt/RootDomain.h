@@ -179,6 +179,8 @@ public:
 	virtual IOOptionBits getSleepSupported( void );
 
 	void                wakeFromDoze( void );
+    
+    void                requestUserActive(IOService *driver, const char *reason);
 
 // KEXT driver announces support of power management feature
 

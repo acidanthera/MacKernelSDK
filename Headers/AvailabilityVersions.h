@@ -119,6 +119,7 @@
 #define __IPHONE_14_5    140500
 #define __IPHONE_14_6    140600
 #define __IPHONE_14_7    140700
+#define __IPHONE_14_8    140800
 #define __IPHONE_15_0    150000
 /* __IPHONE_NA is not defined to a value but is used as a token by macros to indicate that the API is unavailable */
 

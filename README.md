@@ -1,7 +1,7 @@
 MacKernelSDK
 ============
 
-This project lets your kernel extensions (kexts) target a broad range of XNU kernels when using the latest Xcode version right from the interface. In addition it also includes several headers only available in other projects or older Xcode releases.
+This project lets your kernel extensions (kexts) target a broad range of XNU kernels when using the latest Xcode version right from the interface. In addition, it also includes several headers only available in other projects or older Xcode releases.
 
 ## Quick start
 
@@ -34,9 +34,9 @@ To start using **MacKernelSDK** do the following steps:
 
     Otherwise Xcode will link to the original libkmod.
 
-4. Optionally add `/MacKernelSDK` to `.gitignore`.
+5. Optionally add `/MacKernelSDK` to `.gitignore`.
 
-5. To make sure that you use the right SDK check for `__ACIDANTHERA_MAC_SDK` macro in `Availability.h`.
+6. To make sure that you use the right SDK check for `__ACIDANTHERA_MAC_SDK` macro in `Availability.h`.
 
 ## Targeting `i386`
 
@@ -87,6 +87,8 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - `IOHIDUtility.h`
 - Added private headers from IOHIDFamily 1035.70.7:
     - `AppleHIDUsageTables.h` (removed in newer releases)
+- Added private headers for IOBluetoothFamily from 10.6 SDK
+    - `IOBluetoothInternal.h` (removed in newer releases)
 - Added extra compiled and reverse-engineered headers:
     - SMBus (`IOKit/IOSMBusController.h`)
     - Apple Smart Battery (`IOKit/battery/AppleSmartBatteryCommands.h`)
@@ -94,6 +96,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - NKE private APIs (`IOKit/network`)
     - IOUSBFamily from macOS 10.10 SDK
     - IO80211Family from Black80211 originally created by Roman Peshkov
+    - IOBluetoothFamily by cjiang (`IOKit/bluetooth`)
 - Added kmod targeting earlier macOS kernels:
     - 10.6 64-bit or newer (`Library/x86_64/libkmod.a`)
     - 10.4 or newer (`Library/universal/libkmod.a`)

@@ -240,7 +240,6 @@ public:
     /*!
      * @brief Options for <code>getEndpointDescriptor</code>, <code>getSuperSpeedEndpointCompanionDescriptor</code>, and <code>getDescriptors</code>
      *
-     * @discussion
      * @constant kGetEndpointDescriptorOriginal - Original descriptor used when creating the pipe
      * @constant kGetEndpointDescriptorCurrentPolicy - Descriptor controlling the current endpoint policy, including changes made via the <code>adjustPolicy</code> method.
      */

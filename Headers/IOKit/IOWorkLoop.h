@@ -51,6 +51,7 @@ class IOCommandGate;
  *  <br><br>
  *       When an event source is registered with a work loop it is informed of the semaphore to use to wake up the loop.
  */
+
 class IOWorkLoop : public OSObject
 {
 	OSDeclareDefaultStructors(IOWorkLoop);

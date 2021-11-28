@@ -213,7 +213,7 @@ public:
 
     /*!
      * @brief   Returns the current state of the I/O source.
-     * @return  @link tState @/link
+     * @result  @link tState @/link
      */
     virtual tState getState();
 
