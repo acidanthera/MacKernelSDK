@@ -275,7 +275,7 @@ public:
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerTransport, 22);
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerTransport, 23);
 
-protected:
+public:
     IOBluetoothHCIController *  mBluetoothFamily;      // 136
     IOBluetoothHostController * mBluetoothController;  // 144
     IOService *                 mProvider;             // 152
