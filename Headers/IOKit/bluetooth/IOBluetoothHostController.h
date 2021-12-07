@@ -121,7 +121,7 @@ struct BluetoothHCIACLPacket
 
 class IOBluetoothHostController : public IOService
 {
-    OSDeclareAbstractStructors(IOBluetoothHostController)
+	OSDeclareDefaultStructors(IOBluetoothHostController)
 
     typedef IOReturn (*IOBluetoothIncomingDataAction)(IOBluetoothHostController * hostController, UInt8 * inDataPtr, UInt32 inDataSize, UInt32 inSequenceNumber);
 
@@ -826,7 +826,7 @@ private:
     OSMetaClassDeclareReservedUnused(IOBluetoothHostController, 22);
     OSMetaClassDeclareReservedUnused(IOBluetoothHostController, 23);
 
-protected:
+public:
     OSSet *                    mReporterSet;                  // 136
     IOReportLegend *           mReportLegend;                 // 144
     IOStateReporter *          mPowerStateReporter;           // 152
@@ -996,7 +996,6 @@ protected:
     UInt16                               mActiveConnections;                 // 928
     UInt8                                mNextNewSynchronousConnectionType;  // 930
 
-public:
     bool                    mNeedToGetCurrentUSBIsochFrameNumber; // 931
     UInt16                  unknown9;                             // 932, setted to 256
     UInt16                  mMaxPower;                            // 934
@@ -1020,7 +1019,6 @@ public:
     UInt8  unknown15;                              // 971
     bool   mWaitingForCompletedHCICommandsToSleep; // 972 calls transport completepowerstatechange
 
-protected:
     int64_t mAppleBTLEAdvertisingReport[15];               // 976
     int64_t mTotalnumberofBTLEAdvertisingReportsReceived;  // 1096
     int64_t mTotalNumberOfTimesBluetoothIdleTimerExpired;  // 1104
@@ -1051,7 +1049,7 @@ protected:
     bool     mAutoResumeSet;                      // 1296
     bool     mACLPacketCausedFullWake;            // 1297
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
-    UInt8    __reserved1;                         // 1298
+    bool     mHardResetPerformed;                 // 1298
 #endif
     UInt32   mHardResetCounter;                   // 1300
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
@@ -1062,7 +1060,7 @@ protected:
     UInt32   mCreateLEDeviceCallTime;             // 1308
     bool     mBluetoothdNotFound;                 // 1312
 #else
-    UInt8    __reserved1;                         /// 1304, same as above
+    bool     mHardResetPerformed;                 /// 1304
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
     UInt32   mCreateLEDeviceCallTime;             /// 1308
     bool     mHardResetDuringBoot;                /// 1312

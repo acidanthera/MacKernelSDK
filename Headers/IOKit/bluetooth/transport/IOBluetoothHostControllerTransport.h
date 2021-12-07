@@ -184,8 +184,8 @@ public:
     virtual UInt16   GetControllerVendorID();
     virtual UInt16   GetControllerProductID();
 
-    virtual BluetoothHCIPowerState GetRadioPowerState();
-    virtual void                   SetRadioPowerState(BluetoothHCIPowerState powerState);
+    virtual UInt8 GetRadioPowerState();
+    virtual void SetRadioPowerState(UInt8 powerState);
 
     virtual bool     GetNVRAMSettingForSwitchBehavior();
     virtual UInt32   GetControllerLocationID();

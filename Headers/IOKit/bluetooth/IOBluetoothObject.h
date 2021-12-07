@@ -53,7 +53,7 @@ class IOBluetoothHCIController;
 
 class IOBluetoothObject : public IOService
 {
-    OSDeclareAbstractStructors(IOBluetoothObject)
+	OSDeclareDefaultStructors(IOBluetoothObject)
 
 public:
     virtual bool start(IOService * provider) APPLE_KEXT_OVERRIDE;

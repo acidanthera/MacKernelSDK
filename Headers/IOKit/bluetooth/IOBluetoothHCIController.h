@@ -354,7 +354,7 @@ public:
     OSMetaClassDeclareReservedUnused(IOBluetoothHCIController, 49);
     OSMetaClassDeclareReservedUnused(IOBluetoothHCIController, 50);
 
-protected:
+public:
     IOWorkLoop *    mWorkLoop;                // 136
     IOCommandGate * mCommandGate;             // 144
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
@@ -457,7 +457,7 @@ protected:
     thread_call_t mHardResetThreadCall;                    // 440
     UInt32        mUSBHardResetWLCallTime;                 // 448
 
-    bool          mTestHCICommandTimeoutUSBHardResetWL;    // 452
+    bool          mTestNotRespondingHardReset;    		   // 452
     bool          mTestHCICommandTimeoutHardReset;         // 453
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     bool          unknown1;                                // 454, see DispatchHardwareResetTest

@@ -44,7 +44,7 @@
 
 class IOWorkQueue : public IOEventSource
 {
-    OSDeclareAbstractStructors(IOWorkQueue)
+    OSDeclareDefaultStructors(IOWorkQueue)
 
     typedef IOReturn (*Action)(OSObject * owner, void * arg0, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
 

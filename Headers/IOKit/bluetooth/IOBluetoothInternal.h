@@ -80,7 +80,8 @@ enum IOBluetoothHCIControllerPowerStateOrdinal
 {
     kIOBluetoothHCIControllerPowerStateOrdinalOff  = 0,
     kIOBluetoothHCIControllerPowerStateOrdinalIdle = 1,
-    kIOBluetoothHCIControllerPowerStateOrdinalOn   = 2
+    kIOBluetoothHCIControllerPowerStateOrdinalOn   = 2,
+	kIOBluetoothHCIControllerPowerStateOrdinalCount
 };
 
 typedef UInt32 IOBluetoothHCIControllerFeatureFlags;
@@ -121,10 +122,14 @@ enum BluetoothHCIExtendedInquiryResponseDataTypesAppleSpecificInfo
 };
 
 #define BluetoothFamilyLogPacket(family, type, format, ...) do {                                \
-	static const char _pkt_log_fmt[] = format;       										    \
-	snprintf((char *) _pkt_log_fmt, sizeof(_pkt_log_fmt), format, ##__VA_ARGS__);			    \
-	if (family) {																				\
-		family->LogPacket(type, (void *) _pkt_log_fmt, strlen(_pkt_log_fmt)); }  				\
+	_Static_assert(__builtin_constant_p(format), "format string must be constant");             \
+	char * _pkt_log = (char *) IOMalloc(0x1FF);													\
+	if ( _pkt_log ) {																			\
+		bzero(_pkt_log, 0x1FF);																	\
+		snprintf(_pkt_log, 0x1FF, format, ##__VA_ARGS__);			    						\
+		if (family) {																			\
+			family->LogPacket(type, _pkt_log, strlen(_pkt_log)); }  							\
+	}																							\
 	__asm__(""); /* avoid tailcall */                                                           \
 } while (0)
 

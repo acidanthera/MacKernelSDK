@@ -2361,6 +2361,12 @@ enum
 };
 
 // Event results structures.
+typedef struct BluetoothHCIEventCommandCompleteResults
+{
+	uint8_t                   numCommands;
+	BluetoothHCICommandOpCode opCode;
+} __attribute__((packed)) BluetoothHCIEventCommandCompleteResults;
+
 typedef struct BluetoothHCIEventConnectionCompleteResults
 {
     BluetoothConnectionHandle  connectionHandle;

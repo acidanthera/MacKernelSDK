@@ -79,16 +79,16 @@ public:
     virtual IOReturn      powerStateWillChangeToWL(IOOptionBits options, void *) APPLE_KEXT_OVERRIDE;
     virtual void          systemWillShutdownWL(IOOptionBits options, void *) APPLE_KEXT_OVERRIDE;
 
-    virtual bool                   ControllerSupportWoBT() APPLE_KEXT_OVERRIDE;
-    virtual UInt16                 GetControllerVendorID() APPLE_KEXT_OVERRIDE;
-    virtual UInt16                 GetControllerProductID() APPLE_KEXT_OVERRIDE;
-    virtual BluetoothHCIPowerState GetRadioPowerState() APPLE_KEXT_OVERRIDE;
-    virtual void                   SetRadioPowerState(BluetoothHCIPowerState) APPLE_KEXT_OVERRIDE;
-    virtual void                   ResetBluetoothDevice() APPLE_KEXT_OVERRIDE;
-    virtual void                   GetInfo(void * outInfo) APPLE_KEXT_OVERRIDE;
-    static IOReturn                SetIdlePolicyValueAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4);
-    virtual IOReturn               SetIdlePolicyValue(uint32_t idleTimeoutMs) APPLE_KEXT_OVERRIDE;
-    virtual bool                   TransportWillReEnumerate() APPLE_KEXT_OVERRIDE;
+    virtual bool     ControllerSupportWoBT() APPLE_KEXT_OVERRIDE;
+    virtual UInt16   GetControllerVendorID() APPLE_KEXT_OVERRIDE;
+    virtual UInt16   GetControllerProductID() APPLE_KEXT_OVERRIDE;
+    virtual UInt8    GetRadioPowerState() APPLE_KEXT_OVERRIDE;
+    virtual void     SetRadioPowerState(UInt8 state) APPLE_KEXT_OVERRIDE;
+    virtual void     ResetBluetoothDevice() APPLE_KEXT_OVERRIDE;
+    virtual void     GetInfo(void * outInfo) APPLE_KEXT_OVERRIDE;
+    static  IOReturn SetIdlePolicyValueAction(OSObject * owner, void * arg1, void * arg2, void * arg3, void * arg4);
+    virtual IOReturn SetIdlePolicyValue(uint32_t idleTimeoutMs) APPLE_KEXT_OVERRIDE;
+    virtual bool     TransportWillReEnumerate() APPLE_KEXT_OVERRIDE;
 
     static IOReturn  MessageReceiver(void * target, void * refCon, UInt32 messageType, IOService * provider, void * messageArgument, vm_size_t argSize);
     virtual IOReturn HandleMessage(UInt32 messageType, IOService * provider, void * messageArgument, vm_size_t argSize);
@@ -105,7 +105,7 @@ public:
     virtual bool                 ConfigureDevice();
     virtual UInt8                GetInterfaceNumber(IOUSBHostInterface * interface);
     virtual IOUSBHostInterface * FindNextInterface(IOUSBHostInterface *, UInt16, UInt16, UInt16, UInt16);
-    virtual IOUSBHostPipe *      FindNextPipe(IOUSBHostInterface *, UInt8, UInt8, Descriptor *);
+    virtual IOUSBHostPipe *      FindNextPipe(IOUSBHostInterface *, UInt8 type, UInt8 direction, UInt16 * maxPacketSize);
     virtual bool                 FindInterfaces();
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
@@ -204,6 +204,7 @@ protected:
     UInt16               mActiveDeviceRequestIOCount; // 344
     UInt16               mVendorID;                   // 346
     UInt16               mProductID;                  // 348
+
     IOUSBHostInterface * mInterface;                  // 352
     IOUSBHostInterface * mIsochInterface;             // 360
     UInt8                mInterfaceNumber;            // 368
@@ -263,14 +264,14 @@ protected:
     uint8_t __reserved1;               // 1709
     bool    isServiceRegistered;       // 1710
     bool    unknown2;                  // 1711
-    UInt8   unknown3;                  // 1712
+    UInt8   mHardResetState;           // 1712
     bool    __reserved2;               // 1713
     bool    mMatchedOnInterface;       // 1714
     UInt32  mInterruptSleepMs;         // 1716
     bool    mAbortPipesAndCloseCalled; // 1720
-    bool    unknown4;                  // 1721
+    bool    mPreviousEventIsSpecial;   // 1721
     bool    mIOClassIsAppleUSBXHCIPCI; // 1722
-    bool    mPipesStarted;             // 1723
+    bool    mStopAllPipesCalled;       // 1723
     bool    unknown5;                  // 1724 pm state
     bool    unknown6;                  // 1725 pm state
     bool    mHostDeviceStarted;        // 1726

@@ -40,7 +40,7 @@
 
 class IOBluetoothMemoryBlock : public OSObject
 {
-    OSDeclareAbstractStructors(IOBluetoothMemoryBlock)
+    OSDeclareDefaultStructors(IOBluetoothMemoryBlock)
 
     typedef void (*IOBluetoothMemoryBlockCallBack)(IOBluetoothMemoryBlock * target, IOOptionBits options, UInt64 arg0, UInt64 arg1, UInt64 arg2, UInt64 arg3, UInt64 arg4);
 
@@ -82,7 +82,7 @@ protected:
 
 class IOBluetoothL2CAPMemoryBlock : public IOBluetoothMemoryBlock
 {
-    OSDeclareAbstractStructors(IOBluetoothL2CAPMemoryBlock)
+	OSDeclareDefaultStructors(IOBluetoothL2CAPMemoryBlock)
 
 public:
     static IOBluetoothL2CAPMemoryBlock * withAddress(void * address, IOByteCount withLength, IODirection withDirection);
@@ -184,7 +184,7 @@ protected:
 
 class IOBluetoothRFCOMMMemoryBlock : public IOBluetoothMemoryBlock
 {
-    OSDeclareDefaultStructors(IOBluetoothRFCOMMMemoryBlock)
+	OSDeclareDefaultStructors(IOBluetoothRFCOMMMemoryBlock)
 
 public:
     static IOBluetoothRFCOMMMemoryBlock * withAddress(void * address, IOByteCount withLength, IODirection withDirection);
