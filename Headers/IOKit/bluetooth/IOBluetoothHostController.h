@@ -960,7 +960,7 @@ public:
     IOBluetoothHostControllerTransport * mBluetoothTransport;    // 832
     IOWorkQueue *                        mControllerWorkQueue;   // 840
     IOWorkQueue *                        mReporterWorkQueue;     // 848
-    UInt16                               __reserved;             // 856
+    UInt16                               __reserved1;            // 856
     UInt16                               mVendorID;              // 858
     UInt16                               mProductID;             // 860
 
@@ -1003,6 +1003,7 @@ public:
     UInt16                  unknownc;                             // 938
     BluetoothHCIVersionInfo mLocalVersionInfo;                    // 940
 
+	uint8_t __reserved2[6];
     UInt8 mNumConfiguredHIDDevices; // 956
     UInt8 unknownd;                 // 957
     bool  mSupportWoBT;             // 958
