@@ -312,7 +312,7 @@ public:
     bool                     mIsControllerActive;             // 240
     uint8_t                  reserved4;                       // 241
     UInt32                   unknown111;                      // 244
-    UInt8                    reserved5;                       // 248
+    UInt8                    mAlreadyOff;                     // 248
     UInt8                    reserved6;                       // 249
     bool                     mSupportWoBT;                    // 250
     UInt8                    mCurrentPMMethod;                // 251

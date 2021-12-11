@@ -438,8 +438,8 @@ public:
     bool                 mSignPostSupported;       // 418
     bool                 mSignPostStarted;         // 419
 
-    os_log_t mInternalOSLogObject;   // 424
-    bool     unknown;                // 432, has to do with power state in transports
+    os_log_t mInternalOSLogObject; // 424
+    bool     mCanPowerOn;          // 432
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_14
     IOACPIPlatformDevice * mACPIDevice;  /// 464

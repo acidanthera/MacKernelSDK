@@ -463,7 +463,7 @@ public:
     virtual IOBluetoothHCIControllerInternalPowerState GetControllerPowerState();
     virtual IOReturn                                   GetTransportCurrentPowerState(IOBluetoothHCIControllerInternalPowerState * outPowerState);
     virtual IOReturn                                   GetTransportPendingPowerState(IOBluetoothHCIControllerInternalPowerState * outPowerState);
-    virtual IOReturn                                   ChangeTransportPowerStateTo(size_t, bool, IOBluetoothHCIControllerInternalPowerState, char *);
+    virtual IOReturn                                   ChangeTransportPowerStateTo(unsigned long ordinal, bool willWait, IOBluetoothHCIControllerInternalPowerState powerState, char * name);
     virtual IOReturn                                   WaitForTransportPowerStateChange(IOBluetoothHCIControllerInternalPowerState, char *);
     virtual bool                                       SystemReadyForSleep();
     virtual void                                       SetChangingPowerState(bool);
@@ -1034,7 +1034,7 @@ public:
     UInt32 mCurrentIdleTime;     // 1252
     UInt32 mIdleTimerValue;      // 1256
     bool   mIdleTimerValueSet;   // 1260
-    UInt32 unknown16;            // 1264
+    UInt32 mNewIdleTime;         // 1264
     UInt32 unknown17;            // 1268
     UInt32 unknown18;            // 1272
     UInt32 unknown19;            // 1276
