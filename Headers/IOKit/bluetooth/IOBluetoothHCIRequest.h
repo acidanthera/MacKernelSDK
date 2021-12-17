@@ -70,7 +70,11 @@ class IOBluetoothHCIRequest : public OSObject
     OSDeclareDefaultStructors(IOBluetoothHCIRequest)
 
     friend class IOBluetoothHostController;
-	friend class IntelBluetoothHostController;
+    friend class BroadcomBluetoothHostController;
+    friend class AppleBroadcomBluetoothHostController;
+    friend class CSRBluetoothHostController;
+    friend class AppleCSRBluetoothHostController;
+    friend class IntelBluetoothHostController;
 
 public:
     static IOBluetoothHCIRequest * Create(IOCommandGate * commandGate, IOBluetoothHostController * hostController, bool async = true, UInt32 timeout = 5, UInt32 controlFlags = 0);
