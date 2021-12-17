@@ -488,7 +488,7 @@ public:
     virtual IOReturn SetHIDEmulation(UInt32, bool);
     virtual IOReturn CallSetHIDEmulation();
     virtual bool     ModuleIsInUHEMode(bool *);
-    virtual IOReturn TransportRadioPowerOff(UInt16, char *, int, IOBluetoothHCIRequest *);
+    virtual IOReturn TransportRadioPowerOff(BluetoothHCICommandOpCode opCode, char * processName, int processID, IOBluetoothHCIRequest * request);
     virtual IOReturn GetTransportRadioPowerState(UInt8 *);
     virtual IOReturn SetTransportRadioPowerState(UInt8);
     virtual IOReturn CallPowerRadio(bool);

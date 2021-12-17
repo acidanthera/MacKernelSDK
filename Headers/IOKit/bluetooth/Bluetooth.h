@@ -2703,6 +2703,14 @@ enum
     kBluetoothHCIErrorMax = 0x45
 };
 
+enum
+{
+    kBluetoothSyncHCIRequestTimedOutAfterSent       = 0xFF01,
+    kBluetoothSyncHCIRequestTimedOutWaitingToBeSent = 0xFF02,
+    kBluetoothControllerTransportInactive           = 0xFF03,
+    kBluetoothControllerTransportSuspended          = 0xFF04
+};
+
 #if 0
 #pragma mark === HCI Power Mode ===
 #endif
