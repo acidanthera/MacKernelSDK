@@ -1008,7 +1008,7 @@ public:
     UInt16                  unknownc;                             // 938
     BluetoothHCIVersionInfo mLocalVersionInfo;                    // 940
 
-	uint8_t __reserved2[6];
+	UInt32 mVendorCommandSelector;  // 952
     UInt8 mNumConfiguredHIDDevices; // 956
     UInt8 unknownd;                 // 957
     bool  mSupportWoBT;             // 958
