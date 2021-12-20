@@ -119,10 +119,10 @@ struct BluetoothHCIACLPacket
     BluetoothHCIACLPacket * nextPacket;
 };
 
-extern long PackData( void * inBuffer, UInt32 inDataSize, const char * inFormat, ... );
-extern long PackDataList( void * inBuffer, UInt32 inDataSize, const char * inFormat, va_list inArgs );
-extern long UnpackData( IOByteCount inBufferSize, const void * inBuffer, const char * inFormat, ... );
-extern long UnpackDataList( IOByteCount inBufferSize, const void * inBuffer, const char * inFormat, va_list inArgs );
+IOBLUETOOTH_EXPORT long PackData( void * inBuffer, UInt32 inDataSize, const char * inFormat, ... );
+IOBLUETOOTH_EXPORT long PackDataList( void * inBuffer, UInt32 inDataSize, const char * inFormat, va_list inArgs );
+IOBLUETOOTH_EXPORT long UnpackData( IOByteCount inBufferSize, const void * inBuffer, const char * inFormat, ... );
+IOBLUETOOTH_EXPORT long UnpackDataList( IOByteCount inBufferSize, const void * inBuffer, const char * inFormat, va_list inArgs );
 
 class IOBluetoothHostController : public IOService
 {
