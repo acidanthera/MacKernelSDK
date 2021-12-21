@@ -323,7 +323,7 @@ public:
     virtual void     SetNumSCOConnections(UInt8, UInt32);
     virtual IOReturn ToggleSCOConnection();
     virtual IOReturn ToggleeSCOEV3Connection();
-    virtual IOReturn ToggleeSCOEthisConnection();
+    virtual IOReturn ToggleeSCOEV4Connection();
     virtual IOReturn ToggleeSCOEV5Connection();
 
     virtual UInt16 getSynchronousConnectionPacketTypeProperty();
