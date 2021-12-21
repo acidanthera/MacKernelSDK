@@ -323,7 +323,7 @@ public:
     virtual void     SetNumSCOConnections(UInt8, UInt32);
     virtual IOReturn ToggleSCOConnection();
     virtual IOReturn ToggleeSCOEV3Connection();
-    virtual IOReturn ToggleeSCOEV4Connection();
+    virtual IOReturn ToggleeSCOEthisConnection();
     virtual IOReturn ToggleeSCOEV5Connection();
 
     virtual UInt16 getSynchronousConnectionPacketTypeProperty();
@@ -448,7 +448,7 @@ public:
     virtual IOReturn CallResetTimerForIdleTimer();
     virtual IOReturn EnableIdleTimer();
     virtual IOReturn DisableIdleTimer();
-    virtual UInt32   ChangeIdleTimerTime(char * calledByFunction, UInt32 newTime);
+    virtual void     ChangeIdleTimerTime(char * calledByFunction, UInt32 newTime);
     virtual IOReturn SetIdleTimerValue(UInt32 value);
     virtual IOReturn SetIdleTimerValueInNVRAM(UInt32 value);
     virtual IOReturn ClearIdleTimerValueInNVRAM();
@@ -913,20 +913,21 @@ public:
     BluetoothHCIACLPacket * mLowPriorityLEACLPacketsTail;  // 472
 
     OSArray *                               mAllowedIncomingL2CAPChannels;        // 480
-    UInt32                                  unknown1;                             // 488, not enough info
+    UInt32                                  mDesyncIncomingDataCounter;           // 488
     UInt32                                  mCurrentlyExecutingSequenceNumber;    // 492
     OSArray *                               mAllowedIncomingRFCOMMChannels;       // 496
     IOBluetoothHCIControllerConfigState     mPreviousControllerConfigState;       // 504
     UInt32                                  unknown2;                             // 508
     UInt32                                  unknown3;                             // 512
     UInt16                                  unknown4;                             // 516
+    bool                                    unknown5;                             // 518
     UInt8 *                                 mSCOPacketBuffer;                     // 520
     UInt16                                  mNumBufferedSCOBytes;                 // 528
     AbsoluteTime                            mBufferedSCOPacketTimestamp;          // 536
     IOBluetoothInactivityTimerEventSource * mIdleTimer;                           // 544
     UInt32                                  mNumSCODataInQueue;                   // 552
     UInt32                                  mCurrentlyExecutingSCOSequenceNumber; // 556
-    UInt16                                  unknown5;                             // 560
+    bool                                    mNeedToCleanUpWaitForAckQueue;        // 560
     UInt16                                  mSynchronousConnectionPacketType;     // 562
 
     HearingDeviceListType * mConnectedHearingDeviceListHead; // 568
@@ -1026,30 +1027,31 @@ public:
     bool   mWaitingForCompletedHCICommandsToSleep; // 972 calls transport completepowerstatechange
 
     int64_t mAppleBTLEAdvertisingReport[15];               // 976
-    int64_t mTotalnumberofBTLEAdvertisingReportsReceived;  // 1096
+    int64_t mTotalNumberofBTLEAdvertisingReportsReceived;  // 1096
     int64_t mTotalNumberOfTimesBluetoothIdleTimerExpired;  // 1104
     bool    mPowerReportersCreated;                        // 1112
     int64_t mLESetAdvertisingData[15];                     // 1120
     int64_t mTotalNumberOfLESetAdvertisingDataCommandSent; // 1240
 
-    // Idle timer stuff
-    bool   mIdleTimerDisabled;   // 1248
-    bool   mPowerStateChanging;  // 1249
-    bool   mHandlingIdleTimeout; // 1250
-    UInt32 mCurrentIdleTime;     // 1252
-    UInt32 mIdleTimerValue;      // 1256
-    bool   mIdleTimerValueSet;   // 1260
-    UInt32 mNewIdleTime;         // 1264
-    UInt32 unknown17;            // 1268
-    UInt32 unknown18;            // 1272
-    UInt32 unknown19;            // 1276
+    // Idle timer
+    bool   mIdleTimerDisabled;        // 1248
+    bool   mPowerStateChanging;       // 1249
+    bool   mHandlingIdleTimeout;      // 1250
+    UInt32 mPendingIdleTimerValue;    // 1252
+    UInt32 mIdleTimerValue;           // 1256
+    bool   mIdleTimerValueSet;        // 1260
+    UInt32 mIdleTimerTime;            // 1264, the one functions actually use
+    UInt32 mNVRAMIdleTimerValue;      // 1268
+    bool   mSetNVRAMIdleTimerValue;   // 1272
+	bool   mClearNVRAMIdleTimerValue; // 1273
+    UInt32 mTransportIdleTimerValue;  // 1276
+    bool   mSupportIdleTimer;         // 1280
 
-    bool     unknown1a;                           // 1280
     bool     mUpdatingFirmware;                   // 1281
-    UInt8    unknown1b;                           // 1282
-    UInt8    unknown1c;                           // 1283
+    bool     mPendingRequestsState;               // 1282, processing = 1, kill = 0
+    bool     mLEConnectionCompleteOutOfSequence;  // 1283
     UInt16   mControllerOutstandingCalls;         // 1284
-    UInt8    unknown1d;                           // 1286
+    bool     mSystemNotReadyForSleep;             // 1286
     bool     mSupportDPLE;                        // 1287
     os_log_t mInternalOSLogObject;                // 1288
     bool     mAutoResumeSet;                      // 1296
