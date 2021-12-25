@@ -122,18 +122,19 @@ enum BluetoothHCIExtendedInquiryResponseDataTypesAppleSpecificInfo
 };
 
 #define BluetoothFamilyLogPacket(family, type, format, ...) do {                                \
-	_Static_assert(__builtin_constant_p(format), "format string must be constant");             \
-	char * _pkt_log = (char *) IOMalloc(0x1FF);													\
-	if ( _pkt_log ) {																			\
-		bzero(_pkt_log, 0x1FF);																	\
-		snprintf(_pkt_log, 0x1FF, format, ##__VA_ARGS__);			    						\
-		if (family) {																			\
-			family->LogPacket(type, _pkt_log, strlen(_pkt_log)); }  							\
-	}																							\
-	__asm__(""); /* avoid tailcall */                                                           \
+    _Static_assert(__builtin_constant_p(format), "format string must be constant");             \
+    char * _pkt_log = (char *) IOMalloc(0x1FF);                                                 \
+    if ( _pkt_log ) {                                                                           \
+        bzero(_pkt_log, 0x1FF);                                                                 \
+        snprintf(_pkt_log, 0x1FF, format, ##__VA_ARGS__);                                       \
+        if (family) {                                                                           \
+            family->LogPacket(type, _pkt_log, strlen(_pkt_log)); }                              \
+        IOFree(_pkt_log, 0x1FF);                                                                \
+    }                                                                                           \
+    __asm__(""); /* avoid tailcall */                                                           \
 } while (0)
 
-#define OSLogAndLogPacket(log, family, type, format, ...) do {									\
-	os_log(log, format, ##__VA_ARGS__);															\
-	BluetoothFamilyLogPacket(family, type, format, ##__VA_ARGS__);								\
+#define OSLogAndLogPacket(log, family, type, format, ...) do {                                  \
+    os_log(log, format, ##__VA_ARGS__);                                                         \
+    BluetoothFamilyLogPacket(family, type, format, ##__VA_ARGS__);                              \
 } while (0)
