@@ -647,7 +647,7 @@ public:
     virtual IOReturn BluetoothHCILESetAdvertiseEnable(BluetoothHCIRequestID inID, UInt8);
     virtual IOReturn BluetoothHCILEReadLocalSupportedFeatures(BluetoothHCIRequestID inID, BluetoothHCISupportedFeatures * outFeatures);
     virtual IOReturn BluetoothHCILEReadRemoteUsedFeatures(BluetoothHCIRequestID inID, UInt16, BluetoothHCISupportedFeatures * outFeatures);
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual IOReturn BluetoothHCIReset(BluetoothHCIRequestID inID, char * name);
 #else
     virtual IOReturn BluetoothHCIReset(BluetoothHCIRequestID inID);
