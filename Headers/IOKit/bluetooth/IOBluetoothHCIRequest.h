@@ -69,13 +69,6 @@ class IOBluetoothHCIRequest : public OSObject
 {
     OSDeclareDefaultStructors(IOBluetoothHCIRequest)
 
-    friend class IOBluetoothHostController;
-    friend class BroadcomBluetoothHostController;
-    friend class AppleBroadcomBluetoothHostController;
-    friend class CSRBluetoothHostController;
-    friend class AppleCSRBluetoothHostController;
-    friend class IntelBluetoothHostController;
-
 public:
     static IOBluetoothHCIRequest * Create(IOCommandGate * commandGate, IOBluetoothHostController * hostController, bool async = true, UInt32 timeout = 5, UInt32 controlFlags = 0);
     static IOReturn                Dispose(IOBluetoothHCIRequest * inObject);
@@ -121,6 +114,8 @@ protected:
     UInt8                             mPrivateResultsBuffer[kMaxHCIBufferLength * 4]; // Just in case they didn't give a results ptr. 12
     IOByteCount                       mPrivateResultsSize;                            // Result size. 2064
     BluetoothHCITransportID           mTransportID;                                   // Transport ID to use for this request. 2072
+    
+public:
     BluetoothHCIRequestState          mState;                                         // Busy, waiting, idle. 2076
     bool                              mAsyncNotify;                                   // 2077
     task_t                            mOwningTaskID;                                  // 2080
@@ -131,7 +126,6 @@ protected:
     BluetoothHCINotificationMessage * mNotificationMessage;                           // 2144
     IOByteCount                       mNotificationMessageSize;                       // 2152
 
-public:
     IOBluetoothHCIRequest * mNextBusy;                           // Points to next request element on busy queue. 2160
     IOBluetoothHCIRequest * mNextWait;                           // Points to next request element on wait queue. 2168
     IOBluetoothHCIRequest * mNextAllocated;                      // Points to next allocated request element. 2176
