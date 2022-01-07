@@ -1802,7 +1802,7 @@ typedef struct BluetoothHCIInquiryWithRSSIResult
 
 typedef struct BluetoothHCIInquiryWithRSSIResults
 {
-    BluetoothHCIInquiryWithRSSIResult results[50];
+    BluetoothHCIInquiryWithRSSIResult results[kBluetoothHCIInquiryResultsMaxResults];
     IOItemCount                       count;
 } BluetoothHCIInquiryWithRSSIResults;
 

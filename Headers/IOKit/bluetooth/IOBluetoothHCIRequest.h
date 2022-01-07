@@ -65,6 +65,16 @@ enum BluetoothHCIRequestStates
     kHCIRequestStateEnd
 };
 
+IOBLUETOOTH_EXPORT IOReturn ParseHCIEvent(UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn DecodeHCICommandResult(UInt16 opCode, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseLinkControlGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseLinkPolicyGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseHostControllerGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseInformationalGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseStatusGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseTestingGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseVendorSpecificCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+
 class IOBluetoothHCIRequest : public OSObject
 {
     OSDeclareDefaultStructors(IOBluetoothHCIRequest)

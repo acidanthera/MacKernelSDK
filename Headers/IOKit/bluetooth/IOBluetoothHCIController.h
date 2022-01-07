@@ -86,10 +86,10 @@ struct BluetoothPacketLogData
 };
 #endif
 
-extern UInt32 IOBluetoothRingBufferRead(UInt32 *, UInt8 *, UInt32, UInt32);
-extern UInt32 IOBluetoothRingBufferReadAtOffset(UInt32 *, void *, UInt32, UInt64, UInt32);
-extern UInt32 IOBluetoothRingBufferWrite(UInt32 *, UInt8 *, UInt32, UInt32);
-extern UInt32 IOBluetoothRingBufferWriteAtOffset(UInt32 *, void *, UInt32, UInt64, UInt32);
+IOBLUETOOTH_EXPORT UInt32 IOBluetoothRingBufferRead(UInt32 *, void * outBuffer, UInt32, UInt32);
+IOBLUETOOTH_EXPORT UInt32 IOBluetoothRingBufferReadAtOffset(UInt32 *, void *, UInt32, IOByteCount offset, UInt32);
+IOBLUETOOTH_EXPORT UInt32 IOBluetoothRingBufferWrite(UInt32 *, void *, UInt32, UInt32);
+IOBLUETOOTH_EXPORT UInt32 IOBluetoothRingBufferWriteAtOffset(UInt32 *, void *, UInt32, IOByteCount offset, UInt32);
 
 extern bool SearchForTransportEventTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
 extern void FullWakeTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
