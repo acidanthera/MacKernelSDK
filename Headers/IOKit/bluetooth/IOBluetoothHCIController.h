@@ -86,10 +86,10 @@ struct BluetoothPacketLogData
 };
 #endif
 
-extern UInt32 IOBluetoothRingBufferRead(UInt32 *, UInt8 *, UInt32, UInt32);
-extern UInt32 IOBluetoothRingBufferReadAtOffset(UInt32 *, void *, UInt32, UInt64, UInt32);
-extern UInt32 IOBluetoothRingBufferWrite(UInt32 *, UInt8 *, UInt32, UInt32);
-extern UInt32 IOBluetoothRingBufferWriteAtOffset(UInt32 *, void *, UInt32, UInt64, UInt32);
+IOBLUETOOTH_EXPORT UInt32 IOBluetoothRingBufferRead(UInt32 *, void * outBuffer, UInt32, UInt32);
+IOBLUETOOTH_EXPORT UInt32 IOBluetoothRingBufferReadAtOffset(UInt32 *, void *, UInt32, IOByteCount offset, UInt32);
+IOBLUETOOTH_EXPORT UInt32 IOBluetoothRingBufferWrite(UInt32 *, void *, UInt32, UInt32);
+IOBLUETOOTH_EXPORT UInt32 IOBluetoothRingBufferWriteAtOffset(UInt32 *, void *, UInt32, IOByteCount offset, UInt32);
 
 extern bool SearchForTransportEventTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
 extern void FullWakeTimeOutOccurred(OSObject * owner, IOTimerEventSource * timer);
@@ -354,7 +354,7 @@ public:
     OSMetaClassDeclareReservedUnused(IOBluetoothHCIController, 49);
     OSMetaClassDeclareReservedUnused(IOBluetoothHCIController, 50);
 
-protected:
+public:
     IOWorkLoop *    mWorkLoop;                // 136
     IOCommandGate * mCommandGate;             // 144
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
@@ -438,8 +438,8 @@ protected:
     bool                 mSignPostSupported;       // 418
     bool                 mSignPostStarted;         // 419
 
-    os_log_t mInternalOSLogObject;   // 424
-    bool     unknown;                // 432, has to do with power state in transports
+    os_log_t mInternalOSLogObject; // 424
+    bool     mCanPowerOn;          // 432
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_10_14
     IOACPIPlatformDevice * mACPIDevice;  /// 464
@@ -457,7 +457,7 @@ protected:
     thread_call_t mHardResetThreadCall;                    // 440
     UInt32        mUSBHardResetWLCallTime;                 // 448
 
-    bool          mTestHCICommandTimeoutUSBHardResetWL;    // 452
+    bool          mTestNotRespondingHardReset;    		   // 452
     bool          mTestHCICommandTimeoutHardReset;         // 453
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     bool          unknown1;                                // 454, see DispatchHardwareResetTest

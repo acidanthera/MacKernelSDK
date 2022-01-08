@@ -184,8 +184,8 @@ public:
     virtual UInt16   GetControllerVendorID();
     virtual UInt16   GetControllerProductID();
 
-    virtual BluetoothHCIPowerState GetRadioPowerState();
-    virtual void                   SetRadioPowerState(BluetoothHCIPowerState powerState);
+    virtual UInt8 GetRadioPowerState();
+    virtual void SetRadioPowerState(UInt8 powerState);
 
     virtual bool     GetNVRAMSettingForSwitchBehavior();
     virtual UInt32   GetControllerLocationID();
@@ -275,7 +275,7 @@ public:
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerTransport, 22);
     OSMetaClassDeclareReservedUnused(IOBluetoothHostControllerTransport, 23);
 
-protected:
+public:
     IOBluetoothHCIController *  mBluetoothFamily;      // 136
     IOBluetoothHostController * mBluetoothController;  // 144
     IOService *                 mProvider;             // 152
@@ -312,7 +312,7 @@ protected:
     bool                     mIsControllerActive;             // 240
     uint8_t                  reserved4;                       // 241
     UInt32                   unknown111;                      // 244
-    UInt8                    reserved5;                       // 248
+    UInt8                    mAlreadyOff;                     // 248
     UInt8                    reserved6;                       // 249
     bool                     mSupportWoBT;                    // 250
     UInt8                    mCurrentPMMethod;                // 251

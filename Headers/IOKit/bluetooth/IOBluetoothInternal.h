@@ -80,7 +80,8 @@ enum IOBluetoothHCIControllerPowerStateOrdinal
 {
     kIOBluetoothHCIControllerPowerStateOrdinalOff  = 0,
     kIOBluetoothHCIControllerPowerStateOrdinalIdle = 1,
-    kIOBluetoothHCIControllerPowerStateOrdinalOn   = 2
+    kIOBluetoothHCIControllerPowerStateOrdinalOn   = 2,
+	kIOBluetoothHCIControllerPowerStateOrdinalCount
 };
 
 typedef UInt32 IOBluetoothHCIControllerFeatureFlags;
@@ -120,15 +121,24 @@ enum BluetoothHCIExtendedInquiryResponseDataTypesAppleSpecificInfo
     kBluetoothHCIExtendedInquiryResponseDataTypeAppleSpecificInfoThirdPartyAdvertising = 0x02,
 };
 
+#define REQUIRE(err) os_log(OS_LOG_DEFAULT, "REQUIRE failure: %s - file: %s:%d\n", err, __FILE__, __LINE__)
+#define CHECK(err) os_log(OS_LOG_DEFAULT, "CHECK failure: %s - file: %s:%d\n", err, __FILE__, __LINE__)
+#define REQUIRE_NO_ERR(err) os_log(OS_LOG_DEFAULT, "REQUIRE_NO_ERR failure: 0x%x - file: %s:%d\n", err, __FILE__, __LINE__)
+
 #define BluetoothFamilyLogPacket(family, type, format, ...) do {                                \
-	static const char _pkt_log_fmt[] = format;       										    \
-	snprintf((char *) _pkt_log_fmt, sizeof(_pkt_log_fmt), format, ##__VA_ARGS__);			    \
-	if (family) {																				\
-		family->LogPacket(type, (void *) _pkt_log_fmt, strlen(_pkt_log_fmt)); }  				\
-	__asm__(""); /* avoid tailcall */                                                           \
+    _Static_assert(__builtin_constant_p(format), "format string must be constant");             \
+    char * _pkt_log = (char *) IOMalloc(0x1FF);                                                 \
+    if ( _pkt_log ) {                                                                           \
+        bzero(_pkt_log, 0x1FF);                                                                 \
+        snprintf(_pkt_log, 0x1FF, format, ##__VA_ARGS__);                                       \
+        if (family) {                                                                           \
+            family->LogPacket(type, _pkt_log, strlen(_pkt_log)); }                              \
+        IOFree(_pkt_log, 0x1FF);                                                                \
+    }                                                                                           \
+    __asm__(""); /* avoid tailcall */                                                           \
 } while (0)
 
-#define OSLogAndLogPacket(log, family, type, format, ...) do {									\
-	os_log(log, format, ##__VA_ARGS__);															\
-	BluetoothFamilyLogPacket(family, type, format, ##__VA_ARGS__);								\
+#define OSLogAndLogPacket(log, family, type, format, ...) do {                                  \
+    os_log(log, format, ##__VA_ARGS__);                                                         \
+    BluetoothFamilyLogPacket(family, type, format, ##__VA_ARGS__);                              \
 } while (0)

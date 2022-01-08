@@ -65,11 +65,19 @@ enum BluetoothHCIRequestStates
     kHCIRequestStateEnd
 };
 
+IOBLUETOOTH_EXPORT IOReturn ParseHCIEvent(UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn DecodeHCICommandResult(UInt16 opCode, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseLinkControlGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseLinkPolicyGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseHostControllerGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseInformationalGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseStatusGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseTestingGroupCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+IOBLUETOOTH_EXPORT IOReturn ParseVendorSpecificCommand(UInt16 ocf, UInt8 * inData, UInt32 inDataSize, UInt8 * outData, UInt32 * outDataSize, UInt8 * outStatus);
+
 class IOBluetoothHCIRequest : public OSObject
 {
     OSDeclareDefaultStructors(IOBluetoothHCIRequest)
-
-    friend class IOBluetoothHostController;
 
 public:
     static IOBluetoothHCIRequest * Create(IOCommandGate * commandGate, IOBluetoothHostController * hostController, bool async = true, UInt32 timeout = 5, UInt32 controlFlags = 0);
@@ -116,6 +124,8 @@ protected:
     UInt8                             mPrivateResultsBuffer[kMaxHCIBufferLength * 4]; // Just in case they didn't give a results ptr. 12
     IOByteCount                       mPrivateResultsSize;                            // Result size. 2064
     BluetoothHCITransportID           mTransportID;                                   // Transport ID to use for this request. 2072
+    
+public:
     BluetoothHCIRequestState          mState;                                         // Busy, waiting, idle. 2076
     bool                              mAsyncNotify;                                   // 2077
     task_t                            mOwningTaskID;                                  // 2080
@@ -126,7 +136,6 @@ protected:
     BluetoothHCINotificationMessage * mNotificationMessage;                           // 2144
     IOByteCount                       mNotificationMessageSize;                       // 2152
 
-public:
     IOBluetoothHCIRequest * mNextBusy;                           // Points to next request element on busy queue. 2160
     IOBluetoothHCIRequest * mNextWait;                           // Points to next request element on wait queue. 2168
     IOBluetoothHCIRequest * mNextAllocated;                      // Points to next allocated request element. 2176

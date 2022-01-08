@@ -1802,7 +1802,7 @@ typedef struct BluetoothHCIInquiryWithRSSIResult
 
 typedef struct BluetoothHCIInquiryWithRSSIResults
 {
-    BluetoothHCIInquiryWithRSSIResult results[50];
+    BluetoothHCIInquiryWithRSSIResult results[kBluetoothHCIInquiryResultsMaxResults];
     IOItemCount                       count;
 } BluetoothHCIInquiryWithRSSIResults;
 
@@ -2361,6 +2361,12 @@ enum
 };
 
 // Event results structures.
+typedef struct BluetoothHCIEventCommandCompleteResults
+{
+	uint8_t                   numCommands;
+	BluetoothHCICommandOpCode opCode;
+} __attribute__((packed)) BluetoothHCIEventCommandCompleteResults;
+
 typedef struct BluetoothHCIEventConnectionCompleteResults
 {
     BluetoothConnectionHandle  connectionHandle;
@@ -2695,6 +2701,14 @@ enum
     kBluetoothHCIErrorPacketTooLong                                 = 0x45,
 
     kBluetoothHCIErrorMax = 0x45
+};
+
+enum
+{
+    kBluetoothSyncHCIRequestTimedOutAfterSent       = 0xFF01,
+    kBluetoothSyncHCIRequestTimedOutWaitingToBeSent = 0xFF02,
+    kBluetoothControllerTransportInactive           = 0xFF03,
+    kBluetoothControllerTransportSuspended          = 0xFF04
 };
 
 #if 0
