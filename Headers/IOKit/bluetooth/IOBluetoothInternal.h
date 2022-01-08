@@ -121,6 +121,10 @@ enum BluetoothHCIExtendedInquiryResponseDataTypesAppleSpecificInfo
     kBluetoothHCIExtendedInquiryResponseDataTypeAppleSpecificInfoThirdPartyAdvertising = 0x02,
 };
 
+#define REQUIRE(err) os_log(OS_LOG_DEFAULT, "REQUIRE failure: %s - file: %s:%d\n", err, __FILE__, __LINE__)
+#define CHECK(err) os_log(OS_LOG_DEFAULT, "CHECK failure: %s - file: %s:%d\n", err, __FILE__, __LINE__)
+#define REQUIRE_NO_ERR(err) os_log(OS_LOG_DEFAULT, "REQUIRE_NO_ERR failure: 0x%x - file: %s:%d\n", err, __FILE__, __LINE__)
+
 #define BluetoothFamilyLogPacket(family, type, format, ...) do {                                \
     _Static_assert(__builtin_constant_p(format), "format string must be constant");             \
     char * _pkt_log = (char *) IOMalloc(0x1FF);                                                 \
