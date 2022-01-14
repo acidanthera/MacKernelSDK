@@ -107,7 +107,7 @@ typedef struct HearingDeviceListType
 typedef struct LEDeviceListType
 {
     BluetoothConnectionHandle mConnectionHandle;
-    bool                      unknown;
+    bool                      mCreateDeviceNotCalled;
     LEDeviceListType *        mNextDevice;
     LEDeviceListType *        mPreviousDevice;
 } BluetoothLEDevice;
@@ -353,7 +353,7 @@ public:
 
     virtual bool     GetCompleteCodeForCommand(BluetoothHCICommandOpCode inOpCode, BluetoothHCIEventCode * outEventCode);
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_14
-    virtual IOReturn GetOpCodeAndEventCode(UInt8 * inDataPtr, UInt32 inDataSize, BluetoothHCICommandOpCode * outOpCode, BluetoothHCIEventCode * eventCode, BluetoothHCIEventStatus * outStatus, UInt8 *, BluetoothDeviceAddress * outDeviceAddress, BluetoothConnectionHandle * outConnectionHandle, bool *);
+    virtual IOReturn GetOpCodeAndEventCode(UInt8 * inDataPtr, UInt32 inDataSize, BluetoothHCICommandOpCode * outOpCode, UInt8 * numOpCodes, BluetoothHCIEventCode * eventCode, BluetoothHCIEventStatus * outStatus, BluetoothDeviceAddress * outDeviceAddress, BluetoothConnectionHandle * outConnectionHandle, bool *);
 #else
     virtual IOReturn GetOpCodeAndEventCode(UInt8 * inDataPtr, BluetoothHCICommandOpCode * outOpCode, BluetoothHCIEventCode * eventCode, BluetoothHCIEventStatus * outStatus, UInt8 *, BluetoothDeviceAddress * outDeviceAddress, BluetoothConnectionHandle * outConnectionHandle);
 #endif
