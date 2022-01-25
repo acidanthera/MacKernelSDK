@@ -155,7 +155,6 @@ public:
     @abstract Adds a chain of packets to the head of a synchronized queue.
     @discussion A spinlock is used to synchronize access to the queue.
     @param m A chain of packets to add to the head of the queue.
-    @result Always returns true. 
 */
 
     virtual void lockPrepend(mbuf_t m);

@@ -31,24 +31,55 @@
  *
  */
 
-#ifndef _IO80211WORKLOOP_H
-#define _IO80211WORKLOOP_H
+#ifndef _IO80211FLOWQUEUE_H
+#define _IO80211FLOWQUEUE_H
 
-#include <IOKit/IOWorkLoop.h>
+#include <IOKit/network/IOEthernetController.h>
+#include <IOKit/80211/apple80211_var.h>
 
-class IO80211WorkLoop : public IOWorkLoop
+struct IO80211FlowQueueHash
 {
-    OSDeclareDefaultStructors( IO80211WorkLoop )
+    UInt8      ac;
+    UInt8      interface;
+    ether_addr address;
+} __attribute__((packed));
+
+class IO80211FlowQueue : public OSObject
+{
+    OSDeclareDefaultStructors( IO80211FlowQueue )
 
 public:
-    static IO80211WorkLoop * workLoop();
+    virtual UInt32 enqueuePacket( mbuf_t packet );
+    virtual UInt32 queueSpace();
+    virtual UInt32 queueSize();
+    virtual UInt32 pendingPackets();
+    virtual void pause();
+    virtual void unPause();
+    virtual bool isPaused();
+    virtual UInt32 DEBUG_totalStagedPackets();
+    virtual UInt32 DEBUG_curStagedPackets();
+    virtual UInt32 print( void * userPrintCtx );
 
-    virtual void openGate() APPLE_KEXT_OVERRIDE;
-    virtual void closeGate() APPLE_KEXT_OVERRIDE;
-    virtual int sleepGate( void * event, UInt32 interuptibleType ) APPLE_KEXT_OVERRIDE;
-    virtual int sleepGateDeadline( void * event, UInt32 interuptibleType, AbsoluteTime deadline );
-    virtual void wakeupGate( void * event, bool oneThread ) APPLE_KEXT_OVERRIDE;
+protected:
+    IO80211FlowQueueHash _hash; // 16
+    void * _buf;                // 24
+    bool _paused;               // 32
+};
 
+class IO80211FlowQueueLegacy : public IO80211FlowQueue
+{
+    OSDeclareDefaultStructors( IO80211FlowQueueLegacy )
+    
+public:
+    IO80211FlowQueueLegacy * withParamaters( const ether_addr & address, UInt8 ac, UInt8 interface );
+    bool initWithParamaters( const ether_addr & address, UInt8 ac, UInt8 interface );
+    
+    virtual UInt32 enqueuePacket( mbuf_t packet ) APPLE_KEXT_OVERRIDE;
+    
+    virtual UInt32 queueSpace() APPLE_KEXT_OVERRIDE;
+    virtual UInt32 queueSize() APPLE_KEXT_OVERRIDE;
+    
+    virtual bool isPaused() APPLE_KEXT_OVERRIDE;
 };
 
 #endif

@@ -31,24 +31,44 @@
  *
  */
 
-#ifndef _IO80211WORKLOOP_H
-#define _IO80211WORKLOOP_H
+#ifndef _IO80211_STOPWATCH_H
+#define _IO80211_STOPWATCH_H
 
-#include <IOKit/IOWorkLoop.h>
+#include <IOKit/IOService.h>
 
-class IO80211WorkLoop : public IOWorkLoop
+class Stopwatch : public OSObject
 {
-    OSDeclareDefaultStructors( IO80211WorkLoop )
-
+    OSDeclareDefaultStructors( Stopwatch )
+    
 public:
-    static IO80211WorkLoop * workLoop();
-
-    virtual void openGate() APPLE_KEXT_OVERRIDE;
-    virtual void closeGate() APPLE_KEXT_OVERRIDE;
-    virtual int sleepGate( void * event, UInt32 interuptibleType ) APPLE_KEXT_OVERRIDE;
-    virtual int sleepGateDeadline( void * event, UInt32 interuptibleType, AbsoluteTime deadline );
-    virtual void wakeupGate( void * event, bool oneThread ) APPLE_KEXT_OVERRIDE;
-
+    struct TimeDelta_us
+    {
+        UInt32 elapsedTicks;
+        UInt32 elapsedMs;
+        UInt32 operationTime;
+    } __attribute__((packed));
+    
+    static Stopwatch * withUptime();
+    virtual bool init() APPLE_KEXT_OVERRIDE;
+    virtual void free() APPLE_KEXT_OVERRIDE;
+    void start();
+    void restart();
+    void reset();
+    void stop();
+    
+    AbsoluteTime getSplit_abs();
+    UInt64 getSplit_ns();
+    UInt32 getSplit_us();
+    AbsoluteTime getElapsed_abs();
+    UInt64 getElapsed_ns();
+    UInt32 getElapsed_us();
+    UInt32 getElapsed_s();
+    
+    void getElapsed( TimeDelta_us & us );
+    
+protected:
+    AbsoluteTime _startTime;
+    AbsoluteTime _stopTime;
 };
 
 #endif

@@ -1,87 +1,84 @@
-#ifndef IO80211P2PInterface_h
-#define IO80211P2PInterface_h
+/*
+ * Released under "The BSD 3-Clause License"
+ *
+ * Copyright (c) 2021 cjiang. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above
+ *    copyright notice, this list of conditions and the following
+ *    disclaimer in the documentation and/or other materials provided
+ *    with the distribution.
+ * 3. The names of its contributors may not be used to endorse or promote
+ *    products derived from this software without specific prior written
+ *    permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
 
-#include "IO80211VirtualInterface.h"
+#ifndef _IO80211P2PINTERFACE_H
+#define _IO80211P2PINTERFACE_H
 
-class IO80211P2PInterface : public IO80211VirtualInterface {
-    OSDeclareDefaultStructors(IO80211P2PInterface)
+#include <IOKit/80211/IO80211VirtualInterface.h>
+
+class IO80211P2PInterface : public IO80211VirtualInterface
+{
+    OSDeclareDefaultStructors( IO80211P2PInterface )
 
 public:
-    virtual void free(void) APPLE_KEXT_OVERRIDE;
-#if __IO80211_TARGET >= __MAC_11_0
-    virtual bool willTerminate(IOService *,uint) APPLE_KEXT_OVERRIDE;
-#endif
-    virtual IOReturn configureReport(IOReportChannelList   *channels,
-                                     IOReportConfigureAction action,
-                                     void                  *result,
-                                     void                  *destination) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn updateReport(IOReportChannelList      *channels,
-                                  IOReportUpdateAction      action,
-                                  void                     *result,
-                                  void                     *destination) APPLE_KEXT_OVERRIDE;
-
-    virtual bool terminate( IOOptionBits options = 0 ) APPLE_KEXT_OVERRIDE;
-    virtual bool attach(IOService *) APPLE_KEXT_OVERRIDE;
-    virtual void detach(IOService *) APPLE_KEXT_OVERRIDE;
-#if __IO80211_TARGET >= __MAC_10_15
-    virtual IOReturn newUserClient(task_t,void *,UInt,OSDictionary *,IOUserClient **) APPLE_KEXT_OVERRIDE;
-#endif
-    virtual const char * stringFromReturn( IOReturn rtn ) APPLE_KEXT_OVERRIDE;
-    virtual int errnoFromReturn( IOReturn rtn ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn powerStateWillChangeTo(
-                                            IOPMPowerFlags  capabilities,
-                                            unsigned long   stateNumber,
-                                            IOService *     whatDevice ) APPLE_KEXT_OVERRIDE;
-
-    virtual IOReturn powerStateDidChangeTo(
-                                           IOPMPowerFlags  capabilities,
-                                           unsigned long   stateNumber,
-                                           IOService *     whatDevice ) APPLE_KEXT_OVERRIDE;
-    virtual bool init(IO80211Controller *,ether_addr *,uint,char const*) APPLE_KEXT_OVERRIDE;
-    virtual bool createPeerManager(ether_addr *,IO80211PeerManager **) APPLE_KEXT_OVERRIDE;
-    virtual UInt getMediumType() APPLE_KEXT_OVERRIDE;
-    virtual void setLinkState(IO80211LinkState,uint) APPLE_KEXT_OVERRIDE;
-    virtual bool dequeueOutputPacketsWithServiceClass(uint,IOMbufServiceClass,mbuf_t*,mbuf_t*,UInt *,unsigned long long *) APPLE_KEXT_OVERRIDE;
-    virtual UInt32 outputPacket (mbuf_t m, void* param) APPLE_KEXT_OVERRIDE;
-    virtual void setEnabledBySystem(bool) APPLE_KEXT_OVERRIDE;
-    virtual void handleIoctl(unsigned long,void *) APPLE_KEXT_OVERRIDE;
-    virtual UInt32 inputPacket(mbuf_t,packet_info_tag *) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn controllerWillChangePowerState(IO80211Controller *,unsigned long,UInt,IOService *) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn controllerDidChangePowerState(IO80211Controller *,unsigned long,UInt,IOService *) APPLE_KEXT_OVERRIDE;
-    virtual bool handleDebugCmd(apple80211_debug_command *) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn postPeerPresence(ether_addr *,int,int,int,char *) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn postPeerAbsence(ether_addr *) APPLE_KEXT_OVERRIDE;
-#if __IO80211_TARGET >= __MAC_10_15
-    virtual IOReturn postPeerPresenceIPv6(ether_addr *,int,int,int,char *,unsigned char *) APPLE_KEXT_OVERRIDE;
-#endif
-    virtual void signalOutputThread() APPLE_KEXT_OVERRIDE;
-    virtual bool isOutputFlowControlled() APPLE_KEXT_OVERRIDE;
-    virtual void setOutputFlowControlled() APPLE_KEXT_OVERRIDE;
-    virtual void clearOutputFlowControlled() APPLE_KEXT_OVERRIDE;
-    virtual void outputStart(uint) APPLE_KEXT_OVERRIDE;
-    virtual UInt32 configureAQMOutput() APPLE_KEXT_OVERRIDE;
-    virtual void setUnitNumber(char const*) APPLE_KEXT_OVERRIDE;
-    virtual bool initIfnetEparams(ifnet_init_eparams *) APPLE_KEXT_OVERRIDE;
+    virtual errno_t configureIfnet() APPLE_KEXT_OVERRIDE;
+    bool isAPSTA();
+    errno_t apStaConfigureIfnet();
+    bool isP2P();
+    errno_t p2pConfigureIfnet();
+    
+    virtual bool createPeerManager( ether_addr * inAddress, IO80211PeerManager ** outManager ) APPLE_KEXT_OVERRIDE;
+    bool apStaCreatePeerManager( ether_addr * inAddress, IO80211PeerManager ** outManager );
+    bool p2pCreatePeerManager( ether_addr * inAddress, IO80211PeerManager ** outManager );
+    
     virtual bool attachToBpf() APPLE_KEXT_OVERRIDE;
-    virtual bool configureIfnet() APPLE_KEXT_OVERRIDE;
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  0);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  1);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  2);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  3);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  4);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  5);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  6);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  7);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  8);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  9);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 10);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 11);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 12);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 13);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 14);
-    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 15);
-public:
-    char buf[0x300];
+    bool apStaAttachToBpf();
+    bool p2pAttachToBpf();
+    
+    virtual void setUnitNumber( const char * name ) APPLE_KEXT_OVERRIDE;
+    void apStaSetUnitNumber( const char * name );
+    void p2pSetUnitNumber( const char * name );
+    
+    virtual void initIfnetEparams( struct ifnet_init_eparams * eparams ) APPLE_KEXT_OVERRIDE;
+    void apStaInitIfnetEparams( struct ifnet_init_eparams * eparams );
+    errno_t apsta_if_output_pre_enqueue( ifnet_t interface, mbuf_t data );
+    
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  0 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  1 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  2 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  3 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  4 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  5 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  6 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  7 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  8 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface,  9 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 10 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 11 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 12 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 13 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 14 );
+    OSMetaClassDeclareReservedUnused( IO80211P2PInterface, 15 );
 };
 
-#endif /* IO80211P2PInterface_h */
+#endif
