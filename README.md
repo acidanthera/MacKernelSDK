@@ -95,7 +95,9 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - KDP (`kdp/kdp_support.h`)
     - NKE private APIs (`IOKit/network`)
     - IOUSBFamily from macOS 10.10 SDK
-    - IO80211Family from Black80211 originally created by Roman Peshkov
+    - CoreCapture Framework by cjiang (`corecapture`)
+    - IOSkywalkFamily by cjiang (`IOKit/skywalk`)
+    - IO80211Family by cjiang (`IOKit/80211`)
     - IOBluetoothFamily by cjiang (`IOKit/bluetooth`)
 - Added kmod targeting earlier macOS kernels:
     - 10.6 64-bit or newer (`Library/x86_64/libkmod.a`)

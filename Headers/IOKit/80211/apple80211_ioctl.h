@@ -39,16 +39,13 @@ struct apple80211req
     int         req_val;
     u_int32_t   req_len;
     void        *req_data;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     u_int32_t   req_ptr_len;
+#endif
 };
 
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
-#define SIOCSA80211 2150656456
-#define SIOCGA80211 3224398281
-#else
-#define SIOCSA80211 2150132168
-#define SIOCGA80211 3223873993
-#endif
+#define SIOCSA80211 _IOW( 'i', 200, struct apple80211req )
+#define SIOCGA80211 _IOWR( 'i', 201, struct apple80211req )
 
 #define APPLE80211_AWDL_CAP_CCA_STATS   2
 #define APPLE80211_AWDL_CAP_SEC_PAYLOAD 0x100000000
@@ -475,6 +472,69 @@ struct apple80211_ssid_data
     u_int8_t  ssid_bytes[APPLE80211_MAX_SSID_LEN];
 };
 
+struct apple80211_authtype_data
+{
+    u_int32_t    version;
+    u_int32_t    authtype_lower;    //    apple80211_authtype_lower
+    u_int32_t    authtype_upper;    //    apple80211_authtype_upper
+};
+
+struct apple80211_channel_data
+{
+    u_int32_t                    version;
+    struct apple80211_channel    channel;
+};
+
+struct apple80211_powersave_data
+{
+    u_int32_t    version;
+    u_int32_t    powersave_level;
+};
+
+struct apple80211_protmode_data
+{
+    u_int32_t    version;
+    u_int32_t    protmode;
+    u_int32_t    threshold;        // bytes
+};
+
+struct apple80211_txpower_data
+{
+    u_int32_t    version;
+    u_int32_t    txpower_unit;
+    int32_t      txpower;
+};
+
+struct apple80211_rate_data
+{
+    u_int32_t    version;
+    u_int32_t    num_radios;
+    u_int32_t    rate[APPLE80211_MAX_RADIO];
+};
+
+struct apple80211_bssid_data
+{
+    u_int32_t            version;
+    struct ether_addr    bssid;
+};
+
+struct apple80211_scan_data
+{
+    u_int32_t                    version;
+    u_int32_t                    bss_type;                            // apple80211_apmode 4
+    struct ether_addr            bssid;                               // target BSSID 8
+    u_int32_t                    ssid_len;                            // length of the SSID 14
+    u_int8_t                     ssid[APPLE80211_MAX_SSID_LEN];       // direct scan ssid or AirDrop scan ssid like "Air-xxxx" 18
+    u_int32_t                    scan_type;                           // apple80211_scan_type 50
+    u_int32_t                    phy_mode;                            // apple80211_phymode vector 54
+    u_int16_t                    dwell_time;                          // time to spend on each channel (ms) 58
+    u_int32_t                    rest_time;                           // time between scanning each channel (ms) 60
+    u_int32_t                    num_channels;                        // 0 if not passing in channels 64
+    struct apple80211_channel    channels[APPLE80211_MAX_CHANNELS];   // channel list 68
+    // 1608
+};
+//static_assert(sizeof(apple80211_scan_data) == 2184 );
+
 struct apple80211_virt_if_create_data
 {
     uint32_t version;
@@ -563,18 +623,6 @@ struct apple80211_vht_capability
     uint8_t     vhc_mcs_set[8];
 };
 
-struct apple80211_channel_data
-{
-    u_int32_t                    version;
-    struct apple80211_channel    channel;
-};
-
-struct apple80211_bssid_data
-{
-    u_int32_t            version;
-    struct ether_addr    bssid;
-};
-
 struct apple80211_capability_data
 {
     u_int32_t    version;
@@ -617,37 +665,10 @@ struct apple80211_assoc_status_data
     u_int32_t    status;
 };
 
-struct apple80211_rate_data
-{
-    u_int32_t    version;
-    u_int32_t    num_radios;
-    u_int32_t    rate[APPLE80211_MAX_RADIO];
-};
-
 struct apple80211_status_dev_data
 {
     u_int32_t    version;
     u_int8_t     dev_name[MAXPATHLEN];
-};
-
-struct apple80211_powersave_data
-{
-    u_int32_t    version;
-    u_int32_t    powersave_level;
-};
-
-struct apple80211_protmode_data
-{
-    u_int32_t    version;
-    u_int32_t    protmode;
-    u_int32_t    threshold;        // bytes
-};
-
-struct apple80211_txpower_data
-{
-    u_int32_t    version;
-    u_int32_t    txpower_unit;
-    int32_t      txpower;
 };
 
 struct apple80211_phymode_data
@@ -680,13 +701,6 @@ struct apple80211_intmit_data
     u_int32_t    int_mit;
 };
 
-struct apple80211_authtype_data
-{
-    u_int32_t    version;
-    u_int32_t    authtype_lower;    //    apple80211_authtype_lower
-    u_int32_t    authtype_upper;    //    apple80211_authtype_upper
-};
-
 struct apple80211_sup_channel_data
 {
     u_int32_t                    version;
@@ -706,23 +720,6 @@ struct apple80211_locale_data
     u_int32_t    locale;
 };
 
-struct apple80211_scan_data
-{
-    u_int32_t                    version;
-    u_int32_t                    bss_type;                            // apple80211_apmode 4
-    struct ether_addr            bssid;                               // target BSSID 8
-    u_int32_t                    ssid_len;                            // length of the SSID 14
-    u_int8_t                     ssid[APPLE80211_MAX_SSID_LEN];       // direct scan ssid or AirDrop scan ssid like "Air-xxxx" 18
-    u_int32_t                    scan_type;                           // apple80211_scan_type 50
-    u_int32_t                    phy_mode;                            // apple80211_phymode vector 54
-    u_int16_t                    dwell_time;                          // time to spend on each channel (ms) 58
-    u_int32_t                    rest_time;                           // time between scanning each channel (ms) 60
-    u_int32_t                    num_channels;                        // 0 if not passing in channels 64
-    struct apple80211_channel    channels[APPLE80211_MAX_CHANNELS];   // channel list 68
-    // 1608
-};
-//static_assert(sizeof(apple80211_scan_data) == 2184 );
-
 struct apple80211_scan_multiple_data
 {
     uint32_t                  version;
@@ -736,8 +733,7 @@ struct apple80211_scan_multiple_data
     uint32_t                  dwell_time; //520
     uint32_t                  rest_time; // 524
     uint32_t                  num_channels; //528
-    struct apple80211_channel channels[APPLE80211_MAX_CHANNELS * 2]; //532
-    
+    struct apple80211_channel channels[APPLE80211_MAX_CHANNELS]; //532
 };
 //static_assert(sizeof(apple80211_scan_multiple_data) == 2080 );
 
@@ -1268,4 +1264,4 @@ struct apple80211_sta_roam_data
     uint8_t     target_bssid[APPLE80211_ADDR_LEN];
 } __attribute__((packed));
 
-#endif // _APPLE80211_IOCTL_H_
+#endif

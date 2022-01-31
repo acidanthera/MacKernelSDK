@@ -30,10 +30,6 @@
 #error "Missing macOS target version"
 #endif
 
-#ifndef APPLE_KEXT_DEPRECATE
-#define APPLE_KEXT_DEPRECATE
-#endif
-
 /*! @defined kIOEthernetControllerClass
     @abstract kIOEthernetControllerClass is the name of the
         IOEthernetController class. */
@@ -190,7 +186,7 @@ class IOTimeSyncEthernetInterfaceAdapter;
     the controller driver to the data link layer. 
 */
 
-class APPLE_KEXT_DEPRECATE IOEthernetController : public IONetworkController
+class IOEthernetController : public IONetworkController
 {
     OSDeclareAbstractStructors( IOEthernetController )
 

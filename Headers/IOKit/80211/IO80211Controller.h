@@ -34,6 +34,10 @@
 #ifndef _IO80211CONTROLLER_H
 #define _IO80211CONTROLLER_H
 
+#ifndef __PRIVATE_SPI__
+#define __PRIVATE_SPI__
+#endif
+
 #include <Availability.h>
 #include <libkern/version.h>
 

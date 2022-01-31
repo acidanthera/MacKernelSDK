@@ -34,6 +34,10 @@
 #ifndef _IO80211INTERFACE_H
 #define _IO80211INTERFACE_H
 
+#ifndef __PRIVATE_SPI__
+#define __PRIVATE_SPI__
+#endif
+
 #include <Availability.h>
 #include <libkern/version.h>
 
@@ -285,7 +289,7 @@ public:
     errno_t bpfOutputPacket(mbuf_t, void *);
     errno_t bpfOutput(uint,mbuf_t);
     mbuf_t preQueuePacket(mbuf_t);
-    static IOReturn outputPreEnqueueHandler( void * owner , void *, mbuf_t packet );
+    static errno_t outputPreEnqueueHandler( void * target, void * refCon, mbuf_t packet );
     void logTxPacket(mbuf_t);
     void dropTxPacket( mbuf_t packet );
     UInt32 dequeueTxPackets(UInt32, UInt32);

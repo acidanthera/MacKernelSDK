@@ -228,7 +228,6 @@ enum {
     kIONetworkEventTypeLinkSpeedChange      = 0xff000005
 };
 
-#ifdef __PRIVATE_SPI__
 enum {
     kIONetworkWorkLoopSynchronous   = 0x00000001
 };
@@ -301,7 +300,6 @@ struct IONetworkPacketPollingParameters {
     uint64_t    pollIntervalTime;
     uint64_t    reserved[4];
 };
-#endif /* __PRIVATE_SPI__ */
 
 /*! @class IONetworkInterface
     @abstract Abstract class that manages the connection between an

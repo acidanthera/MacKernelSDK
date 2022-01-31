@@ -36,10 +36,6 @@
 
 #include <Availability.h>
 
-#ifndef __PRIVATE_SPI__
-#define __PRIVATE_SPI__
-#endif
-
 #include <net/ethernet.h>
 #include <net/kpi_interface.h>
 #include <IOKit/network/IOGatedOutputQueue.h>

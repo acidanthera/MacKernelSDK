@@ -35,7 +35,7 @@
 #define APPLE80211_MAX_ANTENNAE        4
 #define APPLE80211_MAX_RADIO           4
 #define APPLE80211_MAX_AWDL_CHANNELS   32
-#define APPLE80211_MAX_CHANNELS        64
+#define APPLE80211_MAX_CHANNELS        128
 #define APPLE80211_MAX_STATIONS        128
 #define APPLE80211_MAX_VERSION_LEN     256
 #define APPLE80211_MAX_ROM_SIZE        32768    // 32 KB
@@ -121,6 +121,11 @@ enum apple80211_cipher_type
     APPLE80211_CIPHER_AES_CCM     = 5,        // AES (CCM)
     APPLE80211_CIPHER_PMK         = 6,        // PMK
     APPLE80211_CIPHER_PMKSA       = 7,        // PMK obtained from pre-authentication
+    APPLE80211_CIPHER_SMS4        = 8,
+    APPLE80211_CIPHER_MSK         = 9,
+    APPLE80211_CIPHER_PWD         = 10,
+    APPLE80211_CIPHER_AES_GCM     = 11,
+    APPLE80211_CIPHER_AES_GCM256  = 12,
 };
 
 enum apple80211_cipher_key_type
@@ -147,12 +152,18 @@ enum apple80211_authtype_upper
     APPLE80211_AUTHTYPE_WPA_PSK      = 1 << 1,    //    WPA PSK
     APPLE80211_AUTHTYPE_WPA2         = 1 << 2,    //    WPA2
     APPLE80211_AUTHTYPE_WPA2_PSK     = 1 << 3,    //    WPA2 PSK
-    APPLE80211_AUTHTYPE_LEAP         = 1 << 4,    //    LEAP
-    APPLE80211_AUTHTYPE_8021X        = 1 << 5,    //    802.1x
-    APPLE80211_AUTHTYPE_WPS          = 1 << 6,    //    WiFi Protected Setup
-    APPLE80211_AUTHTYPE_SHA256_PSK   = 1 << 7,
-    APPLE80211_AUTHTYPE_SHA256_8021X = 1 << 8,
-    APPLE80211_AUTHTYPE_WPA3_SAE     = 1 << 9
+    APPLE80211_AUTHTYPE_FT_PSK       = 1 << 4,    //
+    APPLE80211_AUTHTYPE_LEAP         = 1 << 5,    //    LEAP
+    APPLE80211_AUTHTYPE_WEP_8021X    = 1 << 6,    //    WEP 802.1x
+    APPLE80211_AUTHTYPE_FT_8021X     = 1 << 7,    //    802.1x
+    APPLE80211_AUTHTYPE_WPS          = 1 << 8,    //    WiFi Protected Setup
+    APPLE80211_AUTHTYPE_WAPI         = 1 << 9,
+    APPLE80211_AUTHTYPE_SHA256_PSK   = 1 << 10,
+    APPLE80211_AUTHTYPE_SHA256_8021X = 1 << 11,
+    APPLE80211_AUTHTYPE_WPA3_SAE     = 1 << 12,
+    APPLE80211_AUTHTYPE_WPA3_FT_SAE  = 1 << 13,
+    APPLE80211_AUTHTYPE_WPA3_ENTERPRISE = 1 << 14,
+    APPLE80211_AUTHTYPE_WPA3_FT_ENTERPRISE = 1 << 15,
 };
 
 // Unify association status code and deauth reason codes into a single enum describing
@@ -249,7 +260,8 @@ enum apple80211_channel_flag
     APPLE80211_C_FLAG_EXT_ABV      = 0x200, // If 40 Mhz, extension channel above.
     // If this flag is not set, then the
     // extension channel is below.
-    APPLE80211_C_FLAG_80MHZ        = 0x400  // name made up - set if channelWidth == 80 && 5ghz && AC
+    APPLE80211_C_FLAG_80MHZ        = 0x400,  // set if channelWidth == 80 && 5ghz && AC
+    APPLE80211_C_FLAG_160MHZ       = 0x800,  // Apple devices do not use it
 };
 
 enum apple80211_rate_flag
@@ -492,16 +504,19 @@ struct apple80211_scan_result
     u_int32_t             asr_rates[ APPLE80211_MAX_RATES ]; // 0x24 - 0x5f
     u_int8_t              asr_ssid_len;   // 0x60
     u_int8_t              asr_ssid[ APPLE80211_MAX_SSID_LEN ]; // 0x61 - 0x80
-    __attribute__((packed)) __attribute__((aligned(1))) int16_t unk;
+    int16_t               unk;
     uint8_t               unk2;
     u_int32_t             asr_age;        // (ms) non-zero for cached scan result // 0x84
 
-    bool _heIEPresent; // 0x90
     u_int16_t             unk3;
     int16_t               asr_ie_len;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED < __MAC_12_0
     uint32_t              asr_unk3;
     void*                 asr_ie_data;
-};
+#else
+    uint8_t               asr_ie_data[1024];
+#endif
+} __attribute__((packed));
 
 struct apple80211_network_data
 {
@@ -585,7 +600,17 @@ enum apple80211_virtual_interface_type
     APPLE80211_VIF_MAX
 };
 
-enum apple80211_assoc_flags {
+enum apple80211_ie_type
+{
+    APPLE80211_IE_FLAG_PROBE_REQ     = (1 << 0),
+    APPLE80211_IE_FLAG_PROBE_RESP    = (1 << 1),
+    APPLE80211_IE_FLAG_ASSOC_REQ     = (1 << 2),
+    APPLE80211_IE_FLAG_ASSOC_RESP    = (1 << 3),
+    APPLE80211_IE_FLAG_BEACON        = (1 << 4),
+};
+
+enum apple80211_assoc_flags
+{
     APPLE80211_ASSOC_F_CLOSED    = 1,    // flag: scan was directed, needed to remember closed networks
 };
 
@@ -678,13 +703,25 @@ struct apple80211_frame_counters;
 #define APPLE80211_M_ROAMED                  30
 #define APPLE80211_M_ACT_FRM_TX_COMPLETE     31
 #define APPLE80211_M_DEAUTH_RECEIVED         32
-#define APPLE80211_M_DRIVER_AVAILABLE        0x37
-#define APPLE80211_M_LINK_ADDRESS_CHANGED    0x3B
-#define APPLE80211_M_ROAM_START              0x46
-#define APPLE80211_M_ROAM_END                0x47
-#define APPLE80211_M_INTERFACE_STATE         0x3A
+#define APPLE80211_M_RSSI_CHANGED            39
+#define APPLE80211_M_PEER_STATE              40
+#define APPLE80211_M_AWDL_AVAILABILITY_WINDOW_START 42
+#define APPLE80211_M_AWDL_AVAILABILITY_WINDOW_EXTENSIONS_END    43
+#define APPLE80211_M_AWDL_SYNC_STATE_CHANGED 46
+#define APPLE80211_M_RESET_INTERFACE         49
+#define APPLE80211_M_PEER_CREDIT_GRANT       50
+#define APPLE80211_M_DRIVER_AVAILABLE        55
+#define APPLE80211_M_INTERFACE_STATE         58
+#define APPLE80211_M_LINK_ADDRESS_CHANGED    59
+#define APPLE80211_M_BGSCAN_CACHED_NETWORK_AVAILABLE    63
+#define APPLE80211_M_ROAM_START              70
+#define APPLE80211_M_ROAM_END                71
+#define APPLE80211_M_AWDL_DFS_CSA            88
+#define APPLE80211_M_TCPKA_TIMEOUT           91
+#define APPLE80211_M_AWDL_DFS_CSA_COMPLETE   94
+#define APPLE80211_M_ACTION_FRAME            143
 
-#define APPLE80211_M_MAX                     0x3A
+#define APPLE80211_M_MAX                     170
 #define APPLE80211_M_BUFF_SIZE               APPLE80211_MAP_SIZE( APPLE80211_M_MAX )
 
 // Registry Information
