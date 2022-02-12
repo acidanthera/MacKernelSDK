@@ -34,46 +34,69 @@
 #ifndef _IOSKYWALKPACKETBUFFERPOOL_H
 #define _IOSKYWALKPACKETBUFFERPOOL_H
 
+#include <IOKit/IOBufferMemoryDescriptor.h>
 #include <IOKit/skywalk/IOSkywalkPacketBuffer.h>
 
 extern void pp_ctx_retain( void * target );
 extern void pp_ctx_release( void * target );
 
+struct SegmentStats
+{
+    UInt64 constructorCount;
+    UInt64 destructorCount;
+    UInt64 prepareErrors;
+    UInt32 prepareMaxRetries;
+    UInt32 prepareErrorCode;
+};
+
 struct IOSkywalkPacketDescriptor;
 struct IOSkywalkPacketBufferDescriptor;
 struct IOSkywalkMemorySegmentDescriptor;
+
+class IOSkywalkInterface;
 
 class IOSkywalkPacketBufferPool : public OSObject
 {
     OSDeclareDefaultStructors( IOSkywalkPacketBufferPool )
 
+    /*! @enum IOSkywalkPacketBufferPoolFlags
+        @abstract Flags for PoolOptions::poolFlags.
+        @constant PoolFlagSingleMemorySegment The pool will be constucted with single memory segment of buffers.
+        @constant PoolFlagPersistentMemory The pool memory will be persistently wired.
+    */
+
+    enum IOSkywalkPacketBufferPoolFlags
+    {
+        kIOSkywalkPacketBufferPoolFlagSingleMemorySegment = 0x00000002,
+        kIOSkywalkPacketBufferPoolFlagPersistentMemory    = 0x00000004,
+        kIOSkywalkPacketBufferPoolFlagFlagMask            = kIOSkywalkPacketBufferPoolFlagSingleMemorySegment | kIOSkywalkPacketBufferPoolFlagPersistentMemory
+    };
+
     struct PoolOptions
     {
-        uint32_t packetCount; // 0
-        uint32_t bufferCount; // 4
-        uint32_t bufferSize; // 8
+        uint32_t packetCount;         // 0
+        uint32_t bufferCount;         // 4
+        uint32_t bufferSize;          // 8
         uint32_t maxBuffersPerPacket; // 12
-        uint32_t memorySegmentSize; // 16
-        uint32_t poolFlags; // 20
-        // 24
+        uint32_t memorySegmentSize;   // 16
+        uint32_t poolFlags;           // 20
+        uint64_t _reserved;           // 24
     };
-    
+
 public:
-    static IOSkywalkPacketBufferPool * withName( const char * name, OSObject * owner, UInt32 flags, const PoolOptions * options );
-    virtual bool initWithName( const char * name, void * owner, UInt32 flags, const PoolOptions * options );
-    virtual bool initWithName( const char * name, OSObject * owner, UInt32 flags, const PoolOptions * options );
+    static IOSkywalkPacketBufferPool * withName( const char * name, OSObject * owner, UInt32 packetType, const PoolOptions * options );
+    virtual bool initWithName( const char * name, void * owner, UInt32 packetType, const PoolOptions * options );
+    virtual bool initWithName( const char * name, OSObject * owner, UInt32 packetType, const PoolOptions * options );
     virtual void free() APPLE_KEXT_OVERRIDE;
     void disposeAllPackets();
     void disposeAllBuffers();
     virtual void release() const APPLE_KEXT_OVERRIDE;
     void releaseAllPackets();
     void releaseAllMemorySegments();
-    
-    void reportingChangeNotification();
-    
+
     void segmentConstructor( struct kern_pbufpool * pbufPool, struct sksegment * segment, IOMemoryDescriptor * md );
     void segmentDestructor( struct kern_pbufpool * pbufPool, struct sksegment * segment, IOMemoryDescriptor * md );
-    bool createSegmentBuffers( IOSkywalkMemorySegment * segment, IOOptionBits options, bool subDesc );
+    bool createSegmentBuffers( IOSkywalkMemorySegment * segment, UInt32 numBuffers, bool subDesc );
     void destroySegmentBuffers( IOSkywalkMemorySegment * segment );
     IOReturn prepareMemorySegment( IOSkywalkMemorySegment * segment, IOBufferMemoryDescriptor * buffer, UInt64 offset );
     IOSkywalkMemorySegment * getMemorySegmentWithHandle( struct sksegment * handle );
@@ -82,9 +105,10 @@ public:
     IOSkywalkPacketBuffer * getPacketBufferWithBufletHandle( kern_buflet_t handle );
     IOSkywalkPacketBuffer * getPacketBufferWithSegmentInfo( sksegment * segment, UInt32 );
     const char * getPoolName();
-    
+
     void checkInPacketQueue( const IOSkywalkPacketQueue * queue );
     void checkOutPacketQueue( const IOSkywalkPacketQueue * queue );
+    void reportingChangeNotification();
     void checkInReportingService( IOService * service, const IOSkywalkInterface * interface );
     void checkOutReportingService( const IOService * service );
     void createReportersForService( IOService * service, const IOSkywalkInterface * interface );
@@ -92,30 +116,53 @@ public:
     void addPoolReporter( IOService * service, OSSet * reportSet );
     OSSet * copyReportersForService( const IOService * service );
     UInt64 getReportChannelValue( UInt64 reportChannel );
-    
-    virtual IOReturn allocatePacket( uint,IOSkywalkPacket **,uint );
-    virtual IOReturn allocatePackets( uint,uint *,IOSkywalkPacket **,uint );
+
+    virtual IOReturn allocatePacket( UInt32, IOSkywalkPacket ** outPacket, IOOptionBits options );
+    virtual IOReturn allocatePackets( UInt32, UInt32 *, IOSkywalkPacket ** outPackets, IOOptionBits options );
     virtual IOReturn deallocatePacket( IOSkywalkPacket * packet );
     virtual IOReturn deallocatePackets( IOSkywalkPacket ** packets, uint32_t packetsCount );
     virtual IOReturn deallocatePacketChain( UInt64 );
-    virtual IOReturn allocatePacketBuffer( IOSkywalkPacketBuffer **,uint );
-    virtual IOReturn allocatePacketBuffers( uint *,IOSkywalkPacketBuffer **,uint );
+    virtual IOReturn allocatePacketBuffer( IOSkywalkPacketBuffer **, UInt32 );
+    virtual IOReturn allocatePacketBuffers( UInt32 *, IOSkywalkPacketBuffer **, UInt32 );
     virtual IOReturn deallocatePacketBuffer( IOSkywalkPacketBuffer * buffer );
     virtual IOReturn deallocatePacketBuffers( IOSkywalkPacketBuffer ** buffers, uint32_t buffersCount );
-    
+
     virtual IOReturn newPacket( IOSkywalkPacketDescriptor * desc, IOSkywalkPacket ** outPacket );
     virtual IOReturn newPacketBuffer( IOSkywalkPacketBufferDescriptor * desc, IOSkywalkPacketBuffer ** outBuffer );
     virtual IOReturn newMemorySegment( IOSkywalkMemorySegmentDescriptor * desc, IOSkywalkMemorySegment ** outSegment );
-    
-protected:
-    void * _reserved; // 16
-    struct kern_pbufpool * mPbufPool; // 24
-    OSObject * mProvider; // 32
-    OSString * mPoolName; // 144
-    thread_call_t mReportingChangeNotificationThread; // 168
-    // 176
-};
 
-// 184
+protected:
+    void                 * mRefCon;    // 16
+    struct kern_pbufpool * mPbufPool;  // 24
+    OSObject             * mProvider;  // 32
+
+    UInt32 mPacketCount;       // 40
+    UInt32 mBufferCount;       // 44
+    UInt32 mBufferSize;        // 48
+    UInt32 mMaxFragments;      // 52
+    UInt32 mSegmentCount;      // 56
+    UInt32 mPacketType;        // 60
+    UInt32 mSegmentSize;       // 64
+    UInt32 mBuffersPerSegment; // 68
+    UInt32 mPoolFlags;         // 72
+    
+    uint64_t                 _reserved;     // 80
+    IOSkywalkMemorySegment * mMemSegment;   // 88
+    OSArray                * mPacketArray;  // 96
+    OSArray                * mSegmentArray; // 104
+    uint64_t                 _reserved2;    // 112
+    SegmentStats           * mSegmentStats; // 120
+
+    IOLock   *    mSetLock;                           // 128 - protect the OSSets
+    OSSet    *    mPacketQueueSet;                    // 136
+    OSString *    mPoolName;                          // 144
+    OSSet    *    mReporterSet;                       // 152
+    OSSet    *    mReportingServiceSet;               // 160
+    thread_call_t mReportingChangeNotificationThread; // 168
+    bool          mSingleMemorySemgent;               // 176
+    bool          mPersistentMemory;                  // 177
+    bool          mSegmentBuffersWithSubRange;        // 178
+    bool          mDisposed;                          // 179
+};
 
 #endif

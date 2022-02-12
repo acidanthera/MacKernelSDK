@@ -34,11 +34,56 @@
 #ifndef _IOSKYWALKMEMORYSEGMENT_H
 #define _IOSKYWALKMEMORYSEGMENT_H
 
+#include <IOKit/IODMACommand.h>
 #include <IOKit/skywalk/IOSkywalkPacketBufferPool.h>
+
+struct DMASpecification
+{
+    SegmentFunction  outSegFunc;
+    UInt8            numAddressBits;
+    UInt64           maxSegmentSize;
+    MappingOptions   mappingOptions;
+    UInt64           maxTransferSize;
+    UInt32           alignment;
+    IOMapper *       mapper;
+};
+
+struct IOSkywalkMemorySegmentDescriptor
+{
+    UInt32 packetBufferCount;
+    DMASpecification * specs;
+};
 
 class IOSkywalkMemorySegment : public OSObject
 {
-    
+    OSDeclareDefaultStructors( IOSkywalkMemorySegment )
+
+public:
+    static IOSkywalkMemorySegment * withPool( IOSkywalkPacketBufferPool * pool, IOSkywalkMemorySegmentDescriptor * desc, IOOptionBits options = 0 );
+    virtual bool initWithPool( IOSkywalkPacketBufferPool * pool, IOSkywalkMemorySegmentDescriptor * desc, IOOptionBits options = 0 );
+    virtual void free() APPLE_KEXT_OVERRIDE;
+
+    IOSkywalkPacketBufferPool * getPacketBufferPool();
+    virtual IOReturn setDMACommand( IODMACommand * dmaCommand, IOOptionBits options = 0 );
+    virtual IODMACommand * getDMACommand();
+
+    virtual IOReturn prepare( IODirection forDirection = kIODirectionNone );
+    virtual IOReturn complete( IODirection forDirection = kIODirectionNone );
+
+    virtual IOReturn setBufferMemoryDescriptor( IOBufferMemoryDescriptor * md );
+    IOMemoryDescriptor * getMemoryDescriptor();
+    virtual IOReturn setMemoryDescriptor( IOMemoryDescriptor * md, UInt64 address );
+    UInt64 getVirtualAddress();
+
+protected:
+    void * mRefCon; // 16
+    IOSkywalkPacketBufferPool * mPool; // 24
+    IOMemoryDescriptor * mMemoryDescriptor; // 32
+    OSObject * _unknown; // 40
+    UInt64 mVirtualAddress; // 48
+    IODMACommand * mDMACommand; // 56
+    OSArray * mPacketBufferArray; // 64, stores IOSkywalkPacketBuffers
+    uint64_t _reserved1[6]; // 72
 };
 
 #endif

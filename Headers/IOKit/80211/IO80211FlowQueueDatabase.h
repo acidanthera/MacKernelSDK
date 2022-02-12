@@ -58,9 +58,9 @@ public:
     IO80211FlowQueue * find( UInt64 hash );
     void flush( IO80211FlowQueueAction action, void * arg );
     
+    UInt32 pendingPackets( UInt8 interface );
     UInt32 packetSpace( UInt8 interface );
     UInt32 queueSize( UInt8 interface );
-    UInt32 pendingPackets( UInt8 interface );
     
     UInt32 print( void * userPrintCtx );
     

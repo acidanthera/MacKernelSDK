@@ -119,26 +119,26 @@ public:
     OSMetaClassDeclareReservedUnused( IOSkywalkNetworkInterface, 10 );
     
 protected:
-    void * _reserved; // 176
+    void * mRefCon;
     
     struct ExpansionData
     {
-        RegistrationInfo * eRegistrationInfo; // 0
-        ifnet_t eBSDInterface; // 8
-        OSArray * ePacketQueueArray; // 16
-        IOLock * eDataLock; // 24
-        IOLock * eInterfacePreparedLock; // 32
-        IOSkywalkNetworkKDPPoller * eKDPPoller; // 40
-        thread_call_t eLinkStatusEventThread; // 48
-        UInt32 eLinkStatusMessageType; // 56
-        IOSkywalkNetworkMediaType eActiveMediaType; // 60
-        UInt32 eChosenMedia; // 64
-        IOSkywalkNetworkLinkStatus eLinkStatus; // 68
-        bool eInterfacePrepared; // 72
-        const char eBSDName[80]; // 73
-        UInt32 eMTU; // 156
+        RegistrationInfo          * eRegistrationInfo;
+        ifnet_t                     eBSDInterface;
+        OSArray                   * ePacketQueueArray;
+        IOLock                    * eDataLock;
+        IOLock                    * eInterfacePreparedLock;
+        IOSkywalkNetworkKDPPoller * eKDPPoller;
+        thread_call_t               eLinkStatusEventThread;
+        UInt32                      eLinkStatusMessageType;
+        IOSkywalkNetworkMediaType   eActiveMediaType;
+        UInt32                      eChosenMedia;
+        IOSkywalkNetworkLinkStatus  eLinkStatus;
+        bool                        eInterfacePrepared;
+        const char                  eBSDName[80];
+        UInt32                      eMTU;
     };
-    ExpansionData * mExpansionData; // 184
+    ExpansionData * mExpansionData;
 };
 
 #endif

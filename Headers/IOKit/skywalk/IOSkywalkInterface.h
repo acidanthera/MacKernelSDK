@@ -71,11 +71,11 @@ protected:
     OSMetaClassDeclareReservedUnused( IOSkywalkInterface, 10 );
     
 protected:
-    void * __reserved; //136
-    OSArray * mPacketQueueArray; // 144
+    void                      * mRefCon;            // 136
+    OSArray                   * mPacketQueueArray;  // 144
     IOSkywalkPacketBufferPool * mPacketBufferPool1; // 152
     IOSkywalkPacketBufferPool * mPacketBufferPool2; // 160
-    OSSet * mClients; // 168
+    OSSet                     * mClients;           // 168
 };
 
 #endif

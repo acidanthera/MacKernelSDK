@@ -63,6 +63,21 @@ typedef enum kIO80211InterfaceType
     kIO80211InterfaceTypeNAN
 } kIO80211InterfaceType;
 
+enum
+{
+    kIO80211InterfaceRoleInfrastructure            = 0,
+    kIO80211InterfaceRoleLowLatency                = 1,
+    kIO80211InterfaceRoleP2PDevice                 = 2,
+    kIO80211InterfaceRoleP2PClient                 = 3,
+    kIO80211InterfaceRoleP2PGroupOwner             = 4,
+    kIO80211InterfaceRoleAirLink                   = 5,
+    kIO80211InterfaceRoleSoftAP                    = 6,
+    kIO80211InterfaceRoleWiFiAwareDiscovery        = 7,
+    kIO80211InterfaceRoleWiFiAwareDiscoveryAndData = 8,
+    kIO80211InterfaceRoleWiFiAwareData             = 9,
+    kIO80211InterfaceRoleUndefined
+};
+
 struct io80211_timespec
 {
     clock_sec_t  secs;
@@ -161,13 +176,13 @@ public:
     void postMessage( UInt32 msg, void * data = NULL, size_t dataSize = 0 );
     IOReturn setDataPointerAndLengthForMessageType( apple80211_postMessage_tlv_types type, void ** data, size_t * dataSize );
     
+    IOReturn createIOReporters( IOService * service );
     virtual IOReturn configureReport( IOReportChannelList * channels, IOReportConfigureAction action, void * result, void * destination ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn updateReport( IOReportChannelList * channels, IOReportUpdateAction action, void * result, void * destination ) APPLE_KEXT_OVERRIDE;
-    IOReturn createIOReporters( IOService * service );
     
-    void reportTransmitStatus( mbuf_t packet, int len, struct packet_info_tx * info );
-    IOReturn reportTransmitCompletionStatus( mbuf_t packet, int len, UInt32, UInt32, UInt32 );
-    IOReturn reportDataPathEvents( UInt32 msg ,void * data = NULL, size_t dataSize = 0 );
+    void reportTransmitStatus( mbuf_t packet, IOReturn status, struct packet_info_tx * info );
+    IOReturn reportTransmitCompletionStatus( mbuf_t packet, IOReturn status, uint32_t param1 = 0, uint32_t param2 = 0, IOOptionBits options = 0 );
+    bool reportDataPathEvents( UInt32 msg ,void * data = NULL, size_t dataSize = 0 );
     static IOReturn reportDataPathEventsGated( void * target, void * msg, void * data, void * dataSize, void * arg0 );
     IOReturn reportTxStatistics( apple80211_txstats * stats );
     IOReturn reportDataTransferRates();
@@ -177,11 +192,11 @@ public:
     void setAuthTimeout( AbsoluteTime timeout );
     AbsoluteTime authTimeout();
     
-    virtual bool setLinkState( IO80211LinkState, UInt32 reason );
-    virtual bool setLinkState( IO80211LinkState, int, UInt32 reason );
+    virtual bool setLinkState( IO80211LinkState linkState, UInt32 reason );
+    virtual bool setLinkState( IO80211LinkState linkState, IOReturn status, UInt32 reason );
     IO80211LinkState linkState();
     
-    void setScanningState(UInt32 scanSource, bool, apple80211_scan_data *, int);
+    void setScanningState( UInt32 scanSource, bool scan, apple80211_scan_data * data, IOReturn status );
     
     bool setInterfaceExtendedCCA( apple80211_channel channel, apple80211_cca_report * report );
     bool setInterfaceCCA( apple80211_channel channel, int cca );
@@ -254,13 +269,13 @@ public:
     void setPeerManagerLogFlag( UInt32 operation, UInt32 bit, IOOptionBits options );
     void togglePeerManagerLogFlag( UInt32 bit, IOOptionBits options );
     
+    bool shouldLog( UInt64 debugFlags );
     void logDebug( char const * format, ... );
     void logDebug( UInt64 debugFlags, char const * format, ... );
     void logDebugHex( const void * data, size_t size, const char * format, ... );
     void vlogDebug( UInt64 debugFlags, char const * format, va_list va );
     void vlogDebugBPF( UInt64 debugFlags, char const * format, va_list va );
-    bool shouldLog( UInt64 debugFlags );
-    void logTxCompletionPacket( mbuf_t packet, int len );
+    void logTxCompletionPacket( mbuf_t packet, IOReturn status );
     
     virtual const char * stringFromReturn( IOReturn rtn ) APPLE_KEXT_OVERRIDE;
     virtual int errnoFromReturn( IOReturn rtn ) APPLE_KEXT_OVERRIDE;
@@ -276,8 +291,8 @@ public:
     void flushPacketQueues();
     void removePacketQueue( const IO80211FlowQueueHash * hash );
     UInt32 pendingPackets( UInt8 interface );
-    UInt32 queueSize( UInt8 interface );
     UInt32 packetSpace( UInt8 interface );
+    UInt32 queueSize( UInt8 interface );
     
     errno_t bpfAttach( UInt32 dataLinkType, UInt32 headerLength, OSObject * target, IOOutputAction action, IOBPFTapAction tap, IOWorkLoop * workLoop );
     errno_t bpfAttach( UInt32 dataLinkType, UInt32 headerLength );

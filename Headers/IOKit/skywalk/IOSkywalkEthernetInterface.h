@@ -79,15 +79,15 @@ public:
     OSMetaClassDeclareReservedUnused( IOSkywalkEthernetInterface, 10 );
     
 protected:
-    void * _reserved;
+    void * mRefCon;
     
     struct ExpansionData
     {
         RegistrationInfo * eRegistrationInfo;
-        OSData * eMulticastAddresses;
-        UInt32 eNumMulticastAddresses;
-        UInt16 eBSDInterfaceFlags;
-        sockaddr_dl eLinkLayerSockAddress;
+        OSData           * eMulticastAddresses;
+        UInt32             eNumMulticastAddresses;
+        UInt16             eBSDInterfaceFlags;
+        sockaddr_dl        eLinkLayerSockAddress;
     };
     ExpansionData * mExpansionData;
 };

@@ -35,17 +35,81 @@
 #define _IOSKYWALKPACKET_H
 
 #include <IOKit/IOCommand.h>
+#include <IOKit/skywalk/IOSkywalkPacketBufferPool.h>
+
+typedef uint32_t IOSkywalkPacketDirection;
+enum
+{
+    kIOSkywalkPacketDirectionNone = 0x00000000,
+    kIOSkywalkPacketDirectionTx   = 0x00000001,
+    kIOSkywalkPacketDirectionRx   = 0x00000002
+};
+
+enum IOSkywalkPacketTypes
+{
+    kIOSkywalkPacketTypeGeneric = 0,
+    kIOSkywalkPacketTypeNetwork,
+    kIOSkywalkPacketTypeCloneable
+};
+
+struct IOSkywalkPacketDescriptor
+{
+    UInt32 packetIndex;
+    bool singleBuffer;
+};
 
 class IOSkywalkPacket : public IOCommand
 {
-    OSDeclareDefaultStructors(IOSkywalkPacket)
+    OSDeclareDefaultStructors( IOSkywalkPacket )
 
 public:
-    
-protected:
-    // 24
-};
+    static IOSkywalkPacket * withPool( IOSkywalkPacketBufferPool * pool, IOSkywalkPacketDescriptor * desc, IOOptionBits options );
+    virtual bool initWithPool( IOSkywalkPacketBufferPool * pool, IOSkywalkPacketDescriptor * desc, IOOptionBits options );
+    virtual void free() APPLE_KEXT_OVERRIDE;
 
-// 120
+    IOSkywalkPacketBufferPool * getPacketBufferPool();
+    UInt32 getBufferSize();
+    virtual UInt32 getPacketBuffers( IOSkywalkPacketBuffer ** buffers, UInt32 maxBuffers );
+    virtual UInt32 getPacketBufferCount();
+    virtual IOMemoryDescriptor * getMemoryDescriptor();
+    virtual IOReturn setDataLength( UInt32 length );
+    virtual UInt32 getDataLength();
+    virtual IOReturn setDataOffset( UInt16 offset );
+    virtual UInt16 getDataOffset();
+    virtual IOReturn setDataOffsetAndLength( UInt16 offset, UInt32 length );
+
+    IOSkywalkPacketQueue * getSourceQueue();
+    virtual IOReturn prepareWithQueue( IOSkywalkPacketQueue * queue, IOSkywalkPacketDirection direction = kIOSkywalkPacketDirectionNone, IOOptionBits options = 0 );
+    virtual IOReturn prepare( IOSkywalkPacketQueue * queue, UInt64, IOOptionBits options = 0 );
+    virtual IOReturn completeWithQueue( IOSkywalkPacketQueue * queue, IOSkywalkPacketDirection direction = kIOSkywalkPacketDirectionNone, IOOptionBits options = 0 );
+    virtual IOReturn complete( IOSkywalkPacketQueue * queue, IOOptionBits options = 0 );
+
+    void setTransferDirection( IOSkywalkPacketDirection direction );
+    IOSkywalkPacketDirection getTransferDirection();
+    bool clearTransferDirection( IOSkywalkPacketDirection direction );
+
+    void setSlotReference( void * ref );
+    void * getSlotReference();
+    virtual UInt32 getPacketType();
+    virtual kern_buflet_t acquireWithPacketHandle( UInt64 handle, IOOptionBits options );
+    void cancelCompletionCallback();
+    virtual void disposePacket();
+
+protected:
+    void *                      mRefCon;        // 32
+    UInt64                      mPacketHandle;  // 40
+    IOSkywalkPacketBuffer    ** mPacketBuffers; // 48
+    IOSkywalkPacketQueue      * mSourceQueue;   // 56
+    IOSkywalkPacketBufferPool * mBufferPool;    // 64
+    kern_buflet_t               mBuflet;        // 72
+    
+    uint64_t                 _reserved0;         // 80
+    UInt32                   mPacketState;       // 88 - 0 on complete, 1 on acquire, 2 on prepare
+    UInt32                   mMaxNumBuffers;     // 92
+    UInt32                   mActualNumBuffers;  // 96
+    UInt32                   mPacketIndex;       // 100
+    IOSkywalkPacketDirection mTransferDirection; // 104
+    void *                   mSlotReference;     // 112
+};
 
 #endif

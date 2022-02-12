@@ -35,6 +35,7 @@
 #define _IOSKYWALKPACKETBUFFER_H
 
 #include <IOKit/IOCommand.h>
+#include <IOKit/skywalk/IOSkywalkTypes.h>
 
 struct __kern_buflet;
 typedef __kern_buflet * kern_buflet_t;
@@ -46,7 +47,7 @@ class IOSkywalkMemorySegment;
 
 struct IOSkywalkPacketBufferDescriptor
 {
-    OSObject * unknown;
+    IOMemoryDescriptor * memDescriptor;
     IOSkywalkMemorySegment * memSegment;
     UInt64 memSegmentOffset;
 };
@@ -72,17 +73,17 @@ public:
     IOSkywalkPacket * getPacket();
     virtual void setPacket( IOSkywalkPacket * packet, IOOptionBits options );
     
-    virtual IOReturn prepare( IOOptionBits options );
-    virtual IOReturn complete( IOOptionBits options );
+    virtual IOReturn prepare( IODirection forDirection = kIODirectionNone );
+    virtual IOReturn complete( IODirection forDirection = kIODirectionNone );
     
     IOSkywalkMemorySegment * getMemorySegment();
     UInt64 getMemorySegmentOffset();
-    virtual IOReturn prepareWithMemorySegment( IOSkywalkMemorySegment * segment, UInt64 offset, IOOptionBits options );
-    virtual IOReturn completeWithMemorySegment( IOSkywalkMemorySegment * segment, UInt64 offset, IOOptionBits options );
+    virtual IOReturn prepareWithMemorySegment( IOSkywalkMemorySegment * segment, UInt64 offset, IOOptionBits options = 0 );
+    virtual IOReturn completeWithMemorySegment( IOSkywalkMemorySegment * segment, UInt64 offset, IOOptionBits options = 0 );
     
     IOSkywalkPacketQueue * getSourceQueue();
-    virtual IOReturn prepareWithQueue( IOSkywalkPacketQueue * queue, UInt32 state, IOOptionBits options );
-    virtual IOReturn completeWithQueue( IOSkywalkPacketQueue * queue, UInt32 state, IOOptionBits options );
+    virtual IOReturn prepareWithQueue( IOSkywalkPacketQueue * queue, IODirection direction = kIODirectionNone, IOOptionBits options = 0 );
+    virtual IOReturn completeWithQueue( IOSkywalkPacketQueue * queue, IODirection direction = kIODirectionNone, IOOptionBits options = 0 );
     
     kern_buflet_t getBufletHandle();
     void setBufletHandle( kern_buflet_t handle );
@@ -95,20 +96,23 @@ public:
     void cancelCompletionCallback();
     
 public:
-    uint64_t __reserved0; // 32
-    IOSkywalkPacketBufferPool * mPool; // 40
-    kern_buflet_t mBufletHandle; // 48
-    UInt64 mBufferHandle; // 56
-    IOSkywalkPacket * mPacket; // 64
-    IOSkywalkPacketQueue * mSourceQueue; // 72
-    OSObject * unknown; // 80
+    void                      * mRefCon;       // 32
+    IOSkywalkPacketBufferPool * mPool;         // 40
+    kern_buflet_t               mBufletHandle; // 48
+    UInt64                      mBufferHandle; // 56
+    
+    IOSkywalkPacket        * mPacket;        // 64
+    IOSkywalkPacketQueue   * mSourceQueue;   // 72
+    IOMemoryDescriptor     * mMemDescriptor; // 80
     IOSkywalkMemorySegment * mMemorySegment; // 88
-    uint64_t __reserved1[2]; // 96
+    uint64_t                 __reserved0[2]; // 96
+    
     UInt64 mMemorySegmentOffset; // 112
-    UInt32  mBufferState; // 120
-    UInt32 mDataLength; // 124
-    UInt16 mDataOffset; // 128
-    void * __reserved2; // 136
+    UInt32 mBufferState;         // 120
+    UInt32 mDataLength;          // 124
+    UInt16 mDataOffset;          // 128
+    
+    uint64_t _reserved1; // 136
 };
 
 #endif

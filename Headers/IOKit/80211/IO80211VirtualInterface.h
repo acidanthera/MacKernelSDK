@@ -49,8 +49,6 @@ class IO80211PeerManager;
 class IO80211AsyncEventUserClient;
 class IO80211P2PDaemonUserClient;
 
-struct packet_info_tag;
-
 struct bpfTapCallback
 {
     u_int32_t data_link_type;
@@ -59,6 +57,20 @@ struct bpfTapCallback
 };
 
 typedef UInt32 realTimeServiceId;
+
+enum
+{
+    kIO80211VirtualInterfaceRoleP2PDevice                 = 0,
+    kIO80211VirtualInterfaceRoleP2PClient                 = 1,
+    kIO80211VirtualInterfaceRoleP2PGroupOwner             = 2,
+    kIO80211VirtualInterfaceRoleAirLink                   = 3,
+    kIO80211VirtualInterfaceRoleSoftAP                    = 4,
+    kIO80211VirtualInterfaceRoleUknown                    = 5,
+    kIO80211VirtualInterfaceRoleWiFiAwareDiscovery        = 6,
+    kIO80211VirtualInterfaceRoleWiFiAwareDiscoveryAndData = 7,
+    kIO80211VirtualInterfaceRoleWiFiAwareData             = 8,
+    kIO80211VirtualInterfaceRoleUndefined
+};
 
 class IO80211VirtualInterface : public IOService
 {
@@ -76,12 +88,13 @@ public:
     virtual bool attach( IOService * provider ) APPLE_KEXT_OVERRIDE;
     virtual void detach( IOService * provider ) APPLE_KEXT_OVERRIDE;
     
+    IOReturn createIOReporters( IOService * service );
     virtual IOReturn configureReport( IOReportChannelList * channels, IOReportConfigureAction action, void * result, void * destination ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn updateReport( IOReportChannelList * channels, IOReportUpdateAction action, void * result, void * destination ) APPLE_KEXT_OVERRIDE;
-    void createIOReporters(IOService * service);
-    void reportTransmitStatus( mbuf_t packet, int len, struct packet_info_tx * info );
-    IOReturn reportTransmitCompletionStatus( mbuf_t packet, int len, UInt32, UInt32, UInt32 );
-    IOReturn reportDataPathEvents( UInt32 msg ,void * data = NULL, size_t dataSize = 0 );
+    void reportTransmitStatus( mbuf_t packet, IOReturn status, struct packet_info_tx * info );
+    IOReturn reportTransmitCompletionStatus( mbuf_t packet, IOReturn status, uint32_t param1 = 0, uint32_t param2 = 0, IOOptionBits options = 0 );
+    
+    bool reportDataPathEvents( UInt32 msg ,void * data = NULL, size_t dataSize = 0 );
     static IOReturn reportDataPathEventsGated( void * target, void * msg, void * data, void * dataSize, void * arg0 );
     
     void setAuthTimeout( AbsoluteTime timeout );
@@ -113,12 +126,12 @@ public:
     virtual bool setLinkState( IO80211LinkState state, UInt32 reason );
     IO80211LinkState linkState();
     
-    void setScanningState(UInt32 scanSource, bool, apple80211_scan_data *, int);
-    void setJoiningState(UInt32, joinStatus, bool); // unimplemented
+    void setScanningState( UInt32 scanSource, bool scan, apple80211_scan_data * data, IOReturn status );
+    void setJoiningState( UInt32 scanSource, joinStatus status, bool join ); // unimplemented
     void setInfraChannel(apple80211_channel * channel);
     void setInfraTxState( bool state );
     bool setInterfaceExtendedCCA(apple80211_channel,apple80211_cca_report *,apple80211_awdl_sync_channel_sequence *);
-    bool setInterfaceCCA(apple80211_channel,int,apple80211_awdl_sync_channel_sequence *);
+    bool setInterfaceCCA( apple80211_channel, int, apple80211_awdl_sync_channel_sequence *);
     bool setInterfaceNF(apple80211_channel,long long);
     bool setInterfaceChipCounters(apple80211_stat_report *,apple80211_chip_counters_tx *,apple80211_chip_error_counters_tx *,apple80211_chip_counters_rx *);
     bool setInterfaceMIBdot11(apple80211_stat_report *,apple80211_ManagementInformationBasedot11_counters *);
@@ -144,7 +157,7 @@ public:
     errno_t handleSIOCSIFADDR();
     errno_t handleSIOCSIFFLAGS( const char * source );
     
-    virtual UInt32 inputPacket(mbuf_t m, packet_info_tag * packet);
+    virtual UInt32 inputPacket( mbuf_t packet, struct packet_info_tag * info );
     
     virtual IOReturn powerStateWillChangeTo( IOPMPowerFlags capabilities, unsigned long stateNumber, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
     static IOReturn powerStateWillChangeToGated( void * owner, void * capabilities, void * stateNumber, void * whatDevice, void * arg );
@@ -215,13 +228,13 @@ public:
     void setDebugFlags( UInt64 debugFlags, IOOptionBits options );
     UInt64 debugFlags();
     
-    void logDebug(char const * format, ...);
-    void logDebug(UInt64 debugFlags, const char * format, ...);
+    bool shouldLog( UInt64 debugFlags );
+    void logDebug( char const * format, ... );
+    void logDebug( UInt64 debugFlags, const char * format, ... );
     void vlogDebug( UInt64 debugFlags, char const * format, va_list va );
     void vlogDebugBPF( UInt64 debugFlags, char const * format, va_list va );
-    bool shouldLog( UInt64 debugFlags );
     void logTxPacket( mbuf_t packet );
-    void logTxCompletionPacket(mbuf_t packet, int len);
+    void logTxCompletionPacket( mbuf_t packet, IOReturn status );
     
     IOReturn storeProcessNameAndIoctlInformation( unsigned long ioctlInfo );
     IOReturn storeIoctlInArray( OSArray * array, OSNumber * ioctlInfo );
