@@ -203,6 +203,17 @@ public:
     OSSymbol * _interfaceBSSIDProperty;   // 328
     OSSymbol * _interfaceEnableProperty;  // 336
     OSData * _bssidData; // 344
+    // 352
+    OSDictionary * _interfaceMacAddress; // 360
+    OSBoolean * _interfaceEnabled; // 376
+
+    void * _logger; // 384
+
+    bool _runningState; // 408
+    IO80211LinkState _linkState; // 412
+    ether_addr _selfMacAddress; // 416
+    // 424
+
 };
 
 // 728

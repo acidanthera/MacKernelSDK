@@ -743,9 +743,10 @@ struct apple80211_link_changed_event_data
     uint32_t   rssi;       // 4
     uint16_t   snr;        // 8
     uint16_t   nf;         // 10
-    char       cca;        // 12
+    uint32_t   cca;        // 12
     bool       voluntary;  // 16
     uint32_t   reason;     // 20
+	uint64_t   reserved;   // 24
 };
 
 struct apple80211_apmode_data

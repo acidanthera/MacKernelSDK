@@ -79,27 +79,27 @@ class IO80211VirtualInterface : public IOService
 public:
     virtual bool init( IO80211Controller * controller, ether_addr_t * address, UInt32 role, char const * bsdName );
     virtual void free() APPLE_KEXT_OVERRIDE;
-    
+
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual bool willTerminate( IOService * provider, IOOptionBits options ) APPLE_KEXT_OVERRIDE;
 #endif
     virtual bool terminate( IOOptionBits options = 0 ) APPLE_KEXT_OVERRIDE;
-    
+
     virtual bool attach( IOService * provider ) APPLE_KEXT_OVERRIDE;
     virtual void detach( IOService * provider ) APPLE_KEXT_OVERRIDE;
-    
+
     IOReturn createIOReporters( IOService * service );
     virtual IOReturn configureReport( IOReportChannelList * channels, IOReportConfigureAction action, void * result, void * destination ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn updateReport( IOReportChannelList * channels, IOReportUpdateAction action, void * result, void * destination ) APPLE_KEXT_OVERRIDE;
     void reportTransmitStatus( mbuf_t packet, IOReturn status, struct packet_info_tx * info );
     IOReturn reportTransmitCompletionStatus( mbuf_t packet, IOReturn status, uint32_t param1 = 0, uint32_t param2 = 0, IOOptionBits options = 0 );
-    
+
     bool reportDataPathEvents( UInt32 msg ,void * data = NULL, size_t dataSize = 0 );
     static IOReturn reportDataPathEventsGated( void * target, void * msg, void * data, void * dataSize, void * arg0 );
-    
+
     void setAuthTimeout( AbsoluteTime timeout );
     AbsoluteTime authTimeout();
-    
+
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     virtual IOReturn newUserClient( task_t owningTask, void * securityID, UInt32 type, OSDictionary * properties, LIBKERN_RETURNS_RETAINED IOUserClient ** handler ) APPLE_KEXT_OVERRIDE;
 #endif
@@ -108,11 +108,11 @@ public:
     IOReturn startAsyncEventUserClientForTask( task_t task, kIO80211InterfaceType );
     IOReturn startP2PDaemonUserClientForTask( task_t task );
     void p2pDaemonExited();
-    
+
     virtual const char * stringFromReturn( IOReturn rtn ) APPLE_KEXT_OVERRIDE;
     virtual int errnoFromReturn( IOReturn rtn ) APPLE_KEXT_OVERRIDE;
 
-    bool setInterfaceRole(UInt32 role);
+    bool setInterfaceRole( UInt32 role );
     UInt32 getInterfaceRole();
 
     bool isPeerToPeerInterface();
@@ -121,39 +121,39 @@ public:
     const char * getBSDName();
     virtual IOMediumType getMediumType();
     IO80211Controller * getController();
-    bool getInterfaceAddress(UInt8 *);
-    
+    bool getInterfaceAddress( UInt8 * address );
+
     virtual bool setLinkState( IO80211LinkState state, UInt32 reason );
     IO80211LinkState linkState();
-    
+
     void setScanningState( UInt32 scanSource, bool scan, apple80211_scan_data * data, IOReturn status );
     void setJoiningState( UInt32 scanSource, joinStatus status, bool join ); // unimplemented
-    void setInfraChannel(apple80211_channel * channel);
+    void setInfraChannel( apple80211_channel * channel );
     void setInfraTxState( bool state );
-    bool setInterfaceExtendedCCA(apple80211_channel,apple80211_cca_report *,apple80211_awdl_sync_channel_sequence *);
-    bool setInterfaceCCA( apple80211_channel, int, apple80211_awdl_sync_channel_sequence *);
-    bool setInterfaceNF(apple80211_channel,long long);
-    bool setInterfaceChipCounters(apple80211_stat_report *,apple80211_chip_counters_tx *,apple80211_chip_error_counters_tx *,apple80211_chip_counters_rx *);
-    bool setInterfaceMIBdot11(apple80211_stat_report *,apple80211_ManagementInformationBasedot11_counters *);
-    bool setFrameStats(apple80211_stat_report *,apple80211_frame_counters *);
-    bool setAMPDUstat(apple80211_stat_report *,apple80211_ampdu_stat_report *);
+    bool setInterfaceExtendedCCA( apple80211_channel channel, apple80211_cca_report * report, apple80211_awdl_sync_channel_sequence * sequence );
+    bool setInterfaceCCA( apple80211_channel channel, int cca, apple80211_awdl_sync_channel_sequence * sequence );
+    bool setInterfaceNF( apple80211_channel channel, int64_t noiseFloor );
+    bool setInterfaceChipCounters( apple80211_stat_report * report, apple80211_chip_counters_tx * tx, apple80211_chip_error_counters_tx * errorTx, apple80211_chip_counters_rx * rx );
+    bool setInterfaceMIBdot11( apple80211_stat_report * report, apple80211_ManagementInformationBasedot11_counters * mib );
+    bool setFrameStats( apple80211_stat_report * report, apple80211_frame_counters * frame );
+    bool setAMPDUstat( apple80211_stat_report * report, apple80211_ampdu_stat_report * ampdu );
     
-    mbuf_t preQueuePacket(mbuf_t);
+    mbuf_t preQueuePacket( mbuf_t packet );
     void dropTxPacket( mbuf_t packet );
     UInt32 dequeueTxPackets( TxPacketRequest * tx );
     virtual IOReturn dequeueOutputPacketsWithServiceClass( UInt32 max, IOMbufServiceClass serviceClass, mbuf_t * firstPacket, mbuf_t * lastPacket, UInt32 * count, UInt64 * result );
     virtual UInt32 outputPacket( mbuf_t m, void * param );
-    errno_t bpfOutputPacket(mbuf_t m, void *);
-    errno_t bpfOutput(UInt32, mbuf_t m);
+    errno_t bpfOutputPacket( mbuf_t m, void * data );
+    errno_t bpfOutput( UInt32, mbuf_t m );
     
     virtual void setEnabledBySystem( bool state );
     bool enabledBySystem();
     
-    static IOReturn ioctl_internal_gated(void * owner, void * request, void * arg0, void * arg1, void * arg2);
-    IOReturn ioctl_internal(void * request);
-    virtual errno_t handleIoctl(unsigned long inID, void * inData);
-    static errno_t handleIoctlGated(void * owner, void * inID ,void * inData, void * arg0, void * arg1);
-    errno_t handleSIOCGIFMEDIA(unsigned long inID, struct ifmediareq *);
+    static IOReturn ioctl_internal_gated( void * owner, void * request, void * arg0, void * arg1, void * arg2 );
+    IOReturn ioctl_internal( void * request );
+    virtual errno_t handleIoctl( unsigned long inID, void * inData );
+    static errno_t handleIoctlGated( void * owner, void * inID ,void * inData, void * arg0, void * arg1 );
+    errno_t handleSIOCGIFMEDIA( unsigned long inID, struct ifmediareq * );
     errno_t handleSIOCSIFADDR();
     errno_t handleSIOCSIFFLAGS( const char * source );
     
@@ -161,47 +161,47 @@ public:
     
     virtual IOReturn powerStateWillChangeTo( IOPMPowerFlags capabilities, unsigned long stateNumber, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
     static IOReturn powerStateWillChangeToGated( void * owner, void * capabilities, void * stateNumber, void * whatDevice, void * arg );
-    virtual IOReturn controllerWillChangePowerState(IO80211Controller * controller, IOPMPowerFlags capabilities, IO80211SystemPowerState stateNumber, IOService * whatDevice);
+    virtual IOReturn controllerWillChangePowerState( IO80211Controller * controller, IOPMPowerFlags capabilities, IO80211SystemPowerState stateNumber, IOService * whatDevice );
     
     virtual IOReturn powerStateDidChangeTo( IOPMPowerFlags capabilities, unsigned long stateNumber, IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
     static IOReturn powerStateDidChangeToGated( void * owner, void * capabilities, void * stateNumber, void * whatDevice, void * arg );
-    virtual IOReturn controllerDidChangePowerState(IO80211Controller * controller, IOPMPowerFlags capabilities, IO80211SystemPowerState stateNumber, IOService * whatDevice);
+    virtual IOReturn controllerDidChangePowerState( IO80211Controller * controller, IOPMPowerFlags capabilities, IO80211SystemPowerState stateNumber, IOService * whatDevice );
     
-    virtual errno_t handleDebugCmd(apple80211_debug_command * command);
+    virtual errno_t handleDebugCmd( apple80211_debug_command * command );
     
-    IOReturn IO80211InterfacePostMessage(UInt32 msg ,void * data = NULL, size_t dataSize = 0);
+    IOReturn IO80211InterfacePostMessage( UInt32 msg ,void * data = NULL, size_t dataSize = 0 );
     void postMessage( UInt32 msg, void * data = NULL, size_t dataSize = 0 );
     void postSyncStateChanged();
     errno_t postNewMasterElected();
     void postServiceIndication();
-    void postAwdlStatistics( struct apple80211_awdl_statistics * ); // size = 2520
-    void postAwdlHppStatsEvent(realTimeServiceId);
-    void postLowlatencyStatistics(struct apple80211_lowlatency_peer_statistics_event *);
-    void postAwdlAppSpecificInfo(struct apple80211_awdl_app_specific_info *);
-    void postP2PAirplayStatistics(struct apple80211_p2p_airplay_statistics *);
+    void postAwdlStatistics( struct apple80211_awdl_statistics * stats ); // size = 2520
+    void postAwdlHppStatsEvent( realTimeServiceId event );
+    void postLowlatencyStatistics( struct apple80211_lowlatency_peer_statistics_event * stats );
+    void postAwdlAppSpecificInfo( struct apple80211_awdl_app_specific_info * info );
+    void postP2PAirplayStatistics( struct apple80211_p2p_airplay_statistics * stats );
     void postHostapChannelChanged(apple80211_hostap_state *);
-    virtual void postPeerPresence(ether_addr * address, int32_t rssi, int linkQualityMetric, int nodeProximityMetric, char * serviceInfo);
-    virtual void postPeerAbsence(ether_addr * address);
+    virtual void postPeerPresence( ether_addr * address, int32_t rssi, int linkQualityMetric, int nodeProximityMetric, char * serviceInfo );
+    virtual void postPeerAbsence( ether_addr * address );
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
-    virtual void postPeerPresenceIPv6(ether_addr * address, int32_t rssi, int linkQualityMetric, int nodeProximityMetric, char * serviceInfo, UInt8 * socketAddressData);
+    virtual void postPeerPresenceIPv6( ether_addr * address, int32_t rssi, int linkQualityMetric, int nodeProximityMetric, char * serviceInfo, UInt8 * socketAddressData );
 #endif
     virtual void signalOutputThread();
     virtual bool isOutputFlowControlled();
     virtual void setOutputFlowControlled();
     virtual void clearOutputFlowControlled();
-    virtual IOReturn outputStart(IOOptionBits options);
-    static IOReturn _outputStart(OSObject * owner, void * options, void * arg0, void * arg1, void * arg2);
-    IOReturn _outputStartGated(IOOptionBits options);
-    IOReturn _outputStartGatedNoPM(IOOptionBits options);
+    virtual IOReturn outputStart( IOOptionBits options );
+    static IOReturn _outputStart( OSObject * owner, void * options, void * arg0, void * arg1, void * arg2 );
+    IOReturn _outputStartGated( IOOptionBits options );
+    IOReturn _outputStartGatedNoPM( IOOptionBits options );
     
     virtual void configureAQMOutput();
-    virtual void setUnitNumber(const char * name);
-    void setUnitNumber(const char * name, UInt32 number);
+    virtual void setUnitNumber( const char * name );
+    void setUnitNumber( const char * name, UInt32 number );
     
-    virtual void initIfnetEparams(struct ifnet_init_eparams * params);
-    void ifnet_start_callback(ifnet_t ifnet);
-    void ifnet_detach_callback(ifnet_t ifnet);
-    void ifnet_ioctl_callback(ifnet_t ifnet, unsigned long id, void * data);
+    virtual void initIfnetEparams( struct ifnet_init_eparams * params );
+    void ifnet_start_callback( ifnet_t ifnet );
+    void ifnet_detach_callback( ifnet_t ifnet );
+    void ifnet_ioctl_callback( ifnet_t ifnet, unsigned long id, void * data );
     
     virtual bool attachToBpf();
     bool peerToPeerAttachToBpf();
@@ -209,12 +209,12 @@ public:
     errno_t bpfAttach( UInt32 dataLinkType, UInt32 headerLength );
     errno_t bpfAttachEN10MB( UInt32 headerLength );
     
-    void bpfTapInput(mbuf_t packet, UInt32 dlt, void * header, size_t header_len);
-    errno_t bpfTap(u_int32_t data_link_type, bpf_tap_mode direction);
-    void sendToBpfTap(mbuf_t packet, UInt32 dlt, void * header, size_t header_len);
+    void bpfTapInput( mbuf_t packet, UInt32 dlt, void * header, size_t header_len );
+    errno_t bpfTap( u_int32_t data_link_type, bpf_tap_mode direction );
+    void sendToBpfTap( mbuf_t packet, UInt32 dlt, void * header, size_t header_len );
     
     ifnet_t getIfnet();
-    bool attachIfnet(ether_addr_t * address, char const * bsdName);
+    bool attachIfnet( ether_addr_t * address, char const * bsdName );
     errno_t detachIfnet();
     virtual errno_t configureIfnet();
     errno_t peerToPeerConfigureIfnet();
@@ -240,9 +240,9 @@ public:
     IOReturn storeIoctlInArray( OSArray * array, OSNumber * ioctlInfo );
     IOReturn dumpUnentitledProcesses();
     
-    void handleChannelSwitchAnnouncement(apple80211_channel_switch_announcement *); // unimplemented
+    void handleChannelSwitchAnnouncement( apple80211_channel_switch_announcement * announcement );
     bool isAwdlAssistedDiscoveryEnabled();
-    void notifyHostapState(apple80211_hostap_state *);
+    void notifyHostapState( apple80211_hostap_state * state );
     
     bool dualBandCapable();
     
@@ -260,11 +260,11 @@ public:
     void getPMKSAList( struct apple80211_pmk_cache_data * list );
 
     void getWmeTxCounters( UInt64 * counters );
-    void setWoWEnabled(bool enable);
+    void setWoWEnabled( bool enable );
     
     bool controllerLostPower();
-    void pushPacket(mbuf_t packet);
-    UInt32 printDataPath(userPrintCtx *);
+    void pushPacket( mbuf_t packet );
+    UInt32 printDataPath( userPrintCtx * ctx );
     
     OSMetaClassDeclareReservedUnused( IO80211VirtualInterface,  0 );
     OSMetaClassDeclareReservedUnused( IO80211VirtualInterface,  1 );
@@ -284,40 +284,40 @@ public:
     OSMetaClassDeclareReservedUnused( IO80211VirtualInterface, 15 );
 
 protected:
-    UInt16 _dataQueueDepth; //136
-    IO80211FlowQueueDatabase * _queueDatabase; //144
-    UInt32 _outputSchedulingModel; //152
-    UInt32 _outputQueueMaxLength; //156
-    IO80211AsyncEventUserClient * _asyncEventUserClient; //160
-    IO80211P2PDaemonUserClient * _p2pDaemonUserClient; //168
-    UInt64 _debugFlags; //176
-    IO80211PeerManager * _peerManager; //184
-    IO80211InterfaceMonitor * _interfaceMonitor; //192
-    UInt32 _interfaceRole; //200
-    IO80211Controller * _controller; //208
-    ifnet_t _ifnet; //216
-    const char _bsdName[ 16 ]; //224
-    UInt32 _ifID; //240
-    IOLock * _detachLock; //248
-    bool _waitingForDetach; //256
-    IO80211LinkState _linkState; //260
-    UInt32 _testedWlanPanicPostMessage; //264
-    UInt64 _interfaceClosePercent; //272
-    UInt64 _interfaceCoexRiskPct; //280
-    unsigned long _authTimeout; //288
-    IOGatedOutputQueue * _beQueue; //296
-    IOGatedOutputQueue * _bgQueue; //304
-    IOGatedOutputQueue * _voQueue; //312
-    IOGatedOutputQueue * _viQueue; //320
-    bool _supportOutputQueues; //328, bg, vo, and vi
-    void * _caps; //336, size is 12
-    bpfListHeader * _bpfListHead ; //344
-    IOLock * _bpfLock; //352
-    bool _bpfDLTIsEN10MB; //360
-    bpf_tap_mode _tapDirection; //364
-    bool _controllerLostPower; //368
-    bool _enabledBySystem; //369
-    UInt32 _outputFlowControlled; //372
+    UInt16 _dataQueueDepth; // 136
+    IO80211FlowQueueDatabase * _queueDatabase; // 144
+    UInt32 _outputSchedulingModel; // 152
+    UInt32 _outputQueueMaxLength; // 156
+    IO80211AsyncEventUserClient * _asyncEventUserClient; // 160
+    IO80211P2PDaemonUserClient * _p2pDaemonUserClient; // 168
+    UInt64 _debugFlags; // 176
+    IO80211PeerManager * _peerManager; // 184
+    IO80211InterfaceMonitor * _interfaceMonitor; // 192
+    UInt32 _interfaceRole; // 200
+    IO80211Controller * _controller; // 208
+    ifnet_t _ifnet; // 216
+    const char _bsdName[ 16 ]; // 224
+    UInt32 _ifID; // 240
+    IOLock * _detachLock; // 248
+    bool _waitingForDetach; // 256
+    IO80211LinkState _linkState; // 260
+    UInt32 _testedWlanPanicPostMessage; // 264
+    UInt64 _interfaceClosePercent; // 272
+    UInt64 _interfaceCoexRiskPct; // 280
+    unsigned long _authTimeout; // 288
+    IOGatedOutputQueue * _beQueue; // 296
+    IOGatedOutputQueue * _bgQueue; // 304
+    IOGatedOutputQueue * _voQueue; // 312
+    IOGatedOutputQueue * _viQueue; // 320
+    bool _supportOutputQueues; // 328, bg, vo, and vi
+    void * _caps; // 336, size is 12
+    bpfListHeader * _bpfListHead ; // 344
+    IOLock * _bpfLock; // 352
+    bool _bpfDLTIsEN10MB; // 360
+    bpf_tap_mode _tapDirection; // 364
+    bool _controllerLostPower; // 368
+    bool _enabledBySystem; // 369
+    UInt32 _outputFlowControlled; // 372
     
     UInt32 _interfaceCCAs[ APPLE80211_MAX_AWDL_CHANNELS ]; // 376
     UInt64 _reserved; // 504
