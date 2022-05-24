@@ -31,24 +31,51 @@
  *
  */
 
-#ifndef _IO80211WORKLOOP_H
-#define _IO80211WORKLOOP_H
+#ifndef _IO80211FLOWQUEUEDATBASE_H
+#define _IO80211FLOWQUEUEDATBASE_H
 
-#include <IOKit/IOWorkLoop.h>
+#include <IOKit/80211/IO80211FlowQueue.h>
 
-class IO80211WorkLoop : public IOWorkLoop
+typedef bool (*IO80211FlowQueueResultAction)( IO80211FlowQueue * queue, void * arg );
+typedef void (*IO80211FlowQueueAction)( IO80211FlowQueue * queue, void * arg );
+
+class IO80211FlowQueueDatabase : public OSObject
 {
-    OSDeclareDefaultStructors( IO80211WorkLoop )
+    OSDeclareDefaultStructors( IO80211FlowQueueDatabase )
 
 public:
-    static IO80211WorkLoop * workLoop();
-
-    virtual void openGate() APPLE_KEXT_OVERRIDE;
-    virtual void closeGate() APPLE_KEXT_OVERRIDE;
-    virtual int sleepGate( void * event, UInt32 interuptibleType ) APPLE_KEXT_OVERRIDE;
-    virtual int sleepGateDeadline( void * event, UInt32 interuptibleType, AbsoluteTime deadline );
-    virtual void wakeupGate( void * event, bool oneThread ) APPLE_KEXT_OVERRIDE;
-
+    virtual bool init() APPLE_KEXT_OVERRIDE;
+    virtual void free() APPLE_KEXT_OVERRIDE;
+    
+    void lockDatabase();
+    void unlockDatabase();
+    
+    IOReturn insert( IO80211FlowQueue * que );
+    void remove( UInt64 hash );
+    
+    IO80211FlowQueue * map( IO80211FlowQueueResultAction action, void * arg );
+    IO80211FlowQueue * find( IO80211FlowQueueResultAction action, void * arg );
+    IO80211FlowQueue * find( UInt64 hash );
+    void flush( IO80211FlowQueueAction action, void * arg );
+    
+    UInt32 pendingPackets( UInt8 interface );
+    UInt32 packetSpace( UInt8 interface );
+    UInt32 queueSize( UInt8 interface );
+    
+    UInt32 print( void * userPrintCtx );
+    
+protected:
+    /*! @var _dataBase
+     *   The data base in which all flow queues of this object are stored. */
+    
+    IO80211FlowQueue * _dataBase[200]; // 16
+    
+    /*! @var _foundQueue
+     *   The result request found in find() will be stored in this member variable so as to accelerate the next find request. */
+    
+    IO80211FlowQueue * _foundQueue; // 1616
+    SInt32 _queueSize; // 1624
+    IOSimpleLock * _dataBaseLock; // 1632
 };
 
 #endif

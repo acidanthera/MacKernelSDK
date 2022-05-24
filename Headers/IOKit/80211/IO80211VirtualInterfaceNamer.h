@@ -36,29 +36,29 @@
 
 #include <IOKit/IOService.h>
 
+extern bool IO80211VirtualInterfaceNamerRetain();
+extern void IO80211VirtualInterfaceNamerRelease();
+extern bool IO80211VirtualInterfaceNamerMarkInterfaceUnitUsed( char const * name, UInt32 unitNumber );
+extern void IO80211VirtualInterfaceNamerMarkInterfaceUnitUnused( char const * name, UInt32 unitNumber );
+extern UInt32 IO80211VirtualInterfaceNamerNextAvailableUnitNumberForName( char const * name, bool markUsed );
+
 class IO80211VirtualInterfaceNamer : public IOService
 {
-	OSDeclareDefaultStructors(IO80211VirtualInterfaceNamer)
+    OSDeclareDefaultStructors(IO80211VirtualInterfaceNamer)
 
 public:
-	virtual bool init() APPLE_KEXT_OVERRIDE;
-	virtual void free() APPLE_KEXT_OVERRIDE;
+    virtual bool init() APPLE_KEXT_OVERRIDE;
+    virtual void free() APPLE_KEXT_OVERRIDE;
 
-	bool arrayContainsUnitNumber( OSArray * array, OSNumber * unitNumber );
-	bool markInterfaceUnitUsed( char const * name, UInt32 unitNumber );
-	void markInterfaceUnitUnused( char const * name, UInt32 unitNumber );
-	UInt32 nextAvailableUnitNumberForName( char const * name, bool markUsed );
+    bool arrayContainsUnitNumber( OSArray * array, OSNumber * unitNumber );
+    bool markInterfaceUnitUsed( char const * name, UInt32 unitNumber );
+    void markInterfaceUnitUnused( char const * name, UInt32 unitNumber );
+    UInt32 nextAvailableUnitNumberForName( char const * name, bool markUsed );
 
-	IORecursiveLock * _lock;
-	OSDictionary * _interfaceUnits; // all OSArrays
+    IORecursiveLock * _lock;
+    OSDictionary * _interfaceUnits; // all OSArrays
 };
 
-static IO80211VirtualInterfaceNamer * _interfaceNamer;
-
-bool IO80211VirtualInterfaceNamerRetain();
-void IO80211VirtualInterfaceNamerRelease();
-bool IO80211VirtualInterfaceNamerMarkInterfaceUnitUsed( char const * name, UInt32 unitNumber );
-void IO80211VirtualInterfaceNamerMarkInterfaceUnitUnused( char const * name, UInt32 unitNumber );
-UInt32 IO80211VirtualInterfaceNamerNextAvailableUnitNumberForName( char const * name, bool markUsed );
+extern static IO80211VirtualInterfaceNamer * _interfaceNamer;
 
 #endif

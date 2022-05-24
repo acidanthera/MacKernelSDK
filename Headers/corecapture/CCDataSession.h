@@ -31,24 +31,24 @@
  *
  */
 
-#ifndef _IO80211WORKLOOP_H
-#define _IO80211WORKLOOP_H
+#ifndef _CCDATASESSION_H
+#define _CCDATASESSION_H
 
-#include <IOKit/IOWorkLoop.h>
+#include <corecapture/CCCapture.h>
 
-class IO80211WorkLoop : public IOWorkLoop
+class CCDataSession : public OSObject
 {
-    OSDeclareDefaultStructors( IO80211WorkLoop )
-
+    OSDeclareDefaultStructors( CCDataSession )
+    
 public:
-    static IO80211WorkLoop * workLoop();
-
-    virtual void openGate() APPLE_KEXT_OVERRIDE;
-    virtual void closeGate() APPLE_KEXT_OVERRIDE;
-    virtual int sleepGate( void * event, UInt32 interuptibleType ) APPLE_KEXT_OVERRIDE;
-    virtual int sleepGateDeadline( void * event, UInt32 interuptibleType, AbsoluteTime deadline );
-    virtual void wakeupGate( void * event, bool oneThread ) APPLE_KEXT_OVERRIDE;
-
+    CCDataSession * withNameAndTimestamp( const char * name, CCTimestamp timestamp );
+    bool initWithNameAndTimestamp( const char * name, CCTimestamp timestamp );
+    virtual void free() APPLE_KEXT_OVERRIDE;
+    
+protected:
+    CCTimestamp mTimestamp;
+    OSString * mSessionName;
 };
 
 #endif
+

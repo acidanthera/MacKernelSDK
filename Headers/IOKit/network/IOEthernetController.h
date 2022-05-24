@@ -30,10 +30,6 @@
 #error "Missing macOS target version"
 #endif
 
-#ifndef APPLE_KEXT_DEPRECATE
-#define APPLE_KEXT_DEPRECATE
-#endif
-
 /*! @defined kIOEthernetControllerClass
     @abstract kIOEthernetControllerClass is the name of the
         IOEthernetController class. */
@@ -190,7 +186,7 @@ class IOTimeSyncEthernetInterfaceAdapter;
     the controller driver to the data link layer. 
 */
 
-class APPLE_KEXT_DEPRECATE IOEthernetController : public IONetworkController
+class IOEthernetController : public IONetworkController
 {
     OSDeclareAbstractStructors( IOEthernetController )
 
@@ -599,7 +595,6 @@ public:
 	
 	/*! @function getAVBSupport
 		@abstract Indicates that AVB streaming is supported and what capabilities it has.
-		@discussion
 		@param avbSupport A pointer to an IOEthernetControllerAVBSupport struct to return the capabilities.
 		@return True if this controller has at least 1 real time transmit queues or at least 1 realtime receive queues
 	 */
@@ -623,7 +618,7 @@ protected:
 			for transmitting packets by the controller. The packet mapper is retained.
 		@param packetMapper the IOMapper to be used.
 	 */
-	void setAVBPacketMapper(IOMapper *packetMaper);
+	void setAVBPacketMapper(IOMapper *packetMapper);
 	
 #pragma mark Interface State
 	friend IOTimeSyncEthernetInterfaceAdapter;
@@ -840,7 +835,7 @@ protected:
 		@abstract Set the value returned by getTransmitQueuePrefetchDelay() for a given queue.
 		@discussion Stores the value of the maximum prefetch delay for a given queue. See getTransmitQueuePrefetchDelay for more details.
 		@param queueIndex index of the realtime transmit queue.
-		@param PrefetchDelay The prefetch delay for the queue.
+		@param prefetchDelay The prefetch delay for the queue.
 	 */
 	void setTransmitQueuePrefetchDelay(uint32_t queueIndex, uint64_t prefetchDelay);
 	
@@ -1137,7 +1132,6 @@ protected:
 		@discussion Sets the gPTPPresent property on the controller and interface. If setting gPTPPresent to true it calls 
 			registerService() to trigger matching and loading of the AVB stack on demand, otherwise it calls messageClients
 			to trigger the stack to unload.
-		@param gPTPPresent
 		@return IOReturn indicating success or reason for failure.
 	 */
 	IOReturn setGPTPPresent(bool gPTPPresent);

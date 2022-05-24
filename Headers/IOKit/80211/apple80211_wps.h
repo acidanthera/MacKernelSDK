@@ -1,10 +1,24 @@
-//
-//  wps_eap.h
-//  IO80211Family
-//
-//  Created by Pete on 6/20/06.
-//  Copyright 2006 Apple Computer, Inc. All rights reserved.
-//
+/*
+ * Copyright (c) 2005 Apple Computer, Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * The contents of this file constitute Original Code as defined in and
+ * are subject to the Apple Public Source License Version 1.1 (the
+ * "License").  You may not use this file except in compliance with the
+ * License.  Please obtain a copy of the License at
+ * http://www.apple.com/publicsource and read it before using this file.
+ *
+ * This Original Code and all software distributed under the License are
+ * distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+ * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
+ * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.  Please see the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ *
+ * @APPLE_LICENSE_HEADER_END@
+ */
 
 #ifndef _APPLE80211_WPS_H_
 #define _APPLE80211_WPS_H_
@@ -12,11 +26,6 @@
 #include <Availability.h>
 #include <sys/types.h>
 #include <net/ethernet.h>
-
-// This is necessary, because even the latest Xcode does not support properly targeting 11.0.
-#ifndef __IO80211_TARGET
-#error "Please define __IO80211_TARGET to the requested version"
-#endif
 
 #define WPS_HANDSHAKE_TIMEOUT      120 /* seconds */
 #define WPS_RETRANSMIT_TIMEOUT     5
@@ -53,13 +62,13 @@ struct wps_eap_hdr
 {
     u_int8_t    code;
     u_int8_t    identifier;
-    u_int16_t    length;
+    u_int16_t   length;
     u_int8_t    type;
     u_int8_t    vendor_id[3];
-    u_int32_t    vendor_type;
+    u_int32_t   vendor_type;
     u_int8_t    op_code;
     u_int8_t    flags;
-    u_int16_t    msg_length;
+    u_int16_t   msg_length;
     //    u_int8_t    msg[1];        /* data follows */
 } PACKED;
 
@@ -510,7 +519,7 @@ enum WPSSupplicantState
     WPS_S_FAIL_TX,
     WPS_S_FAIL_RX,
     WPS_S_MSG_TIMEOUT,
-    WPS_S_SESSION_TIMEOUT,
+    WPS_S_SESSION_TIMEOUT
 };
 typedef enum WPSSupplicantState WPSSupplicantState;
 
@@ -518,15 +527,15 @@ typedef enum WPSSupplicantState WPSSupplicantState;
 
 #define WPSE_NOERR                     0        // no error
 #define WPSE_ERR                      -1        // general error code
-#define    WPSE_PROTO_ERR             -2        // Problem with EAPOL handshake
-#define    WPSE_IE_NOT_PRESENT        -3        // No WPS IE present in IE list for ssid
-#define    WPSE_IE_MALFORMED          -4        // WPS IS missing required (for Apple) fields
-#define    WPSE_SCAN_ERR              -5        // Scan failed
-#define    WPSE_NO_PIN_AT_REG         -6        // No PIN configured at registrar
+#define WPSE_PROTO_ERR                -2        // Problem with EAPOL handshake
+#define WPSE_IE_NOT_PRESENT           -3        // No WPS IE present in IE list for ssid
+#define WPSE_IE_MALFORMED             -4        // WPS IS missing required (for Apple) fields
+#define WPSE_SCAN_ERR                 -5        // Scan failed
+#define WPSE_NO_PIN_AT_REG            -6        // No PIN configured at registrar
 #define WPSE_NO_PIN_AT_CLIENT         -7        // No PIN configured at client
-#define    WPSE_SSID_NOT_FOUND        -8        // Scan did not find SSID
-#define    WPSE_UNSUPPORTED_PW_ID     -9        // Registrar reports that it is using an unsupported PW ID
-#define    WPSE_ASSOC_FAILED          -10       // Association attempt failed
+#define WPSE_SSID_NOT_FOUND           -8        // Scan did not find SSID
+#define WPSE_UNSUPPORTED_PW_ID        -9        // Registrar reports that it is using an unsupported PW ID
+#define WPSE_ASSOC_FAILED             -10       // Association attempt failed
 #define WPSE_API_REQ                  -11       // An apple80211 ioctl request failed
 #define WPSE_NOMEM                    -12       // memory error
 #define WPSE_WPA_RSN_NOT_SUP          -13       // WPA/RSN not supported

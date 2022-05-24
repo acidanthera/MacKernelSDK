@@ -197,10 +197,10 @@ struct IOMbufQueue;
     all outbound packets sent to the interface from the data link layer.
     An output handler is registered with the interface by calling
     registerOutputHandler().
-    @param mbuf_t A packet mbuf.
+    @param packet A packet mbuf.
     @param param A parameter for the output request. */
 
-typedef UInt32 (OSObject::*IOOutputAction)(mbuf_t, void * param);
+typedef UInt32 (OSObject::*IOOutputAction)(mbuf_t packet, void * param);
 
 /*! @typedef BPF_FUNC
     @discussion Prototype for the BPF tap handler. This will disappear
@@ -228,7 +228,6 @@ enum {
     kIONetworkEventTypeLinkSpeedChange      = 0xff000005
 };
 
-#ifdef __PRIVATE_SPI__
 enum {
     kIONetworkWorkLoopSynchronous   = 0x00000001
 };
@@ -301,7 +300,6 @@ struct IONetworkPacketPollingParameters {
     uint64_t    pollIntervalTime;
     uint64_t    reserved[4];
 };
-#endif /* __PRIVATE_SPI__ */
 
 /*! @class IONetworkInterface
     @abstract Abstract class that manages the connection between an
@@ -514,7 +512,7 @@ public:
     This input queue is not protected by a lock. Drivers that leverage this
     input queue must either access the queue from a single thread, or enforce
     serialized access.
-    @param mbuf_t The mbuf containing the received packet.
+    @param packet The mbuf containing the received packet.
     @param length Specify the size of the received packet in the mbuf.
     The mbuf length fields are updated with this value. If zero, then the mbuf
     length fields are not updated.
@@ -659,7 +657,7 @@ public:
 /*! @function addNetworkData
     @abstract Adds an <code>IONetworkData</code> object to the interface.
     @discussion The <code>IONetworkData</code> object is added to a
-    collection using the key from <code>IONetworkData::getKey()<code>.
+    collection using the key from <code>IONetworkData::getKey()</code>.
     The object provided is retained.
     @param aData The <code>IONetworkData</code> object.
     @result Returns true if the object was added, false otherwise.
@@ -1068,9 +1066,9 @@ protected:
     @discussion This function is called internally to send input packets to
     the BPF input tap when it is enabled. Subclasses are not expected to
     override this method.
-    @param mbuf_t Pointer to the input packet.
+    @param packet Pointer to the input packet.
 */
-    virtual void     feedPacketInputTap( mbuf_t );
+    virtual void     feedPacketInputTap( mbuf_t packet );
 
 	OSMetaClassDeclareReservedUsed(IONetworkInterface, 2);
 
@@ -1079,9 +1077,9 @@ protected:
     @discussion This function is called internally to send output packets to
     the BPF output tap when it is enabled. Subclasses are not expected to
     override this method.
-    @param mbuf_t Pointer to the output packet.
+    @param packet Pointer to the output packet.
 */
-	virtual void     feedPacketOutputTap( mbuf_t );
+	virtual void     feedPacketOutputTap( mbuf_t packet );
 
 	OSMetaClassDeclareReservedUsed(IONetworkInterface, 3);
 
@@ -1108,8 +1106,8 @@ protected:
     IONetworkInterface::init() and before IONetworkInterface::attachToDataLinkLayer().
     This allows for over-riding ifnet_init_eparams.start_delay_qlen and 
     ifnet_init_eparams.start_delay_timeout.
-    @param outputStartDelayQueueLength, maps to ifnet_init_eparams.start_delay_qlen
-    @param outputStartDelayTimeout, maps to ifnet_init_eparams.start_delay_timeout
+    @param outputStartDelayQueueLength maps to ifnet_init_eparams.start_delay_qlen
+    @param outputStartDelayTimeout maps to ifnet_init_eparams.start_delay_timeout
     @result <code>kIOReturnSuccess</code> if interface was successfully
     configured.
  */
@@ -1130,7 +1128,7 @@ public:
 
 /*! @function isBPFTapEnabled
     @abstract Query if the BPF tap is enabled.
-    @abstract Allows a driver to poll the BPF tap state after receiving a
+    @discussion Allows a driver to poll the BPF tap state after receiving a
     <code>kIONetworkNotificationBPFTapStateChange</code> notification.
     @param options No options are currently defined, always pass zero.
     @result Returns <code>true</code> if BPF tap is enabled,
@@ -1140,7 +1138,7 @@ public:
 
 /*! @function getLoggingLevel
     @abstract Query the logging level for the interface.
-    @abstract Allows a driver to poll the logging level after receiving a
+    @discussion Allows a driver to poll the logging level after receiving a
     <code>kIONetworkNotificationLoggingLevelChange</code> notification.
     @param options No options are currently defined, always pass zero.
     @result Returns the current logging level.
@@ -1462,7 +1460,7 @@ public:
     @param status The transmit status.
     @param param1 Always pass zero.
     @param param2 Always pass zero.
-    @param No options are currently defined, always pass zero.
+    @param options No options are currently defined, always pass zero.
     @result <code>kIOReturnSuccess</code> if the transmit status was valid
     and accepted, otherwise <code>kIOReturnBadArgument</code> for bad status,
     or <code>kIOReturnError</code> if an error occurred when passing the status

@@ -31,24 +31,21 @@
  *
  */
 
-#ifndef _IO80211WORKLOOP_H
-#define _IO80211WORKLOOP_H
+#ifndef _CCSTREAM_H
+#define _CCSTREAM_H
 
-#include <IOKit/IOWorkLoop.h>
-
-class IO80211WorkLoop : public IOWorkLoop
+enum CCStreamLogLevel
 {
-    OSDeclareDefaultStructors( IO80211WorkLoop )
-
-public:
-    static IO80211WorkLoop * workLoop();
-
-    virtual void openGate() APPLE_KEXT_OVERRIDE;
-    virtual void closeGate() APPLE_KEXT_OVERRIDE;
-    virtual int sleepGate( void * event, UInt32 interuptibleType ) APPLE_KEXT_OVERRIDE;
-    virtual int sleepGateDeadline( void * event, UInt32 interuptibleType, AbsoluteTime deadline );
-    virtual void wakeupGate( void * event, bool oneThread ) APPLE_KEXT_OVERRIDE;
-
+    kCCStreamLogLevelEmergency   = 0x00,
+    kCCStreamLogLevelAlert       = 0x01,
+    kCCStreamLogLevelCrit        = 0x02,
+    kCCStreamLogLevelWarn        = 0x03,
+    kCCStreamLogLevelNotice      = 0x04,
+    kCCStreamLogLevelInfo        = 0x05,
+    kCCStreamLogLevelDebug       = 0x06,
+    kCCStreamLogLevelSpam        = 0x07,
+    kCCStreamLogLevelUnspecified = 0x7F,
+    kCCStreamLogLevelUnknown     = 0xFF
 };
 
 #endif

@@ -31,24 +31,33 @@
  *
  */
 
-#ifndef _IO80211WORKLOOP_H
-#define _IO80211WORKLOOP_H
+#ifndef _CCCAPTURE_H
+#define _CCCAPTURE_H
 
-#include <IOKit/IOWorkLoop.h>
+#include <IOKit/IOService.h>
 
-class IO80211WorkLoop : public IOWorkLoop
+struct CCTimestamp
 {
-    OSDeclareDefaultStructors( IO80211WorkLoop )
+    clock_sec_t  secs;
+    clock_usec_t microsecs;
+};
+
+class CCCapture : public IOService
+{
+    OSDeclareDefaultStructors( CCCapture )
 
 public:
-    static IO80211WorkLoop * workLoop();
-
-    virtual void openGate() APPLE_KEXT_OVERRIDE;
-    virtual void closeGate() APPLE_KEXT_OVERRIDE;
-    virtual int sleepGate( void * event, UInt32 interuptibleType ) APPLE_KEXT_OVERRIDE;
-    virtual int sleepGateDeadline( void * event, UInt32 interuptibleType, AbsoluteTime deadline );
-    virtual void wakeupGate( void * event, bool oneThread ) APPLE_KEXT_OVERRIDE;
-
+    static CCCapture * withProvider( IOService * provider );
+    virtual bool initWithProvider( IOService * provider );
+    virtual void free() APPLE_KEXT_OVERRIDE;
+    
+    virtual bool attach( IOService * provider ) APPLE_KEXT_OVERRIDE;
+    virtual void detach( IOService * provider ) APPLE_KEXT_OVERRIDE;
+    
+    bool startPipe();
+    
+protected:
+    IOService * mProvider;
 };
 
 #endif

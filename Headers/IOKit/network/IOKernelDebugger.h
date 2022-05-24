@@ -356,7 +356,7 @@ public:
     virtual bool init( IOService *                 target,
                        IODebuggerTxHandler         txHandler,
                        IODebuggerRxHandler         rxHandler,
-                       IODebuggerLinkStatusHandler linkUpHandler,
+                       IODebuggerLinkStatusHandler linkStatusHandler,
                        IODebuggerSetModeHandler    setModeHandler);
 
 /*! @function debugger

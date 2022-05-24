@@ -31,24 +31,35 @@
  *
  */
 
-#ifndef _IO80211WORKLOOP_H
-#define _IO80211WORKLOOP_H
+#ifndef _IO80211STRING_H
+#define _IO80211STRING_H
 
-#include <IOKit/IOWorkLoop.h>
+#include <IOKit/IOService.h>
 
-class IO80211WorkLoop : public IOWorkLoop
+class IO80211String : public OSObject
 {
-    OSDeclareDefaultStructors( IO80211WorkLoop )
+    OSDeclareDefaultStructors(IO80211String)
 
 public:
-    static IO80211WorkLoop * workLoop();
+    virtual bool init() APPLE_KEXT_OVERRIDE;
+    virtual void free() APPLE_KEXT_OVERRIDE;
 
-    virtual void openGate() APPLE_KEXT_OVERRIDE;
-    virtual void closeGate() APPLE_KEXT_OVERRIDE;
-    virtual int sleepGate( void * event, UInt32 interuptibleType ) APPLE_KEXT_OVERRIDE;
-    virtual int sleepGateDeadline( void * event, UInt32 interuptibleType, AbsoluteTime deadline );
-    virtual void wakeupGate( void * event, bool oneThread ) APPLE_KEXT_OVERRIDE;
+    static IO80211String * withString( const char * string );
+    bool initWithString( const char * string );
 
+    static IO80211String * withFormat( const char * format, ... );
+    static IO80211String * withFormatAndArguments( const char * format, va_list va );
+    bool initWithFormat( const char * foramt, va_list va );
+
+    bool appendString( const char * string );
+    bool appendFormat( const char * format, ... );
+    bool appendFormatAndArguments( const char * format, va_list va );
+    bool appendStringWithLength( const char * string, UInt32 length );
+    const char * getCStringNoCopy();
+    void printToIOLog();
+
+protected:
+    OSData * mData;
 };
 
 #endif

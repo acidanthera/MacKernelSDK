@@ -493,7 +493,7 @@ public:
     process the output packet provided. The implementation in the driver
     must not block, since this may cause the network stack to be reentered
     from an unsafe point.
-    @param mbuf_t An mbuf chain containing the output packet to be sent on
+    @param m An mbuf chain containing the output packet to be sent on
     the network.
     @param param A parameter provided by the caller.
     @result Returns a return code defined by the caller. 
@@ -884,7 +884,7 @@ public:
 
 /*! @function freePacket
     @abstract Releases the packet given back to the free pool.
-    @param mbuf_t The packet to be freed.
+    @param packet The packet to be freed.
     @param options When kDelayFree option is set, then the packet
     provided to this function will be queued on the free packet queue.
     A subsequent call to releaseFreePackets() will release all queued
@@ -892,7 +892,7 @@ public:
     option, the packet provided will be released immediately. 
 */
 
-    virtual void freePacket(mbuf_t, IOOptionBits options = 0);
+    virtual void freePacket(mbuf_t packet, IOOptionBits options = 0);
 
 /*! @function releaseFreePackets
     @abstract Releases all packets held in the free packet queue.

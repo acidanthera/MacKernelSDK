@@ -31,24 +31,29 @@
  *
  */
 
-#ifndef _IO80211WORKLOOP_H
-#define _IO80211WORKLOOP_H
+#ifndef _IOSKYWALKCONTROLLER_H
+#define _IOSKYWALKCONTROLLER_H
 
-#include <IOKit/IOWorkLoop.h>
+#include <IOKit/IOService.h>
 
-class IO80211WorkLoop : public IOWorkLoop
+class IOSkywalkInterface;
+
+class IOSkywalkController : public IOService
 {
-    OSDeclareDefaultStructors( IO80211WorkLoop )
+    OSDeclareDefaultStructors( IOSkywalkController )
 
 public:
-    static IO80211WorkLoop * workLoop();
+    virtual void free() APPLE_KEXT_OVERRIDE;
+    virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
+    virtual bool handleOpen( IOService * forClient, IOOptionBits options, void * arg ) APPLE_KEXT_OVERRIDE;
+    virtual void handleClose( IOService * forClient, IOOptionBits options ) APPLE_KEXT_OVERRIDE;
+    virtual bool handleIsOpen( const IOService * forClient ) const APPLE_KEXT_OVERRIDE;
+    IOReturn attachInterface( IOSkywalkInterface * interface, IOOptionBits options );
+    IOReturn detachInterface( IOSkywalkInterface * interface, IOOptionBits options );
 
-    virtual void openGate() APPLE_KEXT_OVERRIDE;
-    virtual void closeGate() APPLE_KEXT_OVERRIDE;
-    virtual int sleepGate( void * event, UInt32 interuptibleType ) APPLE_KEXT_OVERRIDE;
-    virtual int sleepGateDeadline( void * event, UInt32 interuptibleType, AbsoluteTime deadline );
-    virtual void wakeupGate( void * event, bool oneThread ) APPLE_KEXT_OVERRIDE;
-
+protected:
+    void  * mRefCon;
+    OSSet * mInterfaces;
 };
 
 #endif
