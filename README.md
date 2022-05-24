@@ -89,6 +89,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - `AppleHIDUsageTables.h` (removed in newer releases)
 - Added private headers for IOBluetoothFamily from 10.6 SDK
     - `IOBluetoothInternal.h` (removed in newer releases)
+- Added private `IOPCIHostBridge` class from IOPCIFamily 484.40.6
 - Added extra compiled and reverse-engineered headers:
     - SMBus (`IOKit/IOSMBusController.h`)
     - Apple Smart Battery (`IOKit/battery/AppleSmartBatteryCommands.h`)
@@ -111,7 +112,7 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `IOFramebuffer.h` to avoid new virtual methods before 10.13
     - In `IONDRVFramebuffer.h` to avoid new virtual methods before 10.13
     - In `IOSCSIParallelInterfaceController.h` to avoid new virtual methods before 10.7
-    - In `IOPCIBridge.h` to avoid new virtual methods before 10.10
+    - In `IOPCIBridge.h` to avoid new virtual methods before 12.0
     - In `IOService.h` to avoid init methods before 10.10
     - In `IOUserClient.h` to avoid new virtual methods before 10.6
     - In `IOBlockStorageDevice.h` to avoid new virtual methods before 10.12
