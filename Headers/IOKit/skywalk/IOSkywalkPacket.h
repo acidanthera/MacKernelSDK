@@ -54,7 +54,7 @@ enum IOSkywalkPacketTypes
 
 struct IOSkywalkPacketDescriptor
 {
-    UInt32 packetIndex;
+    kern_packet_idx_t packetIndex;
     bool singleBuffer;
 };
 
@@ -80,7 +80,7 @@ public:
 
     IOSkywalkPacketQueue * getSourceQueue();
     virtual IOReturn prepareWithQueue( IOSkywalkPacketQueue * queue, IOSkywalkPacketDirection direction = kIOSkywalkPacketDirectionNone, IOOptionBits options = 0 );
-    virtual IOReturn prepare( IOSkywalkPacketQueue * queue, UInt64, IOOptionBits options = 0 );
+    virtual IOReturn prepare( IOSkywalkPacketQueue * queue, UInt64 offset, IOOptionBits options = 0 );
     virtual IOReturn completeWithQueue( IOSkywalkPacketQueue * queue, IOSkywalkPacketDirection direction = kIOSkywalkPacketDirectionNone, IOOptionBits options = 0 );
     virtual IOReturn complete( IOSkywalkPacketQueue * queue, IOOptionBits options = 0 );
 
@@ -91,23 +91,23 @@ public:
     void setSlotReference( void * ref );
     void * getSlotReference();
     virtual UInt32 getPacketType();
-    virtual kern_buflet_t acquireWithPacketHandle( UInt64 handle, IOOptionBits options );
+    virtual kern_buflet_t acquireWithPacketHandle( kern_packet_t handle, IOOptionBits options );
     void cancelCompletionCallback();
     virtual void disposePacket();
 
 protected:
-    void *                      mRefCon;        // 32
-    UInt64                      mPacketHandle;  // 40
+    void *                      mReserved;      // 32
+    kern_packet_t               mPacketHandle;  // 40
     IOSkywalkPacketBuffer    ** mPacketBuffers; // 48
     IOSkywalkPacketQueue      * mSourceQueue;   // 56
     IOSkywalkPacketBufferPool * mBufferPool;    // 64
     kern_buflet_t               mBuflet;        // 72
-    
+
     uint64_t                 _reserved0;         // 80
     UInt32                   mPacketState;       // 88 - 0 on complete, 1 on acquire, 2 on prepare
     UInt32                   mMaxNumBuffers;     // 92
     UInt32                   mActualNumBuffers;  // 96
-    UInt32                   mPacketIndex;       // 100
+    kern_packet_idx_t        mPacketIndex;       // 100
     IOSkywalkPacketDirection mTransferDirection; // 104
     void *                   mSlotReference;     // 112
 };

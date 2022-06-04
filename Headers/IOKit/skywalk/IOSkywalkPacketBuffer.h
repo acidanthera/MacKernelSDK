@@ -53,63 +53,63 @@ struct IOSkywalkPacketBufferDescriptor
 class IOSkywalkPacketBuffer : public IOCommand
 {
     OSDeclareDefaultStructors( IOSkywalkPacketBuffer )
-    
+
 public:
     static IOSkywalkPacketBuffer * withPool( IOSkywalkPacketBufferPool * pool, IOSkywalkPacketBufferDescriptor * desc, IOOptionBits options = 0 );
     virtual bool initWithPool( IOSkywalkPacketBufferPool * pool, IOSkywalkPacketBufferDescriptor * desc, IOOptionBits options = 0 );
     virtual void free() APPLE_KEXT_OVERRIDE;
-    
+
     IOSkywalkPacketBufferPool * getPacketBufferPool();
     UInt32 getBufferSize();
-    
+
     UInt32 getDataLength();
     IOReturn setDataLength( UInt32 length );
     UInt16 getDataOffset();
     IOReturn setDataOffset( UInt16 offset );
     IOReturn setDataOffsetAndLength( UInt16 offset, UInt32 length );
-    
+
     IOSkywalkPacket * getPacket();
     virtual void setPacket( IOSkywalkPacket * packet, IOOptionBits options );
-    
+
     virtual IOReturn prepare( IODirection forDirection = kIODirectionNone );
     virtual IOReturn complete( IODirection forDirection = kIODirectionNone );
-    
+
     IOSkywalkMemorySegment * getMemorySegment();
     UInt64 getMemorySegmentOffset();
     virtual IOReturn prepareWithMemorySegment( IOSkywalkMemorySegment * segment, UInt64 offset, IOOptionBits options = 0 );
     virtual IOReturn completeWithMemorySegment( IOSkywalkMemorySegment * segment, UInt64 offset, IOOptionBits options = 0 );
-    
+
     IOSkywalkPacketQueue * getSourceQueue();
     virtual IOReturn prepareWithQueue( IOSkywalkPacketQueue * queue, IODirection direction = kIODirectionNone, IOOptionBits options = 0 );
     virtual IOReturn completeWithQueue( IOSkywalkPacketQueue * queue, IODirection direction = kIODirectionNone, IOOptionBits options = 0 );
-    
+
     kern_buflet_t getBufletHandle();
     void setBufletHandle( kern_buflet_t handle );
     virtual void acquireWithBufletHandle( kern_buflet_t handle );
-    
+
     UInt64 getBufferHandle();
     virtual void acquireWithBufferHandle( UInt64 handle );
-    
+
     virtual void disposePacketBuffer();
     void cancelCompletionCallback();
-    
+
 public:
-    void                      * mRefCon;       // 32
+    void                      * mReserved;     // 32
     IOSkywalkPacketBufferPool * mPool;         // 40
     kern_buflet_t               mBufletHandle; // 48
     UInt64                      mBufferHandle; // 56
-    
+
     IOSkywalkPacket        * mPacket;        // 64
     IOSkywalkPacketQueue   * mSourceQueue;   // 72
     IOMemoryDescriptor     * mMemDescriptor; // 80
     IOSkywalkMemorySegment * mMemorySegment; // 88
     uint64_t                 __reserved0[2]; // 96
-    
+
     UInt64 mMemorySegmentOffset; // 112
     UInt32 mBufferState;         // 120
     UInt32 mDataLength;          // 124
     UInt16 mDataOffset;          // 128
-    
+
     uint64_t _reserved1; // 136
 };
 

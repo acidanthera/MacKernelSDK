@@ -29,17 +29,17 @@
 #ifndef _SKYWALK_OS_NEXUS_H_
 #define _SKYWALK_OS_NEXUS_H_
 
-#ifdef PRIVATE
-
 #include <stdint.h>
 #include <sys/types.h>
 #include <sys/cdefs.h>
+#include <sys/proc.h>
+#include <net/kpi_interface.h>
 #include <uuid/uuid.h>
 #include <mach/boolean.h>
+#include <IOKit/skywalk/IOSkywalkSupport.h>
 
-#ifdef KERNEL_PRIVATE
 struct ifnet_interface_advisory;
-#endif /* KERNEL_PRIVATE */
+
 
 /*
  * Nexus terminology and overview.  The relationship between the objects are
@@ -76,16 +76,6 @@ typedef enum {
 	NEXUS_TYPE_KERNEL_PIPE,         /* pipe (kernel) */
 	NEXUS_TYPE_NET_IF,              /* network interface (kernel) */
 	NEXUS_TYPE_FLOW_SWITCH,         /* flow switch (user/kernel) */
-#ifdef BSD_KERNEL_PRIVATE
-	/*
-	 * Monitor nexus isn't directly usable on its own; we just
-	 * need a type definition here for it to act as a pseudo
-	 * domain provider.
-	 */
-	NEXUS_TYPE_MONITOR,             /* monitor (user) */
-	NEXUS_TYPE_MAX,                 /* this needs to be last */
-	NEXUS_TYPE_UNDEFINED = -1,      /* for kernel internal use */
-#endif /* BSD_KERNEL_PRIVATE */
 } nexus_type_t;
 
 /*
@@ -239,157 +229,9 @@ typedef struct nexus_mdata {
  */
 #define NEXUS_MAX_KEY_LEN       1024
 
-#ifndef KERNEL
-/*
- * User APIs.
- */
-#if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-__BEGIN_DECLS
-/*
- * Creates a Nexus attribute object.
- *
- * This must be paired with a os_nexus_attr_destroy() on the handle.
- */
-extern nexus_attr_t os_nexus_attr_create(void);
-
-/*
- * Clones a Nexus attribute object.  If source attribute is NULL
- * it behaves just like os_nexus_attr_create();
- *
- * This must be paired with a os_nexus_attr_destroy() on the handle.
- */
-extern nexus_attr_t os_nexus_attr_clone(const nexus_attr_t attr);
-
-/*
- * Sets a value for a given attribute type on a Nexus attribute object.
- */
-extern int os_nexus_attr_set(nexus_attr_t attr,
-    const nexus_attr_type_t type, const uint64_t value);
-
-/*
- * Gets a value for a given attribute type on a Nexus attribute object.
- */
-extern int os_nexus_attr_get(const nexus_attr_t attr,
-    const nexus_attr_type_t type, uint64_t *value);
-
-/*
- * Destroys a Nexus attribute object.
- */
-extern void os_nexus_attr_destroy(nexus_attr_t attr);
-
-/*
- * Opens a handle to the Nexus controller.
- *
- * This must be paired with a os_nexus_controller_destroy() on the handle, in
- * order to remove any remaining active providers and free resources.
- */
-extern nexus_controller_t os_nexus_controller_create(void);
-
-/*
- * Retrieves the file descriptor associated with the Nexus controller.
- */
-extern int os_nexus_controller_get_fd(const nexus_controller_t ctl);
-
-/*
- * Registers a Nexus provider.
- *
- * Anonymous Nexus provider mode implies the freedom to connect to the Nexus
- * instance from any channel client.  Alternatively, named mode requires the
- * Nexus provider to explicitly bind a Nexus instance port to a set of client
- * attributes.  This mode (named) is the default behavior, and is done so to
- * encourage Nexus providers to explicitly know about the clients that it's
- * communicating with.  Specifying anonymous mode can be done via the Nexus
- * attribute NEXUS_ATTR_ANONYMOUS, by setting it to a non-zero value.
- *
- * The client binding attributes include the process ID, the executable UUID,
- * and/or a key blob.  Only a client possessing those will be allowed to open
- * a channel to the Nexus instance port.
- */
-extern int os_nexus_controller_register_provider(const nexus_controller_t ctl,
-    const nexus_name_t name, const nexus_type_t type, const nexus_attr_t attr,
-    uuid_t *prov_uuid);
-
-/*
- * Deregisters a Nexus provider.
- */
-extern int os_nexus_controller_deregister_provider(const nexus_controller_t ctl,
-    const uuid_t prov_uuid);
-
-/*
- * Creates a Nexus instance of a registered provider.
- */
-extern int os_nexus_controller_alloc_provider_instance(
-	const nexus_controller_t ctl, const uuid_t prov_uuid, uuid_t *nx_uuid);
-
-/*
- * Destroys a Nexus instance.
- */
-extern int os_nexus_controller_free_provider_instance(
-	const nexus_controller_t ctl, const uuid_t nx_uuid);
-
-/*
- * Bind a port of a Nexus instance to one or more attributes associated with
- * a channel client: process ID, process executable's UUID, or key blob.
- * This is only applicable to named Nexus provider.
- *
- * Binding to a process ID implies allowing only a channel client with such
- * PID to open the Nexus port.
- *
- * Binding to an executable UUID allows a channel client (regardless of PID
- * or instance) with such executable UUID to open the Nexus port.  When this
- * is requested by a provider that doesn't have the client's executable UUID,
- * a valid client PID must be provided (with the executable UUID zeroed out)
- * in order for the kernel to retrieve the executable UUID from the process
- * and to use that as the bind attribute.  Else, a non-zero executable UUID
- * can be specified (PID is ignored in this case) by the provider.
- *
- * Binding to a key blob allows a channel client possessing the identical
- * key blob to open the Nexus port.  The key blob is opaque to the system,
- * and is left to the Nexus provider to interpret and relay to its client.
- *
- * A Nexus provider must choose to select one or a combination of those
- * attributes for securing access to a port of a named Nexus instance.
- * The provider is also responsible for detecting if the client has gone
- * away, and either to unbind the Nexus instance port indefinitely, or
- * reissue another bind with the new client binding attributes for that
- * same port.  This is to handle cases where the client terminates and
- * is expected to reattach to the same port.
- *
- * All port bindings belonging to a Nexus instance will be automatically
- * removed when the Nexus instance is destroyed.
- */
-extern int os_nexus_controller_bind_provider_instance(
-	const nexus_controller_t ctl, const uuid_t nx_uuid, const nexus_port_t port,
-	const pid_t pid, const uuid_t exec_uuid, const void *key,
-	const uint32_t key_len, const uint32_t bind_flags);
-
-/*
- * Unbind a previously-bound port of a Nexus instance.  This is only
- * applicable to named Nexus provider.  A previously-bound Nexus instance
- * port cannot be bound again until this call is issued.
- */
-extern int os_nexus_controller_unbind_provider_instance(
-	const nexus_controller_t ctl, const uuid_t nx_uuid,
-	const nexus_port_t port);
-
-/*
- * Retrieves current Nexus provider attributes into the nexus_attr_t handle.
- */
-extern int os_nexus_controller_read_provider_attr(const nexus_controller_t ctl,
-    const uuid_t prov_uuid, nexus_attr_t attr);
-
-/*
- * Destroys a Nexus controller handle.
- */
-extern void os_nexus_controller_destroy(nexus_controller_t ctl);
-__END_DECLS
-#endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-#else /* KERNEL */
 /*
  * Kernel APIs.
  */
-#include <sys/proc.h>
-#include <IOKit/skywalk/IOSkywalkSupport.h>
 
 /*
  * Nexus domain provider name.
@@ -1034,6 +876,4 @@ extern int kern_nexus_flow_del(const nexus_controller_t ncd,
     const uuid_t nx_uuid, void *data, size_t data_len);
 
 __END_DECLS
-#endif /* KERNEL */
-#endif /* PRIVATE */
 #endif /* !_SKYWALK_OS_NEXUS_H_ */

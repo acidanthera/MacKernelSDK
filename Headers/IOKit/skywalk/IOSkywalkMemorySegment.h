@@ -76,14 +76,14 @@ public:
     UInt64 getVirtualAddress();
 
 protected:
-    void * mRefCon; // 16
+    void                      * mReserved; // 16
     IOSkywalkPacketBufferPool * mPool; // 24
-    IOMemoryDescriptor * mMemoryDescriptor; // 32
-    OSObject * _unknown; // 40
-    UInt64 mVirtualAddress; // 48
-    IODMACommand * mDMACommand; // 56
-    OSArray * mPacketBufferArray; // 64, stores IOSkywalkPacketBuffers
-    uint64_t _reserved1[6]; // 72
+    IOMemoryDescriptor        * mMemoryDescriptor; // 32
+    OSObject                  * _unknown; // 40
+    UInt64                      mVirtualAddress; // 48
+    IODMACommand              * mDMACommand; // 56
+    OSArray                   * mPacketBufferArray; // 64, stores IOSkywalkPacketBuffers
+    uint64_t                    _reserved1[6]; // 72
 };
 
 #endif

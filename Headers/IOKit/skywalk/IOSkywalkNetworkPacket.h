@@ -54,7 +54,7 @@ public:
     IOReturn getNetworkHeaderOffset( uint32_t * offset );
     IOReturn setDataContainsFCS( bool contain );
     bool     getDataContainsFCS();
-    UInt32   getServiceClass();
+    kern_packet_svc_class_t getServiceClass();
 
     IOReturn setTimestamp( AbsoluteTime timestamp );
     IOReturn getTimestamp( AbsoluteTime * timestamp );
@@ -64,7 +64,7 @@ public:
     IOReturn getExpiryTime( AbsoluteTime * time );
 
     IOReturn getTokenData( void * data, uint16_t * size );
-    IOReturn getPacketID( struct packet_id * packetID );
+    IOReturn getPacketID( packet_id_t * packetID );
 
     bool     isPacketGroupStart();
     bool     isPacketGroupEnd();
@@ -77,7 +77,7 @@ public:
     bool     isLinkMulticast();
 
 protected:
-    void * mRefCon;
+    void * mReserved;
 };
 
 #endif

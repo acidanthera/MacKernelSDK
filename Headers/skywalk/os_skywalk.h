@@ -29,11 +29,9 @@
 #ifndef _SKYWALK_OS_SKYWALK_H
 #define _SKYWALK_OS_SKYWALK_H
 
-#ifdef PRIVATE
-#include <skywalk/os_channel.h>
-#include <skywalk/os_nexus.h>
-#include <skywalk/os_packet.h>
-#endif /* PRIVATE */
+#include <skywalk/channel/os_channel.h>
+#include <skywalk/nexus/os_nexus.h>
+#include <skywalk/packet/os_packet.h>
 
 /*
  * Skywalk ktrace event ID

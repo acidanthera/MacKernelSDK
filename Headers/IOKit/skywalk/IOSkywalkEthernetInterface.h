@@ -79,7 +79,7 @@ public:
     OSMetaClassDeclareReservedUnused( IOSkywalkEthernetInterface, 10 );
     
 protected:
-    void * mRefCon;
+    void * mReserved;
     
     struct ExpansionData
     {

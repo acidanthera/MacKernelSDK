@@ -29,15 +29,13 @@
 #ifndef _SKYWALK_OS_PACKET_H_
 #define _SKYWALK_OS_PACKET_H_
 
-#ifdef PRIVATE
-
 #include <stdint.h>
 #include <sys/types.h>
 #include <sys/cdefs.h>
 #include <uuid/uuid.h>
 #include <mach/boolean.h>
 #include <mach/vm_types.h>
-#include <skywalk/os_nexus.h>
+#include <skywalk/nexus/os_nexus.h>
 
 /*
  * @enum packet_svc_class_t
@@ -287,115 +285,6 @@ typedef struct packet_id {
 #define PKT_TRACE_TX_DRV_START      (SKYWALKDBG_CODE(DBG_SKYWALK_PACKET, 0x012) | DBG_FUNC_START)
 #define PKT_TRACE_TX_DRV_END        (SKYWALKDBG_CODE(DBG_SKYWALK_PACKET, 0x012) | DBG_FUNC_END)
 
-
-#ifndef KERNEL
-/*
- * User APIs.
- */
-
-/*
- * Opaque handles.
- */
-struct __user_buflet;
-typedef uint64_t                        packet_t;
-typedef struct __user_buflet            *buflet_t;
-
-#if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-/*
- * Packets specific.
- */
-extern int os_packet_set_headroom(const packet_t, const uint8_t);
-extern uint8_t os_packet_get_headroom(const packet_t);
-extern int os_packet_set_link_header_length(const packet_t, const uint8_t);
-extern uint8_t os_packet_get_link_header_length(const packet_t);
-extern int os_packet_set_link_broadcast(const packet_t);
-extern boolean_t os_packet_get_link_broadcast(const packet_t);
-extern int os_packet_set_link_multicast(const packet_t);
-extern boolean_t os_packet_get_link_multicast(const packet_t);
-extern int os_packet_set_link_ethfcs(const packet_t);
-extern boolean_t os_packet_get_link_ethfcs(const packet_t);
-extern int os_packet_set_transport_traffic_background(const packet_t);
-extern boolean_t os_packet_get_transport_traffic_background(const packet_t);
-extern int os_packet_set_transport_traffic_realtime(const packet_t);
-extern boolean_t os_packet_get_transport_traffic_realtime(const packet_t);
-extern int os_packet_set_transport_retransmit(const packet_t);
-extern boolean_t os_packet_get_transport_retransmit(const packet_t);
-extern int os_packet_set_transport_last_packet(const packet_t);
-extern int os_packet_set_service_class(const packet_t,
-    const packet_svc_class_t);
-extern packet_svc_class_t os_packet_get_service_class(const packet_t);
-extern int os_packet_set_compression_generation_count(const packet_t, const uint32_t);
-extern uint32_t os_packet_get_compression_generation_count(const packet_t);
-extern int os_packet_set_traffic_class(const packet_t, packet_traffic_class_t);
-extern packet_traffic_class_t os_packet_get_traffic_class(const packet_t);
-extern int os_packet_set_inet_checksum(const packet_t,
-    const packet_csum_flags_t, const uint16_t, const uint16_t);
-extern packet_csum_flags_t os_packet_get_inet_checksum(const packet_t,
-    uint16_t *, uint16_t *);
-extern void os_packet_set_group_start(const packet_t);
-extern boolean_t os_packet_get_group_start(const packet_t);
-extern void os_packet_set_group_end(const packet_t);
-extern boolean_t os_packet_get_group_end(const packet_t);
-extern int os_packet_set_expire_time(const packet_t, const uint64_t);
-extern int os_packet_get_expire_time(const packet_t, uint64_t *);
-extern int os_packet_set_token(const packet_t, const void *, const uint16_t);
-extern int os_packet_get_packetid(const packet_t, packet_id_t *);
-extern int os_packet_set_packetid(const packet_t, packet_id_t *);
-extern int os_packet_set_vlan_tag(const packet_t, const uint16_t,
-    const boolean_t);
-extern int os_packet_get_vlan_tag(const packet_t, uint16_t *, boolean_t *);
-extern uint16_t os_packet_get_vlan_id(const uint16_t);
-extern uint8_t os_packet_get_vlan_priority(const uint16_t);
-#define HAS_OS_PACKET_GET_WAKE_FLAG 1
-extern boolean_t os_packet_get_wake_flag(const packet_t);
-#define HAS_OS_PACKET_KEEP_ALIVE 1
-extern boolean_t os_packet_get_keep_alive(const packet_t);
-extern void os_packet_set_keep_alive(const packet_t, const boolean_t);
-extern boolean_t os_packet_get_truncated(const packet_t);
-extern uint8_t os_packet_get_aggregation_type(const packet_t ph);
-
-/*
- * Quantum & Packets.
- */
-extern void os_packet_set_flow_uuid(const packet_t, const uuid_t flow_uuid);
-extern void os_packet_get_flow_uuid(const packet_t, uuid_t *flow_uuid);
-extern void os_packet_clear_flow_uuid(const packet_t);
-extern uint32_t os_packet_get_data_length(const packet_t);
-extern uint32_t os_packet_get_buflet_count(const packet_t);
-extern buflet_t os_packet_get_next_buflet(const packet_t, const buflet_t);
-extern uint32_t os_packet_get_segment_count(const packet_t ph);
-extern int os_packet_finalize(const packet_t);
-extern int os_packet_add_buflet(const packet_t ph, const buflet_t bprev,
-    const buflet_t bnew);
-/* increment use count on packet */
-extern int os_packet_increment_use_count(const packet_t ph);
-/* decrement use count on packet and retrieve new value  */
-extern int os_packet_decrement_use_count(const packet_t ph, uint16_t *use_cnt);
-
-extern packet_trace_id_t os_packet_get_trace_id(const packet_t ph);
-extern void os_packet_set_trace_id(const packet_t ph, packet_trace_id_t);
-extern void os_packet_trace_event(const packet_t ph, uint32_t);
-
-/*
- * Misc.
- */
-extern uint32_t os_inet_checksum(const void *, uint32_t, uint32_t);
-extern uint32_t os_copy_and_inet_checksum(const void *, void *,
-    uint32_t, uint32_t);
-
-/*
- * Buflets.
- */
-extern int os_buflet_set_data_offset(const buflet_t, const uint16_t);
-extern uint16_t os_buflet_get_data_offset(const buflet_t);
-extern int os_buflet_set_data_length(const buflet_t, const uint16_t);
-extern uint16_t os_buflet_get_data_length(const buflet_t);
-extern void *os_buflet_get_object_address(const buflet_t);
-extern uint32_t os_buflet_get_object_limit(const buflet_t);
-extern void *os_buflet_get_data_address(const buflet_t);
-extern uint16_t os_buflet_get_data_limit(const buflet_t);
-#endif  /* (!_POSIX_C_SOURCE || _DARWIN_C_SOURCE) */
-#else /* KERNEL */
 /*
  * Kernel APIs.
  */
@@ -503,9 +392,6 @@ struct kern_pbufpool_memory_info {
  * We have a separate enum to separate the namespace just in case we need it.
  */
 typedef enum {
-#ifdef BSD_KERNEL_PRIVATE
-	KPKT_SC_UNSPEC  = -1, /* Internal: not specified */
-#endif /* BSD_KERNEL_PRIVATE */
 	KPKT_SC_BK_SYS  = PKT_SC_BK_SYS, /* lowest class */
 	KPKT_SC_BK      = PKT_SC_BK,
 
@@ -539,16 +425,10 @@ typedef enum {
  * We have a separate enum to separate the namespace just in case we need it.
  */
 typedef enum {
-#ifdef BSD_KERNEL_PRIVATE
-	KPKT_TC_UNSPEC  = -1,           /* Internal: not specified */
-#endif /* BSD_KERNEL_PRIVATE */
 	KPKT_TC_BE      = PKT_TC_BE,
 	KPKT_TC_BK      = PKT_TC_BK,
 	KPKT_TC_VI      = PKT_TC_VI,
 	KPKT_TC_VO      = PKT_TC_VO,
-#ifdef BSD_KERNEL_PRIVATE
-	KPKT_TC_MAX     = 4,            /* Internal: traffic class count */
-#endif /* BSD_KERNEL_PRIVATE */
 } kern_packet_traffic_class_t;
 
 /*
@@ -755,6 +635,5 @@ extern errno_t kern_pbufpool_alloc_buflet_nosleep(const kern_pbufpool_t,
 extern void kern_pbufpool_destroy(kern_pbufpool_t);
 extern kern_segment_idx_t kern_segment_get_index(const kern_segment_t);
 __END_DECLS
-#endif /* KERNEL */
-#endif /* PRIVATE */
+
 #endif /* !_SKYWALK_OS_PACKET_H_ */

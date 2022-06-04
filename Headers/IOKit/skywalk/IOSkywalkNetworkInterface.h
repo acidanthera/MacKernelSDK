@@ -92,7 +92,7 @@ public:
     virtual IOReturn enableNetworkWake( UInt32 flags );
     
     virtual IOReturn calculateRingSizeForQueue( const IOSkywalkPacketQueue * queue, UInt32 * size );
-    IOReturn getServiceClassIndex( UInt32 serviceClass, UInt32 * index );
+    IOReturn getServiceClassIndex( kern_packet_svc_class_t serviceClass, UInt32 * index );
     virtual UInt32 getMaxTransferUnit();
     virtual UInt32 getMinPacketSize();
     virtual IOReturn getMTU( UInt32 * mtu );
@@ -119,7 +119,7 @@ public:
     OSMetaClassDeclareReservedUnused( IOSkywalkNetworkInterface, 10 );
     
 protected:
-    void * mRefCon;
+    void * mReserved;
     
     struct ExpansionData
     {

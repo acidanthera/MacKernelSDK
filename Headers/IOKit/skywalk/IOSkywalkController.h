@@ -52,7 +52,7 @@ public:
     IOReturn detachInterface( IOSkywalkInterface * interface, IOOptionBits options );
 
 protected:
-    void  * mRefCon;
+    void  * mReserved;
     OSSet * mInterfaces;
 };
 
