@@ -302,8 +302,18 @@ protected:
     OSMetaClassDeclareReservedUnused(IOPCIBridge,  5);
 #endif
 
-    // Unused Padding
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_12_0
+    OSMetaClassDeclareReservedUsed(IOPCIBridge,  6);
+    virtual UInt32 extendedFindPCICapability(struct IOPCIConfigEntry * entry,
+                                             UInt32 capabilityID,
+                                             IOByteCount * offset = NULL);
+public:
+    virtual bool init( OSDictionary *  propTable );
+#else
     OSMetaClassDeclareReservedUnused(IOPCIBridge,  6);
+#endif
+  
+    // Unused Padding
     OSMetaClassDeclareReservedUnused(IOPCIBridge,  7);
     OSMetaClassDeclareReservedUnused(IOPCIBridge,  8);
     OSMetaClassDeclareReservedUnused(IOPCIBridge,  9);
@@ -480,5 +490,21 @@ public:
 };
 
 #define kIOPCI2PCIBridgeName	"IOPP"
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_12_0
+class IOPCIHostBridge : public IOPCIBridge
+{
+    OSDeclareDefaultStructors(IOPCIHostBridge);
+public:
+    virtual void free(void) APPLE_KEXT_OVERRIDE;
+
+    virtual IOService *probe(IOService * provider, SInt32 *score) APPLE_KEXT_OVERRIDE;
+    virtual bool configure(IOService * provider) APPLE_KEXT_OVERRIDE;
+
+    // Host bridge data is shared, when bridges have shared resources, i.e. PCIe config space (legacy systems).
+    // They must be unique, if bridge has no resources to share (Apple Silicone).
+    IOService *bridgeData;
+};
+#endif
 
 #endif /* ! _IOKIT_IOPCIBRIDGE_H */
