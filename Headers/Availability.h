@@ -139,6 +139,36 @@
 #define __API_TO_BE_DEPRECATED 100000
 #endif
 
+#ifndef __API_TO_BE_DEPRECATED_MACOS
+#define __API_TO_BE_DEPRECATED_MACOS 100000
+#endif
+
+#ifndef __API_TO_BE_DEPRECATED_IOS
+#define __API_TO_BE_DEPRECATED_IOS 100000
+#endif
+
+#ifndef __API_TO_BE_DEPRECATED_TVOS
+#define __API_TO_BE_DEPRECATED_TVOS 100000
+#endif
+
+#ifndef __API_TO_BE_DEPRECATED_WATCHOS
+#define __API_TO_BE_DEPRECATED_WATCHOS 100000
+#endif
+
+#ifndef __API_TO_BE_DEPRECATED_BRIDGEOS
+
+#endif
+
+#ifndef __API_TO_BE_DEPRECATED_MACCATALYST
+#define __API_TO_BE_DEPRECATED_MACCATALYST 100000
+#endif
+
+#ifndef __API_TO_BE_DEPRECATED_DRIVERKIT
+#define __API_TO_BE_DEPRECATED_DRIVERKIT 100000
+#endif
+
+
+
 #include <AvailabilityVersions.h>
 #include <AvailabilityInternal.h>
 
