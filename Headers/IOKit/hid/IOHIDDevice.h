@@ -665,6 +665,8 @@ public:
                      IOMemoryDescriptor * report,
 	                 IOHIDReportType      reportType = kIOHIDReportTypeInput,
 	                 IOOptionBits         options    = 0);
+  
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
 
 /*! @function newReportInterval
     @abstract Returns a number object that describes the actual polling
@@ -673,6 +675,12 @@ public:
     on the object returned. */
     OSMetaClassDeclareReservedUsed(IOHIDDevice,  9);
     virtual OSNumber * newReportIntervalNumber() const;
+  
+#else
+  
+  OSMetaClassDeclareReservedUnused(IOHIDDevice, 9);
+  
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_8
 

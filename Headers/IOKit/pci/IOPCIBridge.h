@@ -279,9 +279,13 @@ protected:
     virtual UInt32 extendedFindPCICapability( IOPCIAddressSpace space,
                                               UInt32 capabilityID, IOByteCount * offset = 0 );
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
     OSMetaClassDeclareReservedUsed(IOPCIBridge, 2);
     virtual IOReturn setDeviceASPMState(IOPCIDevice * device,
                                 IOService * client, IOOptionBits state);
+#else
+  OSMetaClassDeclareReservedUnused(IOPCIBridge,  2);
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_7
     OSMetaClassDeclareReservedUsed(IOPCIBridge, 3);
@@ -414,7 +418,9 @@ public:
 
     virtual IOReturn requestProbe( IOOptionBits options ) APPLE_KEXT_OVERRIDE;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
     virtual void systemWillShutdown(IOOptionBits specifier) APPLE_KEXT_OVERRIDE;
+#endif
 
     virtual void saveBridgeState( void );
 
@@ -444,8 +450,10 @@ public:
     virtual void configWrite8( IOPCIAddressSpace space,
                                         UInt8 offset, UInt8 data ) APPLE_KEXT_OVERRIDE;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
     virtual IOReturn setDeviceASPMState(IOPCIDevice * device,
                                 IOService * client, IOOptionBits state) APPLE_KEXT_OVERRIDE;
+#endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_7
     virtual IOReturn checkLink(uint32_t options = 0) APPLE_KEXT_OVERRIDE;
