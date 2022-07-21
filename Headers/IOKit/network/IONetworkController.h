@@ -1095,6 +1095,7 @@ public:
                            UInt64                  speed        = 0,
                            OSData *                data         = 0);
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 /*! @function systemWillShutdown
     @abstract Handles system shutdown and restart notifications.
     @discussion Overrides <code>IOService::systemWillShutdown</code> in order
@@ -1113,6 +1114,7 @@ public:
 
     virtual IOReturn setAggressiveness(
             unsigned long type, unsigned long newLevel ) APPLE_KEXT_OVERRIDE;
+#endif
 
 protected:
 
