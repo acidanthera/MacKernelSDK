@@ -420,6 +420,7 @@ public:
 
     virtual void stop(IOService * provider) APPLE_KEXT_OVERRIDE;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 /*! @function message
     @abstract Receives messages delivered from an attached provider.
     @discussion Handles the <code>kIOMessageDeviceSignaledWakeup</code> message
@@ -432,6 +433,7 @@ public:
 
     virtual IOReturn message(
         UInt32 type, IOService * provider, void * argument ) APPLE_KEXT_OVERRIDE;
+#endif
 
 /*! @typedef IONetworkController::Action
     @discussion Definition of a C function that can be called
