@@ -44,11 +44,17 @@ __BEGIN_DECLS
 
 /* Send a message from the kernel */
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
 extern mach_msg_return_t mach_msg_send_from_kernel_proper(
 	mach_msg_header_t       *msg,
 	mach_msg_size_t         send_size);
 
 #define mach_msg_send_from_kernel mach_msg_send_from_kernel_proper
+#else
+extern mach_msg_return_t mach_msg_send_from_kernel(
+  mach_msg_header_t       *msg,
+  mach_msg_size_t         send_size);
+#endif
 
 extern mach_msg_return_t
 mach_msg_rpc_from_kernel_proper(
