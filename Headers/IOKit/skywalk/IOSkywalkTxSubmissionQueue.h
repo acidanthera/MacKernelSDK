@@ -36,28 +36,20 @@
 
 #include <IOKit/skywalk/IOSkywalkPacketQueue.h>
 
+class IOSkywalkTxSubmissionQueue;
+class IOSkywalkPacketTable;
+class IOSkywalkRing;
+
+typedef IOReturn (*IOSkywalkQueryFreeSpaceHandler) ( OSObject * owner, IOSkywalkTxSubmissionQueue * queue, UInt32 * outSpace );
+typedef IOReturn (*IOSkywalkTxSubmissionQueueAction)( OSObject * owner, IOSkywalkTxSubmissionQueue * queue, const IOSkywalkPacket **, UInt32, void * );
+
+struct IOSkywalkTxSubmissionQueueStats; // size = 128
+
 class IOSkywalkTxSubmissionQueue : public IOSkywalkPacketQueue
 {
     OSDeclareDefaultStructors( IOSkywalkTxSubmissionQueue )
 
 public:
-    
-    void addReporters( IOService * target, OSSet * set );
-    UInt64 getReportChannelValue( UInt64 reportChannel );
-
-    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  0 );
-    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  1 );
-    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  2 );
-    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  3 );
-    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  4 );
-    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  5 );
-    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  6 );
-    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  7 );
-    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  8 );
-    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  9 );
-    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue, 10 );
-
-protected:
     virtual IOReturn initialize( void * refCon ) APPLE_KEXT_OVERRIDE;
     virtual void finalize() APPLE_KEXT_OVERRIDE;
     virtual void enable() APPLE_KEXT_OVERRIDE;
@@ -74,23 +66,60 @@ protected:
     virtual IOReturn requestDequeue( void * refCon, IOOptionBits options );
     virtual void purgePackets();
 
+    virtual IOReturn performCommand( UInt32 command, void * data, size_t dataSize ) APPLE_KEXT_OVERRIDE;
+    virtual void packetCompletion( IOSkywalkPacket * packet, IOSkywalkPacketQueue * queue, IOOptionBits options ) APPLE_KEXT_OVERRIDE;
     void adjustPacketCounters();
     virtual UInt32 getPacketCount() APPLE_KEXT_OVERRIDE;
     virtual IOReturn getDataByteCount( UInt32 * count ) APPLE_KEXT_OVERRIDE;
-    UInt32 getEffectiveCapacity(uint);
+    UInt32 getEffectiveCapacity( IOOptionBits options );
     virtual bool checkForWork() APPLE_KEXT_OVERRIDE;
 
-    static UInt32 defaultQueryFreeSpaceHandler(OSObject *,IOSkywalkTxSubmissionQueue*,uint *);
-    UInt32 defaultQueryFreeSpace(uint *);
+    // outSpace is unused
+    static UInt32 defaultQueryFreeSpaceHandler( OSObject * owner, IOSkywalkTxSubmissionQueue * queue, UInt32 * outSpace );
+    UInt32 defaultQueryFreeSpace( UInt32 * outSpace );
 
-    virtual IOReturn performCommand( UInt32 command, void * data, size_t dataSize ) APPLE_KEXT_OVERRIDE;
-    virtual void packetCompletion( IOSkywalkPacket * packet, IOSkywalkPacketQueue * queue, IOOptionBits options ) APPLE_KEXT_OVERRIDE;
-    
-    static IOSkywalkTxSubmissionQueue * withPoolAndServiceClass(IOSkywalkPacketBufferPool *,uint,uint,uint,OSObject *,uint (*)(OSObject *,IOSkywalkTxSubmissionQueue*,uint *),uint (*)(OSObject *,IOSkywalkTxSubmissionQueue*,IOSkywalkPacket * const*,uint,void *),void *,uint);
-    static IOSkywalkTxSubmissionQueue * withPool(IOSkywalkPacketBufferPool *,uint,uint,OSObject *,uint (*)(OSObject *,IOSkywalkTxSubmissionQueue*,uint *),uint (*)(OSObject *,IOSkywalkTxSubmissionQueue*,IOSkywalkPacket * const*,uint,void *),void *,uint);
-    static IOSkywalkTxSubmissionQueue * withPool(IOSkywalkPacketBufferPool *,uint,uint,OSObject *,uint (*)(OSObject *,IOSkywalkTxSubmissionQueue*,IOSkywalkPacket * const*,uint,void *),void *,uint);
-    virtual bool initWithPool(IOSkywalkPacketBufferPool *,uint,uint,uint,OSObject *,uint (*)(OSObject *,IOSkywalkTxSubmissionQueue*,uint *),uint (*)(OSObject *,IOSkywalkTxSubmissionQueue*,IOSkywalkPacket * const*,uint,void *),void *,uint);
+    static IOSkywalkTxSubmissionQueue * withPoolAndServiceClass( IOSkywalkPacketBufferPool * pool, UInt32 capacity, UInt32 queueId, kern_packet_svc_class_t serviceClass, OSObject * owner, IOSkywalkQueryFreeSpaceHandler handler, IOSkywalkTxSubmissionQueueAction action, void * refCon, IOOptionBits options );
+    static IOSkywalkTxSubmissionQueue * withPool( IOSkywalkPacketBufferPool * pool, UInt32 capacity, UInt32 queueId, OSObject * owner, IOSkywalkQueryFreeSpaceHandler handler, IOSkywalkTxSubmissionQueueAction action, void * refCon, IOOptionBits options );
+    static IOSkywalkTxSubmissionQueue * withPool( IOSkywalkPacketBufferPool * pool, UInt32 capacity, UInt32 queueId, OSObject * owner, IOSkywalkTxSubmissionQueueAction action, void * refCon, IOOptionBits options );
+    virtual bool initWithPool( IOSkywalkPacketBufferPool * pool, UInt32 capacity, UInt32 queueId, kern_packet_svc_class_t serviceClass, OSObject * owner, IOSkywalkQueryFreeSpaceHandler handler, IOSkywalkTxSubmissionQueueAction action, void * refCon, IOOptionBits options );
     virtual void free() APPLE_KEXT_OVERRIDE;
+
+    void addReporters( IOService * target, OSSet * set );
+    UInt64 getReportChannelValue( UInt64 reportChannel );
+
+    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  0 );
+    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  1 );
+    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  2 );
+    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  3 );
+    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  4 );
+    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  5 );
+    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  6 );
+    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  7 );
+    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  8 );
+    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue,  9 );
+    OSMetaClassDeclareReservedUnused( IOSkywalkTxSubmissionQueue, 10 );
+
+protected:
+    void * mReserved; // 192
+    IOSkywalkRing * mRing; // 200
+    IOSkywalkPacketTable * mTable; // 208
+    IOSkywalkQueryFreeSpaceHandler mQueryFreeSpaceHandler; // 216
+    ifnet_t mIfnet; // 224
+    IOSkywalkTxSubmissionQueueStats * mStats; // 232
+    uint64_t _reserved0[3]; // 240
+    UInt32 mPacketCount; // 264
+    UInt32 mNumCompletedPackets; // 268
+    // 272
+    // 276
+    // 280
+    // 284
+    // 288
+    // 292
+    // 300
+    // 308
+    // 316
 };
+
+// 344
 
 #endif

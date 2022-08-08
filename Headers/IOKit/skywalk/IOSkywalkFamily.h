@@ -42,8 +42,8 @@
 #include <IOKit/skywalk/IOSkywalkPacketBuffer.h>
 #include <IOKit/skywalk/IOSkywalkPacketBufferPool.h>
 #include <IOKit/skywalk/IOSkywalkPacketQueue.h>
-//#include <IOKit/skywalk/IOSkywalkRxSubmissionQueue.h>
-//#include <IOKit/skywalk/IOSkywalkRxCompletionQueue.h>
+#include <IOKit/skywalk/IOSkywalkRxSubmissionQueue.h>
+#include <IOKit/skywalk/IOSkywalkRxCompletionQueue.h>
 #include <IOKit/skywalk/IOSkywalkTxSubmissionQueue.h>
 #include <IOKit/skywalk/IOSkywalkTxCompletionQueue.h>
 #include <IOKit/skywalk/IOSkywalkController.h>
@@ -51,3 +51,4 @@
 #include <IOKit/skywalk/IOSkywalkInterface.h>
 #include <IOKit/skywalk/IOSkywalkNetworkInterface.h>
 #include <IOKit/skywalk/IOSkywalkEthernetInterface.h>
+#include <IOKit/skywalk/IOUserNetworkEthernetNicProxy.h>
