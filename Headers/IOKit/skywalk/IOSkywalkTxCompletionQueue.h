@@ -38,9 +38,25 @@
 
 extern void queueNotifyAction( IOSkywalkPacketQueue * target, void * refCon );
 
-typedef IOReturn (*IOSkywalkTxCompletionQueueAction)(OSObject * owner, IOSkywalkTxCompletionQueue *, IOSkywalkPacket **, uint, void *); // rename!!!
-
+class IOSkywalkTxCompletionQueue;
 class IOSkywalkPacketTable;
+
+typedef IOReturn (*IOSkywalkTxCompletionQueueAction)( OSObject * owner, IOSkywalkTxCompletionQueue *, IOSkywalkPacket **, UInt32, void * );
+
+/*! @struct IOSkywalkTxCompletionQueueStats
+    @abstract A structure containing counters of serveral functions in the IOSkywalkTxCompletionQueue class.
+    @field enqueueCounter Increment with each successful enqueue operation, regardless of the function utilized.
+    @field checkForWorkCounter Increment with each call to checkForWork() if enqueueAndCompletePackets() is executed.
+    @field enqueueFailureCounter Increment with each failed enqueue operation.
+    @field completeCounter The number of packets completed, updated each time completePackets() is called.
+*/
+struct IOSkywalkTxCompletionQueueStats
+{
+    UInt64 enqueueCounter;
+    UInt64 checkForWorkCounter;
+    UInt64 enqueueFailureCounter;
+    UInt64 completeCounter;
+};
 
 class IOSkywalkTxCompletionQueue : public IOSkywalkPacketQueue
 {
@@ -53,19 +69,19 @@ public:
     virtual void disable() APPLE_KEXT_OVERRIDE;
 
     virtual IOReturn performCommand( UInt32 command, void * data, size_t dataSize ) APPLE_KEXT_OVERRIDE;
-    virtual IOReturn requestEnqueue( void *, UInt32 );
-    virtual IOReturn enqueuePackets( const IOSkywalkPacket ** packets, uint, IOOptionBits options );
-    virtual IOReturn enqueuePackets( const queue_entry * packets, uint, IOOptionBits options );
+    virtual IOReturn requestEnqueue( void * packets, IOOptionBits options );
+    virtual IOReturn enqueuePackets( const IOSkywalkPacket ** packets, UInt32 packetCount, IOOptionBits options );
+    virtual IOReturn enqueuePackets( const queue_entry * packets, UInt32 packetCount, IOOptionBits options );
     void completePackets();
-    IOReturn enqueueAndCompletePackets(void *);
+    IOReturn enqueueAndCompletePackets( void * packets );
     virtual UInt32 getPacketCount() APPLE_KEXT_OVERRIDE;
-    UInt32 getEffectiveCapacity(uint);
+    UInt32 getEffectiveCapacity( IOOptionBits options );
     virtual bool checkForWork() APPLE_KEXT_OVERRIDE;
-    
+
     static IOSkywalkTxCompletionQueue * withPool( IOSkywalkPacketBufferPool * pool, UInt32 capacity, UInt32 queueId, OSObject * owner, IOSkywalkTxCompletionQueueAction action, void * refCon, IOOptionBits options );
     virtual bool initWithPool( IOSkywalkPacketBufferPool * pool, UInt32 capacity, UInt32 queueId, OSObject * owner, IOSkywalkTxCompletionQueueAction action, void * refCon, IOOptionBits options );
     virtual void free() APPLE_KEXT_OVERRIDE;
-    
+
     void addReporters( IOService * target, OSSet * set );
     UInt64 getReportChannelValue( UInt64 reportChannel );
 
@@ -80,14 +96,56 @@ public:
     OSMetaClassDeclareReservedUnused( IOSkywalkTxCompletionQueue,  8 );
     OSMetaClassDeclareReservedUnused( IOSkywalkTxCompletionQueue,  9 );
     OSMetaClassDeclareReservedUnused( IOSkywalkTxCompletionQueue, 10 );
-    
-protected:
-    void * mReserved; // 192
-    IOSkywalkPacketTable * mTable; // 200
-    IOLock * mLock; // 208
-    void * x_size_32; // 216
-};
 
-// size = 280
+protected:
+    /*! @var mReserved
+     *   The first variable of every class in IOSkywalkFamily is reserved.
+     *   Offset: 192. */
+    void * mReserved;
+
+    /*! @var mTable
+     *   The IOSkywalkPacketTable in which the packets of this queue are stored.
+     *   Offset: 200. */
+    IOSkywalkPacketTable * mTable;
+
+    /*! @var mInitLock
+     *   An IOLock governing the initialize() and finalize() routines.
+     *   Offset: 208. */
+    IOLock * mInitLock;
+
+    /*! @var mStats
+     *   Structure containing various counters related to this class.
+     *   Offset: 216. */
+    IOSkywalkTxCompletionQueueStats * mStats;
+
+    /*! @var mCommandData
+     *   Data for command 0x50000.
+     *   Offset: 224. */
+    void * mCommandData;
+
+    uint64_t _reserved0[2];
+
+    /*! @var mActionStatus
+     *   Set when $link action runs and clear when it completes. No new enqueue request should happen when this flag is set.
+     *   Offset: 248. */
+    UInt32 mActionStatus;
+
+    /*! @var mInitCounter
+     *   Incremented by initialize() and decremented by finalize().
+     *   Offset: 252. */
+    UInt32 mInitCounter;
+
+    /*! @var mWorkCounter
+     *   The number of works to do, incremented in requestEnqueue(). A work in this class could be considered as an enqueue request.
+     *   Offset: 256. */
+    UInt32 mWorkCounter;
+
+    /*! @var mNumCheckedWorks
+     *   Updated with the value of $link mWorkCounter whenever checkForWork() is called.
+     *   Offset: 260. */
+    UInt32 mNumCheckedWorks;
+
+    uint64_t _reserved1[2];
+};
 
 #endif

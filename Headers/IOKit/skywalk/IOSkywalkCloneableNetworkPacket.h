@@ -52,9 +52,9 @@ public:
     IOReturn getPacketBufferObjectBaseAddr( uint8_t ** baseAddr );
     IOReturn getPacketBufferObjectIOBusBaseAddr( uint8_t ** baseAddr );
 
-    virtual bool getPacketBuffers( IOSkywalkPacketBuffer ** buffers, UInt32 count );
-    virtual UInt32 getPacketBufferCount();
-    virtual IOMemoryDescriptor * getMemoryDescriptor();
+    virtual UInt32 getPacketBuffers( IOSkywalkPacketBuffer ** buffers, UInt32 count ) APPLE_KEXT_OVERRIDE;
+    virtual UInt32 getPacketBufferCount() APPLE_KEXT_OVERRIDE;
+    virtual IOMemoryDescriptor * getMemoryDescriptor() APPLE_KEXT_OVERRIDE;
     virtual IOReturn setDataLength( UInt32 length ) APPLE_KEXT_OVERRIDE;
     virtual UInt32 getDataLength() APPLE_KEXT_OVERRIDE;
     virtual IOReturn setDataOffset( UInt16 offset ) APPLE_KEXT_OVERRIDE;

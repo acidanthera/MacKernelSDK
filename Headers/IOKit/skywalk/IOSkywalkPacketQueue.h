@@ -110,7 +110,7 @@ protected:
     UInt32 mBufferSize; // 160
     IODirection mDirection; // 164
     kern_packet_svc_class_t mServiceClass; // 168
-    uint64_t _reserved1; // 172
+    uint64_t _reserved1[2]; // 172
     bool mQueueReady; // 188
 };
 

@@ -21,7 +21,6 @@ extern "C" {
 
 #include <sys/types.h>
 #include <stdint.h>
-typedef __darwin_ptrdiff_t ptrdiff_t;
 
 typedef unsigned int	vUInt32 __attribute__((__vector_size__(16)));
 typedef signed int		vSInt32 __attribute__((__vector_size__(16)));
@@ -30,7 +29,10 @@ typedef unsigned char	vUInt8  __attribute__((__vector_size__(16)));
 // Types for 24 bit data
 typedef struct { uint8_t bytes[3];} vDSP_uint24;
 typedef struct { uint8_t bytes[3];} vDSP_int24;
-    
+
+#if !defined APPLEDSP_DONT_DEFINE_PTRDIFF
+typedef __darwin_ptrdiff_t ptrdiff_t;
+
 void 
 vDSP_conv(
 	const float	vDSP_signal[],
@@ -202,6 +204,8 @@ vDSP_vsub(
 	float		vDSP_result[],
 	ptrdiff_t	vDSP_strideResult,
 	size_t		vDSP_size);
+
+#endif	//	#if !defined APPLEDSP_DONT_DEFINE_PTRDIFF
 
 typedef struct vDSP_biquad_SetupStruct *vDSP_biquad_Setup;
     
