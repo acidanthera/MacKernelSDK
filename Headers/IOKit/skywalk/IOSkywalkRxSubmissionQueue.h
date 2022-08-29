@@ -36,31 +36,41 @@
 
 #include <IOKit/skywalk/IOSkywalkPacketQueue.h>
 
+class IOSkywalkRxSubmissionQueue;
+class IOSkywalkPacketTable;
+
+typedef IOReturn (*IOSkywalkRxSubmissionQueueAction)( OSObject * owner, IOSkywalkRxSubmissionQueue *, const IOSkywalkPacket **, UInt32, void * );
+
+struct IOSkywalkRxSubmissionQueueStats; // 56
+
 class IOSkywalkRxSubmissionQueue : public IOSkywalkPacketQueue
 {
     OSDeclareDefaultStructors( IOSkywalkRxSubmissionQueue )
 
 public:
-    
-    withPool(IOSkywalkPacketBufferPool *,uint,uint,uint,OSObject *,uint (*)(OSObject *,IOSkywalkRxSubmissionQueue*,IOSkywalkPacket * const*,uint,void *),void *,uint)
-    initWithPool(IOSkywalkPacketBufferPool *,uint,uint,uint,OSObject *,uint (*)(OSObject *,IOSkywalkRxSubmissionQueue*,IOSkywalkPacket * const*,uint,void *),void *,uint)
-    retryDequeue(void)
-    free(void)
-    adjustPacketCounters(void)
-    getEffectiveCapacity(uint)
-    enable(void)
-    disable(void)
-    checkForWork(void)
-    gatedDequeue(void *)
-    requestDequeue(void *,uint)
-    packetCompletion(IOSkywalkPacket *,IOSkywalkPacketQueue *,uint)
-    getPacketCount(void)
-    initialize(void *)
-    finalize(void)
-    performCommand(uint,void *,ulong)
-    addReporters(IOService *,OSSet *)
-    getReportChannelValue(ulong long)
-    
+    virtual IOReturn initialize( void * refCon ) APPLE_KEXT_OVERRIDE;
+    virtual void finalize() APPLE_KEXT_OVERRIDE;
+    virtual void enable() APPLE_KEXT_OVERRIDE;
+    virtual void disable() APPLE_KEXT_OVERRIDE;
+
+    void gatedDequeue( void * refCon );
+    virtual IOReturn requestDequeue( void * refCon, IOOptionBits options );
+    void retryDequeue();
+
+    virtual IOReturn performCommand( UInt32 command, void * data, size_t dataSize ) APPLE_KEXT_OVERRIDE;
+    virtual void packetCompletion( IOSkywalkPacket * packet, IOSkywalkPacketQueue * queue, IOOptionBits options ) APPLE_KEXT_OVERRIDE;
+    void adjustPacketCounters();
+    virtual UInt32 getPacketCount() APPLE_KEXT_OVERRIDE;
+    UInt32 getEffectiveCapacity( IOOptionBits options );
+    virtual bool checkForWork() APPLE_KEXT_OVERRIDE;
+
+    static IOSkywalkRxSubmissionQueue * withPool( IOSkywalkPacketBufferPool * pool, UInt32 capacity, UInt32 queueId, kern_packet_svc_class_t serviceClass, OSObject * owner, IOSkywalkRxSubmissionQueueAction action, void * refCon, IOOptionBits options );
+    virtual bool initWithPool( IOSkywalkPacketBufferPool * pool, UInt32 capacity, UInt32 queueId, kern_packet_svc_class_t serviceClass, OSObject * owner, IOSkywalkRxSubmissionQueueAction action, void * refCon, IOOptionBits options )
+    virtual void free() APPLE_KEXT_OVERRIDE;
+
+    void addReporters( IOService * target, OSSet * set );
+    UInt64 getReportChannelValue( UInt64 reportChannel );
+
     OSMetaClassDeclareReservedUnused( IOSkywalkRxSubmissionQueue,  0 );
     OSMetaClassDeclareReservedUnused( IOSkywalkRxSubmissionQueue,  1 );
     OSMetaClassDeclareReservedUnused( IOSkywalkRxSubmissionQueue,  2 );
@@ -74,7 +84,20 @@ public:
     OSMetaClassDeclareReservedUnused( IOSkywalkRxSubmissionQueue, 10 );
 
 protected:
-    
+    void * mReserved; // 192
+    IOSkywalkPacketTable * mTable; // 200
+    IOLock * mInitLock; // 208
+    IOSkywalkRxSubmissionQueueStats * mStats; // 216
+    thread_call_t mRetryDequeueThread; // 224
+    uint64_t _reserved0; // 232
+    UInt32 mQueueId; // 240
+    UInt32 ; // 244
+    UInt32 ; // 248
+    UInt32 ; // 252
+    UInt32 ; // 256
+    UInt32 ; // 260
+    UInt32 ; // 264
+    uint64_t _reserved1[2]; // 272
 };
 
 #endif

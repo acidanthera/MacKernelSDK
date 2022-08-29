@@ -72,11 +72,12 @@ To compile for 32-bit you will need to add a set of flags in your project:
 ## Extensions and modifications
 
 - Based on macOS 11 SDK from Xcode 12.0 (12A7209)
-- Added extra headers from `xnu-6153.141.1`:
+- Added extra headers from `xnu-8019.80.24`:
     - Absolute time macros (`libkern/OSBase.h`)
     - Cryptography (`corecrypto`, `libkern/crypto`)
     - CPU PM (`i386/cpu_topology.h` and `i386/pmCPU.h`)
     - MAC Framework (`security/_label.h`, `security/mac_framework.h`, `security/mac_policy.h`)
+    - Skywalk Subsystem (`skywalk`, `IOKit/skywalk/IOSkywalkSupport.h`)
 - Added private headers from IOHIDFamily 1446.140.2:
     - `IOHIDPrivateKeys.h`
     - `IOHIDEventServiceKeys_Private.h`
@@ -97,7 +98,8 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - NKE private APIs (`IOKit/network`)
     - IOUSBFamily from macOS 10.10 SDK
     - IO80211Family from Black80211 originally created by Roman Peshkov
-    - IOBluetoothFamily by cjiang (`IOKit/bluetooth`)
+    - IOSkywalkFamily by cjiang (`IOKit/skywalk`)
+    - IOBluetoothFamily by cjiang (`IOKit/bluetooth`) for macOS 11 and below
 - Added kmod targeting earlier macOS kernels:
     - 10.6 64-bit or newer (`Library/x86_64/libkmod.a`)
     - 10.4 or newer (`Library/universal/libkmod.a`)

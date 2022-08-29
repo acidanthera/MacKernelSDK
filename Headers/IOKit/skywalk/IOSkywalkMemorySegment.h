@@ -37,21 +37,20 @@
 #include <IOKit/IODMACommand.h>
 #include <IOKit/skywalk/IOSkywalkPacketBufferPool.h>
 
-struct DMASpecification
-{
-    SegmentFunction  outSegFunc;
-    UInt8            numAddressBits;
-    UInt64           maxSegmentSize;
-    MappingOptions   mappingOptions;
-    UInt64           maxTransferSize;
-    UInt32           alignment;
-    IOMapper *       mapper;
-};
-
 struct IOSkywalkMemorySegmentDescriptor
 {
     UInt32 packetBufferCount;
-    DMASpecification * specs;
+
+    struct
+    {
+        IODMACommand::SegmentFunction outSegFunc;
+        UInt8 numAddressBits;
+        UInt64 maxSegmentSize;
+        IODMACommand::MappingOptions mappingOptions;
+        UInt64 maxTransferSize;
+        UInt32 alignment;
+        IOMapper * mapper;
+    } * specs;
 };
 
 class IOSkywalkMemorySegment : public OSObject

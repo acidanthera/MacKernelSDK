@@ -36,12 +36,43 @@
 
 #include <IOKit/skywalk/IOSkywalkPacketQueue.h>
 
+class IOSkywalkRxCompletionQueue;
+class IOSkywalkPacketTable;
+
+typedef IOReturn (*IOSkywalkRxCompletionQueueAction)( OSObject * owner, IOSkywalkRxCompletionQueue *, IOSkywalkPacket **, UInt32, void * );
+
 class IOSkywalkRxCompletionQueue : public IOSkywalkPacketQueue
 {
     OSDeclareDefaultStructors( IOSkywalkRxCompletionQueue )
 
 public:
-    
+    virtual IOReturn initialize( void * refCon ) APPLE_KEXT_OVERRIDE;
+    virtual void finalize() APPLE_KEXT_OVERRIDE;
+    virtual void enable() APPLE_KEXT_OVERRIDE;
+    virtual void disable() APPLE_KEXT_OVERRIDE;
+
+    IOReturn synchronizeNonChain(  IOOptionBits options );
+    virtual IOReturn synchronize( IOOptionBits options ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn syncPackets( kern_packet_t * packetArray, UInt32 * packetCount, IOOptionBits options ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn sendNotification( IOOptionBits options ) APPLE_KEXT_OVERRIDE;
+
+    virtual IOReturn setPacketPoller( IOSkywalkPacketPoller * poller ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn performCommand( UInt32 command, void * data, size_t dataSize ) APPLE_KEXT_OVERRIDE;
+    IOReturn gatedEnqueue( void * refCon, bool * );
+    virtual IOReturn requestEnqueue( void * packets, IOOptionBits options );
+    virtual IOReturn enqueuePackets( const IOSkywalkPacket ** packets, UInt32 packetCount, IOOptionBits options );
+    virtual IOReturn enqueuePackets( const queue_entry * packets, UInt32 packetCount, IOOptionBits options );
+    virtual UInt32 getPacketCount() APPLE_KEXT_OVERRIDE;
+    UInt32 getEffectiveCapacity( IOOptionBits options );
+    virtual bool checkForWork() APPLE_KEXT_OVERRIDE;
+
+    static IOSkywalkRxCompletionQueue * withPool( IOSkywalkPacketBufferPool * pool, UInt32 capacity, UInt32 queueId, OSObject * owner, IOSkywalkRxCompletionQueueAction action, void * refCon, IOOptionBits options );
+    virtual bool initWithPool( IOSkywalkPacketBufferPool * pool, UInt32 capacity, UInt32 queueId, OSObject * owner, IOSkywalkRxCompletionQueueAction action, void * refCon, IOOptionBits options );
+    virtual void free() APPLE_KEXT_OVERRIDE;
+
+    void addReporters( IOService * target, OSSet * set );
+    UInt64 getReportChannelValue( UInt64 reportChannel );
+
     OSMetaClassDeclareReservedUnused( IOSkywalkRxCompletionQueue,  0 );
     OSMetaClassDeclareReservedUnused( IOSkywalkRxCompletionQueue,  1 );
     OSMetaClassDeclareReservedUnused( IOSkywalkRxCompletionQueue,  2 );
@@ -55,33 +86,8 @@ public:
     OSMetaClassDeclareReservedUnused( IOSkywalkRxCompletionQueue, 10 );
 
 protected:
-    
+
 };
+// 296
 
 #endif
-
-virtual IOReturn requestEnqueue(void *,uint);
-virtual IOReturn enqueuePackets(IOSkywalkPacket * const*,uint,uint);
-virtual IOReturn enqueuePackets(queue_entry const*,uint,uint);
-
-static IOSkywalkRxCompletionQueue * withPool(IOSkywalkPacketBufferPool *,uint,uint,OSObject *,uint (*)(OSObject *,IOSkywalkRxCompletionQueue*,IOSkywalkPacket **,uint,void *),void *,uint);
-virtual bool initWithPool(IOSkywalkPacketBufferPool *,uint,uint,OSObject *,uint (*)(OSObject *,IOSkywalkRxCompletionQueue*,IOSkywalkPacket **,uint,void *),void *,uint);
-
-virtual void free() APPLE_KEXT_OVERRIDE;
-UInt32 getEffectiveCapacity(uint);
-virtual void enable() APPLE_KEXT_OVERRIDE;
-virtual void disable() APPLE_KEXT_OVERRIDE;
-virtual bool checkForWork() APPLE_KEXT_OVERRIDE;
-IOSkywalkRxCompletionQueue::gatedEnqueue(void *,bool *)
-virtual IOReturn initialize( void * refCon ) APPLE_KEXT_OVERRIDE;
-virtual void finalize() APPLE_KEXT_OVERRIDE;
-IOSkywalkRxCompletionQueue::synchronizeNonChain(uint)
-virtual IOReturn synchronize( IOOptionBits options ) APPLE_KEXT_OVERRIDE;
-virtual IOReturn syncPackets( kern_packet_t * packetArray, UInt32 * packetCount, IOOptionBits options ) APPLE_KEXT_OVERRIDE;
-virtual IOReturn setPacketPoller( IOSkywalkPacketPoller * poller ) APPLE_KEXT_OVERRIDE;
-
-virtual UInt32 getPacketCount() APPLE_KEXT_OVERRIDE;
-virtual IOReturn sendNotification( IOOptionBits options ) APPLE_KEXT_OVERRIDE;
-virtual IOReturn performCommand( UInt32 command, void * data, size_t dataSize ) APPLE_KEXT_OVERRIDE;
-void addReporters( IOService * target, OSSet * set );
-UInt64 getReportChannelValue( UInt64 reportChannel );
