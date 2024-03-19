@@ -238,7 +238,8 @@ enum {
     kIONetworkFeatureTSOIPv6                    = 0x020,
     kIONetworkFeatureTransmitCompletionStatus   = 0x040,
     kIONetworkFeatureHWTimeStamp                = 0x080,
-    kIONetworkFeatureSWTimeStamp                = 0x100
+    kIONetworkFeatureSWTimeStamp                = 0x100,
+    kIONetworkFeatureLRO                        = 0x200
 };
 
 #ifdef KERNEL
