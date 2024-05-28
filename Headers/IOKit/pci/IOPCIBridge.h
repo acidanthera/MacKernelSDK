@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2000 Apple Computer, Inc. All rights reserved.
+ * Copyright (c) 1998-2021 Apple Computer, Inc. All rights reserved.
  *
  * @APPLE_LICENSE_HEADER_START@
  * 
@@ -44,6 +44,13 @@
 class IOPCIConfigurator;
 class IOPCIDevice;
 class IOPCIMessagedInterruptController;
+class IOPCIHostBridgeData;
+
+enum
+{
+	kCheckLinkParents  = 0x00000001,
+	kCheckLinkForPower = 0x00000002,
+};
 
 enum {
     kIOPCIResourceTypeMemory         = 0,
@@ -52,6 +59,64 @@ enum {
     kIOPCIResourceTypeBusNumber      = 3,
     kIOPCIResourceTypeCount          = 4,
 };
+
+// Adapter hotplug states
+enum {
+    kIOPCIAdapterPresent           = 0,
+    // Summary: Adapter present, slot powered, power indicator on
+    // Transitions:
+    //     -> kIOPCIAdapterHotRemovePending: Attn Button pressed
+
+    kIOPCIAdapterHotAddPending     = 1,
+    // Summary: Adapter present, slot not powered, power indicator blinking. 5s
+    //          "abort interval" timer started.
+    // Transitions:
+    //    -> kIOPCIAdapterPresent: 5s elapses. Power controller turned.
+    //    -> kIOPCIAdapterNotPresent: Attention button pressed again before 5s
+    //       elapses. Timer cancelled.
+
+    kIOPCIAdapterNotPresent        = 2,
+    // Summary: Adapter not present, slot not powered, power indicator off
+    // Transitions:
+    //   -> kIOPCIAdapterHotAddPending: Attn Button pressed
+
+    kIOPCIAdapterHotRemovePending  = 3,
+    // Summary: Adapter present, slot powered, power indicator blinking. 5s
+    //          "abort interval" timer started.
+    // Transitions:
+    //   -> kIOPCIAdapterNotPresentPending: 5s elapses. nub terminated and
+    //      power controller turned off. Another timer set for 1s.
+    //   -> kIOPCIAdapterPresent: Attention button pressed again before 5s
+    //      elapses. Timer cancelled.
+
+    kIOPCIAdapterNotPresentPending = 4,
+    // Summary: Adapter not present, slot not powered, power indicator blinking.
+    //          1s timer started.
+    //
+    // In this state, software must 1 second before turning off the
+    // power indicator or attempting to turn on the power controller.
+    // (PCIe base spec sec 6.7.1.8 ("Power Controller"))
+    // Transitions:
+    //   -> kIOPCIAdapterNotPresent: 1s timer elapses, turn off power
+    //      indicator, allow hotplugs.
+
+    kIOPCIAdapterUnused            = 5,
+    // Summary: Adapter hotplug not supported.
+};
+
+typedef struct
+{
+    IOService * device;
+    uintptr_t op;
+    void * result;
+    void * arg;
+} configOpParams;
+
+typedef struct
+{
+    IOService * provider;
+    uint8_t busNum;
+} probeBusParams;
 
 /*!
     @class IOPCIBridge
@@ -63,6 +128,8 @@ class IOPCIBridge : public IOService
     friend class IOPCIDevice;
     friend class IOPCI2PCIBridge;
     friend class IOPCIConfigurator;
+    friend class IOPCIEventSource;
+    friend class IOPCIHostBridge;
 
     OSDeclareAbstractStructors(IOPCIBridge)
 
@@ -74,27 +141,26 @@ private:
 
     void removeDevice( IOPCIDevice * device, IOOptionBits options = 0 );
 
-	void restoreQEnter(IOPCIDevice * device);
+    void restoreQEnter(IOPCIDevice * device);
     void restoreQRemove(IOPCIDevice * device);
 
-	IOReturn restoreTunnelState(IOPCIDevice * rootDevice, IOOptionBits options, 
+    IOReturn restoreTunnelState(IOPCIDevice * rootDevice, IOOptionBits options, 
                                 bool * didTunnelController);
     IOReturn restoreMachineState( IOOptionBits options, IOPCIDevice * device );
     void tunnelsWait(IOPCIDevice * device);
-    static IOReturn finishMachineState(IOOptionBits options);
-	static IOReturn systemPowerChange(void * target, void * refCon,
-										UInt32 messageType, IOService * service,
-										void * messageArgument, vm_size_t argSize);
 
     IOReturn _restoreDeviceState( IOPCIDevice * device, IOOptionBits options );
     IOReturn _restoreDeviceDependents(IOPCIDevice * device, IOOptionBits options, IOPCIDevice * forDependent);
+
+    IOReturn resolveInterrupts(IOPCIDevice * nub );
     IOReturn resolveLegacyInterrupts( IOService * provider, IOPCIDevice * nub );
-    IOReturn resolveMSIInterrupts   ( IOService * provider, IOPCIDevice * nub );
+    IOReturn resolveMSIInterrupts   ( IOService * provider, IOPCIDevice * nub, UInt32 numRequired = 0, UInt32 numRequested = 0 );
 
     IOReturn relocate(IOPCIDevice * device, uint32_t options);
-	void spaceFromProperties( IORegistryEntry * regEntry,
+    void spaceFromProperties( IORegistryEntry * regEntry,
                               IOPCIAddressSpace * space );
-	void updateWakeReason(IOPCIDevice * device);
+    void updateWakeReason(IOPCIDevice * device);
+    bool childPrefersMSIX( IOPCIDevice * device );
 
 protected:
 #if !defined(__arm64__)
@@ -103,12 +169,22 @@ protected:
     static SInt64 compareAddressCell( UInt32 cellCount, UInt32 cleft[], UInt32 cright[] );
 #endif
     IOReturn setDeviceASPMBits(IOPCIDevice * device, uint32_t bits);
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_12_0
+    IOReturn setDeviceASPML1Bit(IOPCIDevice * device, uint32_t bits);
+#endif
+
     IOReturn setDeviceL1PMBits(IOPCIDevice * device, uint32_t bits);
     IOReturn setDeviceCLKREQBits(IOPCIDevice * device, uint32_t bits);
 
-    IOReturn setDevicePowerState(IOPCIDevice * device, IOOptionBits options,
-								 unsigned long prevState, unsigned long newState);
+    IOReturn setDevicePowerState(IOPCIDevice * device, IOOptionBits options, unsigned long prevState, unsigned long newState);
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_12_0
+    IOReturn configOp(configOpParams *params);
+#else
     static IOReturn configOp(IOService * device, uintptr_t op, void * result, void * arg = 0);
+#endif
+
     static void     deferredProbe(IOPCIDevice * device);
 
     void * __reserved1;
@@ -121,6 +197,11 @@ protected:
     {
         struct IOPCIRange * rangeLists[kIOPCIResourceTypeCount];
         IOPCIMessagedInterruptController *messagedInterruptController;
+        IOPCIHostBridgeData *hostBridgeData;
+        atomic_bool readyToProbe;
+        bool commandCompletedSupport;
+        bool commandSent;
+        bool childrenInReset;
     };
 
 /*! @var reserved
@@ -130,11 +211,10 @@ private:
     ExpansionData *reserved;
 
 protected:
-	IOWorkLoop * getConfiguratorWorkLoop(void) const;
+    IOWorkLoop * getConfiguratorWorkLoop(void) const;
 
 public:
-	static IOPCIEventSource * createEventSource(
-			         OSObject * owner, IOPCIEventSource::Action action, uint32_t options);
+    static IOPCIEventSource * createEventSource(OSObject * owner, IOPCIEventSource::Action action, uint32_t options);
 
 public:
     virtual void probeBus( IOService * provider, UInt8 busNum );
@@ -183,28 +263,28 @@ private:
     virtual IOReturn getDTNubAddressing( IOPCIDevice * nub );
 
 public:
-    virtual void free( void ) APPLE_KEXT_OVERRIDE;
+    virtual void free( void );
 
-    virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
+    virtual bool start( IOService * provider );
 
-    virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
+    virtual void stop( IOService * provider );
 
     virtual bool configure( IOService * provider );
 
-	virtual IOReturn setProperties(OSObject * properties) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn setProperties(OSObject * properties);
 
     virtual IOReturn newUserClient(task_t owningTask, void * securityID,
                                    UInt32 type,  OSDictionary * properties,
-                                   IOUserClient ** handler) APPLE_KEXT_OVERRIDE;
+                                   IOUserClient ** handler);
 
-	virtual unsigned long maxCapabilityForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
-	virtual unsigned long initialPowerStateForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
-	virtual unsigned long powerStateForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
+    virtual unsigned long maxCapabilityForDomainState ( IOPMPowerFlags domainState );
+    virtual unsigned long initialPowerStateForDomainState ( IOPMPowerFlags domainState );
+    virtual unsigned long powerStateForDomainState ( IOPMPowerFlags domainState );
 
     virtual IOReturn callPlatformFunction(const OSSymbol * functionName,
                                           bool waitForFunction,
                                           void * param1, void * param2,
-                                          void * param3, void * param4) APPLE_KEXT_OVERRIDE;
+                                          void * param3, void * param4);
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -236,30 +316,30 @@ public:
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    virtual IOReturn createAGPSpace( IOAGPDevice * master,
+    virtual IOReturn createAGPSpace( IOAGPDevice * lead,
                                      IOOptionBits options,
                                      IOPhysicalAddress * address, 
                                      IOPhysicalLength * length );
 
-    virtual IOReturn destroyAGPSpace( IOAGPDevice * master );
+    virtual IOReturn destroyAGPSpace( IOAGPDevice * lead );
 
-    virtual IORangeAllocator * getAGPRangeAllocator( IOAGPDevice * master );
+    virtual IORangeAllocator * getAGPRangeAllocator( IOAGPDevice * lead );
 
-    virtual IOOptionBits getAGPStatus( IOAGPDevice * master,
+    virtual IOOptionBits getAGPStatus( IOAGPDevice * lead,
                                        IOOptionBits options = 0 );
-    virtual IOReturn resetAGPDevice( IOAGPDevice * master,
+    virtual IOReturn resetAGPDevice( IOAGPDevice * lead,
                                      IOOptionBits options = 0 );
 
-    virtual IOReturn getAGPSpace( IOAGPDevice * master,
+    virtual IOReturn getAGPSpace( IOAGPDevice * lead,
                                   IOPhysicalAddress * address, 
                                   IOPhysicalLength * length );
 
-    virtual IOReturn commitAGPMemory( IOAGPDevice * master, 
+    virtual IOReturn commitAGPMemory( IOAGPDevice * lead, 
                                       IOMemoryDescriptor * memory,
                                       IOByteCount agpOffset,
                                       IOOptionBits options );
 
-    virtual IOReturn releaseAGPMemory(  IOAGPDevice * master, 
+    virtual IOReturn releaseAGPMemory(  IOAGPDevice * lead, 
                                         IOMemoryDescriptor * memory, 
                                         IOByteCount agpOffset,
                                         IOOptionBits options );
@@ -296,7 +376,7 @@ protected:
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_10
     OSMetaClassDeclareReservedUsed(IOPCIBridge, 4);
-	  virtual IOReturn enableLTR(IOPCIDevice * device, bool enable);
+    virtual IOReturn enableLTR(IOPCIDevice * device, bool enable);
 
     OSMetaClassDeclareReservedUsed(IOPCIBridge, 5);
     virtual IOPCIEventSource * createEventSource(IOPCIDevice * device,
@@ -316,14 +396,43 @@ public:
 #else
     OSMetaClassDeclareReservedUnused(IOPCIBridge,  6);
 #endif
-  
-    // Unused Padding
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_0
+protected:
+    OSMetaClassDeclareReservedUsed(IOPCIBridge,  7);
+    virtual IOReturn setLinkSpeed(tIOPCILinkSpeed linkSpeed, bool retrain) = 0;
+
+    OSMetaClassDeclareReservedUsed(IOPCIBridge,  8);
+    virtual IOReturn getLinkSpeed(tIOPCILinkSpeed *linkSpeed) = 0;
+
+    bool isSupportedLinkSpeed(IOPCIDevice *device, tIOPCILinkSpeed linkSpeed);
+    void setTargetLinkSpeed(IOPCIDevice *device, tIOPCILinkSpeed linkSpeed);
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_4
+    IOReturn linkRetrain(IOPCIDevice *device, bool waitForLinkUp);
+#endif
+
+    OSMetaClassDeclareReservedUsed(IOPCIBridge,  9);
+	virtual void warmResetDisable(void);
+
+    OSMetaClassDeclareReservedUsed(IOPCIBridge, 10);
+	virtual void warmResetEnable(void);
+
+    OSMetaClassDeclareReservedUsed(IOPCIBridge, 11);
+	virtual bool supportsWarmReset(void);
+
+    OSMetaClassDeclareReservedUsed(IOPCIBridge, 12);
+	virtual IOReturn waitForLinkUp(IOPCIDevice *bridgeDevice);
+#else
     OSMetaClassDeclareReservedUnused(IOPCIBridge,  7);
     OSMetaClassDeclareReservedUnused(IOPCIBridge,  8);
     OSMetaClassDeclareReservedUnused(IOPCIBridge,  9);
     OSMetaClassDeclareReservedUnused(IOPCIBridge, 10);
     OSMetaClassDeclareReservedUnused(IOPCIBridge, 11);
     OSMetaClassDeclareReservedUnused(IOPCIBridge, 12);
+#endif
+
+    // Unused Padding
     OSMetaClassDeclareReservedUnused(IOPCIBridge, 13);
     OSMetaClassDeclareReservedUnused(IOPCIBridge, 14);
     OSMetaClassDeclareReservedUnused(IOPCIBridge, 15);
@@ -343,6 +452,70 @@ public:
     OSMetaClassDeclareReservedUnused(IOPCIBridge, 29);
     OSMetaClassDeclareReservedUnused(IOPCIBridge, 30);
     OSMetaClassDeclareReservedUnused(IOPCIBridge, 31);
+
+#if TARGET_CPU_ARM || TARGET_CPU_ARM64
+protected:
+
+    virtual IOReturn deviceMemoryRead(IOMemoryDescriptor* sourceBase,
+                                     IOByteCount         sourceOffset,
+                                     IOMemoryDescriptor* destinationBase,
+                                     IOByteCount         destinationOffset,
+                                     IOByteCount         size);
+
+    virtual IOReturn deviceMemoryRead(IOMemoryDescriptor* sourceBase,
+                                      IOByteCount         sourceOffset,
+                                      void*               destination,
+                                      IOByteCount         size);
+
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_0
+private:
+	IOReturn terminateChild(IOPCIDevice *child);
+	IOReturn terminateChildGated(IOPCIDevice *child);
+	void hotReset(IOPCIDevice *bridgeDevice);
+	void warmReset(void);
+	IOReturn waitForResetComplete(void);
+    IOReturn resetDeviceGated(tIOPCIDeviceResetTypes *type,
+							  tIOPCIDeviceResetOptions *options);
+    IOReturn waitForTerminateThreadCall(thread_call_t threadCall);
+    IOReturn waitForDeviceReady(IOPCIDevice *child);
+
+protected:
+    void slotControlWrite(IOPCIDevice *device, uint16_t data, uint16_t mask);
+
+public:
+    void setInReset(bool inReset);
+
+private:
+    void probeBusGated( probeBusParams *params );
+
+public:
+    /*! @function resetDevice
+     *   @abstract     Reset the downstream PCIe device.
+	 *   @discussion   If this is a multi-function device, all functions associated with the device will be reset.
+	 *                 Device configuration state is saved prior to resetting the device and restored after reset completes.
+	 *                 During reset, the caller must not attempt to access the device.
+	 *                 This call will block until the link comes up and the device is usable (except for type kIOPCIDeviceResetTypeWarmResetDisable).
+	 *   @param type     tIOPCIDeviceResetTypes.
+	 *   @param options  tIOPCIDeviceResetOptions.
+	 *   @return       kIOReturnSuccess if the reset specified is supported
+	 */
+    IOReturn resetDevice(tIOPCIDeviceResetTypes type,
+						 tIOPCIDeviceResetOptions options = kIOPCIDeviceResetOptionNone);
+
+protected:
+	void updateLinkStatusProperty(uint16_t linkStatus);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_4
+	// findDeviceByXXX retains the returned IOPCIDevice object
+	IOPCIDevice *findDeviceByBDF(IOPCIAddressSpace space);
+	IOPCIDevice *findDeviceByMemAddress(IOPhysicalAddress address);
+#endif
+
+private:
+    void waitForDartToQuiesce(IOPCIDevice *nub);
 };
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -355,35 +528,42 @@ class IOPCI2PCIBridge : public IOPCIBridge
     OSDeclareDefaultStructors(IOPCI2PCIBridge)
 
 protected:
-	IOFilterInterruptEventSource * fBridgeInterruptSource;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
+    IOInterruptEventSource * fBridgeInterruptSource;
+#else
+    IOFilterInterruptEventSource * fBridgeInterruptSource;
+#endif
 
 private:
     IOPCIDevice *                  fBridgeDevice;
-	IOTimerEventSource *	       fTimerProbeES;
-	IOWorkLoop *                   fWorkLoop;
-	IOPMDriverAssertionID 		   fPMAssertion;
+    IOTimerEventSource *           fTimerProbeES;
+    IOTimerEventSource *           fAttnButtonTimer;
+    IOTimerEventSource *           fDLLSCEventTimer;
+    IOWorkLoop *                   fWorkLoop;
+    IOPMDriverAssertionID          fPMAssertion;
     IOSimpleLock *                 fISRLock;
     struct IOPCIAERRoot *          fAERRoot;
-	uint32_t                       __resvA[6];
-	int32_t                        fTunnelL1EnableCount;
-	uint32_t                       fHotplugCount;
+    uint32_t                       __resvA[6];
+    int32_t                        fTunnelL1EnableCount;
+    uint32_t                       fHotplugCount;
 
-	uint8_t                        _resvA[3];
+    uint8_t                        _resvA[3];
     uint8_t                        fHotPlugInts;
-	uint8_t                        fIntsPending;
-	uint8_t                        fIsAERRoot;
+    uint8_t                        fIntsPending;
+    uint8_t                        fIsAERRoot;
 
-	uint8_t                        fPresence;
-	uint8_t                        fWaitingLinkEnable;
-	uint8_t                        fLinkChangeOnly;
-	uint8_t                        fBridgeInterruptEnablePending;
-	uint8_t                        fNeedProbe;
-	uint8_t                        fPresenceInt;
-	uint8_t						   fBridgeMSI;
-	uint8_t						   fNoDevice;
-	uint8_t						   fLinkControlWithPM;
-	uint8_t						   fPowerState;
-	char						   fLogName[32];
+    uint8_t                        fPresence;
+    uint8_t                        fWaitingLinkEnable;
+    uint8_t                        fLinkChangeOnly;
+    uint8_t                        fBridgeInterruptEnablePending;
+    uint8_t                        fNeedProbe;
+    uint8_t                        fPresenceInt;
+    uint8_t                        fBridgeMSI;
+    uint8_t                        fNoDevice;
+    uint8_t                        fLinkControlWithPM;
+    uint8_t                        fPowerState;
+    uint8_t                        fAdapterState;
+    char                           fLogName[32];
 ;
 
 /*! @struct ExpansionData
@@ -397,29 +577,29 @@ private:
 
 public:
 
-    virtual UInt8 firstBusNum( void ) APPLE_KEXT_OVERRIDE;
-    virtual UInt8 lastBusNum( void ) APPLE_KEXT_OVERRIDE;
+    virtual UInt8 firstBusNum( void ) override;
+    virtual UInt8 lastBusNum( void ) override;
 
 public:
-    virtual void free() APPLE_KEXT_OVERRIDE;
+    virtual void free() override;
 
-    virtual bool serializeProperties( OSSerialize * serialize ) const APPLE_KEXT_OVERRIDE;
+    virtual bool serializeProperties( OSSerialize * serialize ) const override;
 
     virtual IOService * probe(  IOService *     provider,
-                                SInt32 *        score ) APPLE_KEXT_OVERRIDE;
+                                SInt32 *        score ) override;
 
-    virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
+    virtual bool start( IOService * provider ) override;
 
-    virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
+    virtual void stop( IOService * provider ) override;
 
-    virtual bool configure( IOService * provider ) APPLE_KEXT_OVERRIDE;
+    virtual bool configure( IOService * provider ) override;
 
-    virtual void probeBus( IOService * provider, UInt8 busNum ) APPLE_KEXT_OVERRIDE;
+    virtual void probeBus( IOService * provider, UInt8 busNum ) override;
 
-    virtual IOReturn requestProbe( IOOptionBits options ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn requestProbe( IOOptionBits options ) override;
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
-    virtual void systemWillShutdown(IOOptionBits specifier) APPLE_KEXT_OVERRIDE;
+    virtual void systemWillShutdown(IOOptionBits specifier) override;
 #endif
 
     virtual void saveBridgeState( void );
@@ -427,43 +607,61 @@ public:
     virtual void restoreBridgeState( void );
 
     IOReturn setPowerState( unsigned long powerState,
-                            IOService * whatDevice ) APPLE_KEXT_OVERRIDE;
+                            IOService * whatDevice ) override;
 
-	void adjustPowerState(unsigned long state);
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_14_4
+    virtual IOReturn powerStateDidChangeTo (IOPMPowerFlags  capabilities,
+                                            unsigned long   stateNumber,
+                                            IOService*      whatDevice) override;
+#endif
+
+    void adjustPowerState(unsigned long state);
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_0
+    virtual IOReturn addPowerChild( IOService * theChild ) override;
+
+    virtual IOReturn removePowerChild( IOPowerConnection * theChild ) override;
+#endif
 
     virtual IOReturn saveDeviceState( IOPCIDevice * device,
-                                      IOOptionBits options = 0 ) APPLE_KEXT_OVERRIDE;
+                                      IOOptionBits options = 0 ) override;
 
-    virtual bool publishNub( IOPCIDevice * nub, UInt32 index ) APPLE_KEXT_OVERRIDE;
+    virtual bool publishNub( IOPCIDevice * nub, UInt32 index ) override;
 
-    virtual IODeviceMemory * ioDeviceMemory( void ) APPLE_KEXT_OVERRIDE;
+    virtual IODeviceMemory * ioDeviceMemory( void ) override;
 
-    virtual IOPCIAddressSpace getBridgeSpace( void ) APPLE_KEXT_OVERRIDE;
+    virtual IOPCIAddressSpace getBridgeSpace( void ) override;
 
-    virtual UInt32 configRead32( IOPCIAddressSpace space, UInt8 offset ) APPLE_KEXT_OVERRIDE;
+    virtual UInt32 configRead32( IOPCIAddressSpace space, UInt8 offset ) override;
     virtual void configWrite32( IOPCIAddressSpace space,
-                                        UInt8 offset, UInt32 data ) APPLE_KEXT_OVERRIDE;
-    virtual UInt16 configRead16( IOPCIAddressSpace space, UInt8 offset ) APPLE_KEXT_OVERRIDE;
+                                        UInt8 offset, UInt32 data ) override;
+    virtual UInt16 configRead16( IOPCIAddressSpace space, UInt8 offset ) override;
     virtual void configWrite16( IOPCIAddressSpace space,
-                                        UInt8 offset, UInt16 data ) APPLE_KEXT_OVERRIDE;
-    virtual UInt8 configRead8( IOPCIAddressSpace space, UInt8 offset ) APPLE_KEXT_OVERRIDE;
+                                        UInt8 offset, UInt16 data ) override;
+    virtual UInt8 configRead8( IOPCIAddressSpace space, UInt8 offset ) override;
     virtual void configWrite8( IOPCIAddressSpace space,
-                                        UInt8 offset, UInt8 data ) APPLE_KEXT_OVERRIDE;
+                                        UInt8 offset, UInt8 data ) override;
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_6
     virtual IOReturn setDeviceASPMState(IOPCIDevice * device,
-                                IOService * client, IOOptionBits state) APPLE_KEXT_OVERRIDE;
+                                IOService * client, IOOptionBits state) override;
 #endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_7
-    virtual IOReturn checkLink(uint32_t options = 0) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn checkLink(uint32_t options = 0) override;
 #endif
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_10
-    virtual IOReturn enableLTR(IOPCIDevice * device, bool enable) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn enableLTR(IOPCIDevice * device, bool enable) override;
 
     virtual IOPCIEventSource * createEventSource(IOPCIDevice * device,
-			OSObject * owner, IOPCIEventSource::Action action, uint32_t options) APPLE_KEXT_OVERRIDE;
+                                OSObject * owner, IOPCIEventSource::Action action, uint32_t options) override;
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_0
+    virtual IOReturn setLinkSpeed(tIOPCILinkSpeed linkSpeed, bool retrain) override;
+
+    virtual IOReturn getLinkSpeed(tIOPCILinkSpeed *linkSpeed) override;
 #endif
 
     // Unused Padding
@@ -479,23 +677,34 @@ public:
 
 protected:
     void allocateBridgeInterrupts(IOService * provider);
-	void startBridgeInterrupts(IOService * provider);
-	void enableBridgeInterrupts(void);
-	void disableBridgeInterrupts(void);
+    void startBridgeInterrupts(IOService * provider);
+    void enableBridgeInterrupts(void);
+    void disableBridgeInterrupts(void);
 
 private:
-    IOReturn setTunnelL1Enable(IOPCIDevice * device, IOService * client,
-    									bool l1Enable);
+    IOReturn setTunnelL1Enable(IOPCIDevice * device, IOService * client, bool l1Enable);
 
 public:
-	void startBootDefer(IOService * provider);
+    void startBootDefer(IOService * provider);
 
+#if __MAC_OS_X_VERSION_MAX_ALLOWED < __MAC_11_0
     bool filterInterrupt( IOFilterInterruptEventSource * source);
-                            
+#endif
+
     void handleInterrupt( IOInterruptEventSource * source,
                              int                      count );
-	void timerProbe(IOTimerEventSource * es);
+    void timerProbe(IOTimerEventSource * es);
 };
+
+private:
+    void attnButtonTimer(IOTimerEventSource * es);
+    IOReturn attnButtonHandlerFinish(thread_call_t threadCall);
+    void dllscEventTimer(IOTimerEventSource * es);
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_3
+public:
+	void handleAEREvent(bool synchronous);
+#endif
 
 #define kIOPCI2PCIBridgeName	"IOPP"
 
@@ -509,9 +718,20 @@ public:
     virtual IOService *probe(IOService * provider, SInt32 *score) APPLE_KEXT_OVERRIDE;
     virtual bool configure(IOService * provider) APPLE_KEXT_OVERRIDE;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_0
+    // Return true if all children are in kIOPCIDeviceOnState.
+    bool allChildrenPoweredOn(void);
+#endif
+
     // Host bridge data is shared, when bridges have shared resources, i.e. PCIe config space (legacy systems).
     // They must be unique, if bridge has no resources to share (Apple Silicone).
     IOService *bridgeData;
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_0
+protected:
+    virtual IOReturn setLinkSpeed(tIOPCILinkSpeed linkSpeed, bool retrain) override { return kIOReturnUnsupported; };
+    virtual IOReturn getLinkSpeed(tIOPCILinkSpeed *linkSpeed) override { return kIOReturnUnsupported; };
+#endif
 };
 #endif
 
