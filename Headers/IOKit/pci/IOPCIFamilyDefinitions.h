@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2019 Apple Inc. All rights reserved.
+ * Copyright (c) 2018-2021 Apple Inc. All rights reserved.
  *
  * @APPLE_OSREFERENCE_LICENSE_HEADER_START@
  *
@@ -30,6 +30,7 @@
 #define IOPCIDefinitions_h
 
 #include <TargetConditionals.h>
+// #include <os/availability.h>
 #if TARGET_OS_DRIVERKIT
 #include <stdint.h>
 #include <stddef.h>
@@ -59,6 +60,47 @@
 #define kIOPCIExpressSlotCapabilitiesKey "IOPCIExpressSlotCapabilities"
 
 #define kIOPCIDeviceMemoryArrayKey       "IODeviceMemory"
+
+// base address of the device's memory map
+#define kIOPCIDeviceMemoryMapBase        "IOPCIDeviceMemoryMapBase"
+// size of device memory map
+#define kIOPCIDeviceMemoryMapSize        "IOPCIDeviceMemoryMapSize"
+// mapper page size
+#define kIOPCIDeviceMapperPageSize       "IOPCIDeviceMapperPageSize"
+
+// IOPCIDevice matching property names
+#define kIOPCITunnelCompatibleKey       "IOPCITunnelCompatible"
+#define kIOPCITunnelledKey              "IOPCITunnelled"
+#define kIOPCITunnelL1EnableKey         "IOPCITunnelL1Enable"
+
+#define kIOPCITunnelRootDeviceModelIDKey  "IOPCITunnelRootDeviceModelID"
+#define kIOPCITunnelRootDeviceVendorIDKey "IOPCITunnelRootDeviceVendorID"
+
+#define kIOPCIPauseCompatibleKey        "IOPCIPauseCompatible"
+
+// Properties that can be set on the IOPCIDevice
+// property to control PCI default config space save on sleep.
+// If false, config space will not be save/restored on power state transitions
+#define kIOPMPCIConfigSpaceVolatileKey  "IOPMPCIConfigSpaceVolatile"
+// property to disable express link on sleep
+#define kIOPMPCISleepLinkDisableKey     "IOPMPCISleepLinkDisable"
+// property to issue a secondary bus reset on sleep
+#define kIOPMPCISleepResetKey           "IOPMPCISleepReset"
+// property to provide bitmask for link train while scanning
+#define kIOPCIRetrainLinkMaskKey        "IOPCIRetrainLinkMask"
+// property to issue a link retrain while on wake
+#define kIOPCIRetrainLinkKey            "IOPCIRetrainLink"
+// property to check if endpoint is present on bridge
+#define kIOPCIEndpointPrsnt             "IOPCIEndpointPrsnt"
+// property to change the wait time for link up from spec default
+#define kIOPCIWaitForLinkUpKey          "wait-for-link-up"
+
+/*  bits getInterruptType result */
+enum
+{
+    kIOInterruptTypePCIMessaged  = 0x00010000,
+    kIOInterruptTypePCIMessagedX = 0x00020000
+};
 
 /* Definitions of PCI Config Registers */
 enum
@@ -114,13 +156,27 @@ enum
     kIOPCICapabilityIDMSIX                = 0x11,
     kIOPCICapabilityIDFPB                 = 0x15,
 
+#if defined(__LP64__)
+    kIOPCIExpressCapabilityIDErrorReporting            = -0x01U,
+    kIOPCIExpressCapabilityIDVirtualChannel            = -0x02U,
+    kIOPCIExpressCapabilityIDDeviceSerialNumber        = -0x03U,
+    kIOPCIExpressCapabilityIDPowerBudget               = -0x04U,
+    kIOPCIExpressCapabilityIDAccessControlServices     = -0x0DU,
+    kIOPCIExpressCapabilityIDAlternativeRoutingID      = -0x0EU,
+    kIOPCIExpressCapabilityIDLatencyTolerenceReporting = -0x18U,
+    kIOPCIExpressCapabilityIDL1PMSubstates             = -0x1EU,
+    kIOPCIExpressCapabilityIDPrecisionTimeManagement   = -0x1FU,
+#else  /* defined(__LP64__) */
     kIOPCIExpressCapabilityIDErrorReporting            = -0x01UL,
     kIOPCIExpressCapabilityIDVirtualChannel            = -0x02UL,
     kIOPCIExpressCapabilityIDDeviceSerialNumber        = -0x03UL,
     kIOPCIExpressCapabilityIDPowerBudget               = -0x04UL,
     kIOPCIExpressCapabilityIDAccessControlServices     = -0x0DUL,
+    kIOPCIExpressCapabilityIDAlternativeRoutingID      = -0x0EUL,
     kIOPCIExpressCapabilityIDLatencyTolerenceReporting = -0x18UL,
     kIOPCIExpressCapabilityIDL1PMSubstates             = -0x1EUL,
+    kIOPCIExpressCapabilityIDPrecisionTimeManagement   = -0x1FUL,
+#endif /* !defined(__LP64__) */
 };
 
 /* Command register definitions */
@@ -128,7 +184,8 @@ enum
 {
     kIOPCICommandIOSpace          = 0x0001,
     kIOPCICommandMemorySpace      = 0x0002,
-    kIOPCICommandBusMaster        = 0x0004,
+    kIOPCICommandBusLead          = 0x0004,
+    kIOPCICommandBusMaster        /* API_DEPRECATED_WITH_REPLACEMENT("kIOPCICommandBusLead", macos(10.0, 12.4), ios(1.0, 15.4), watchos(1.0, 8.5), tvos(1.0, 15.4)) */ = kIOPCICommandBusLead,
     kIOPCICommandSpecialCycles    = 0x0008,
     kIOPCICommandMemWrInvalidate  = 0x0010,
     kIOPCICommandPaletteSnoop     = 0x0020,
@@ -153,7 +210,8 @@ enum
     kIOPCIStatusDevSel3            = 0x0600,
     kIOPCIStatusTargetAbortCapable = 0x0800,
     kIOPCIStatusTargetAbortActive  = 0x1000,
-    kIOPCIStatusMasterAbortActive  = 0x2000,
+    kIOPCIStatusLeadAbortActive    = 0x2000,
+    kIOPCIStatusMasterAbortActive  /* API_DEPRECATED_WITH_REPLACEMENT("kIOPCIStatusLeadAbortActive", macos(10.0, 12.4), ios(1.0, 15.4), watchos(1.0, 8.5), tvos(1.0, 15.4)) */ = kIOPCIStatusLeadAbortActive,
     kIOPCIStatusSERRActive         = 0x4000,
     kIOPCIStatusParityErrActive    = 0x8000
 };
@@ -205,6 +263,19 @@ enum
     kPCIPMCSPMEWakeReason  = 0x00020000
 };
 
+enum
+{
+    kIOPCISlotCapabilitiesBitAttentionButtonPresent            = (1 << 0),
+    kIOPCISlotCapabilitiesBitPowerControllerPresent            = (1 << 1),
+    kIOPCISlotCapabilitiesBitMRLSensorPresent                  = (1 << 2),
+    kIOPCISlotCapabilitiesBitAttentionIndicatorPresent         = (1 << 3),
+    kIOPCISlotCapabilitiesBitPowerIndicatorPresent             = (1 << 4),
+    kIOPCISlotCapabilitiesBitHotPlugSurprise                   = (1 << 5),
+    kIOPCISlotCapabilitiesBitHotPlugCapable                    = (1 << 6),
+    kIOPCISlotCapabilitiesBitElectromechanicalInterlockPresent = (1 << 17),
+    kIOPCISlotCapabilitiesBitNoCommandCompletedSupport         = (1 << 18)
+};
+
 // PCIe error bits
 enum
 {
@@ -239,5 +310,57 @@ enum
     kIOPCICorrectableErrorBitHeaderLogOverflow  = 15,
 };
 
+typedef enum tIOPCILinkSpeed
+{
+    kIOPCILinkSpeed_2_5_GTs = 1, // Gen 1
+    kIOPCILinkSpeed_5_GTs,       // Gen 2
+    kIOPCILinkSpeed_8_GTs,       // Gen 3
+    kIOPCILinkSpeed_16_GTs,      // Gen 4
+    kIOPCILinkSpeed_32_GTs,      // Gen 5
+} tIOPCILinkSpeed;
+
+/*!  @enum       tIOPCIDeviceResetTypes
+ *   @constant   kIOPCIDeviceResetTypeHotReset Issues a hot reset to the device without power being removed from the device.
+ *               This will issue a hot reset from its upstream bridge by setting the secondary bus reset bit in the bridge's control
+ *               register.
+ *   @constant   kIOPCIDeviceResetTypeWarmReset Issues a warm reset to the device without power being removed from the device, if a platform
+ *               specific function exists.
+ *   @constant   kIOPCIDeviceResetTypeWarmResetDisable Performs the first half of a warm reset (e.g. assert PERST#), if a platform
+ *               specific function exists. Upon completion, the device is unusable until the caller requests reset with type
+ *               kIOPCIDeviceResetTypeWarmResetEnable.
+ *
+ *               This type facilitates the generation of a cold reset, i.e. by removing power before using kIOPCIDeviceResetTypeWarmResetDisable
+ *               and re-applying it before using kIOPCIDeviceResetTypeWarmResetEnable.
+ *   @constant   kIOPCIDeviceResetTypeWarmResetEnable Completes the warm reset operation initiated with type kIOPCIDeviceResetTypeWarmResetDisable
+ *               (e.g. deassert PERST#). See kIOPCIDeviceResetTypeWarmResetDisable for more details.
+ */
+typedef enum tIOPCIDeviceResetTypes
+{
+    kIOPCIDeviceResetTypeHotReset         = 0x00000001,
+    kIOPCIDeviceResetTypeWarmReset        = 0x00000002,
+    kIOPCIDeviceResetTypeWarmResetDisable = 0x00000004,
+    kIOPCIDeviceResetTypeWarmResetEnable  = 0x00000008,
+} tIOPCIDeviceResetTypes;
+
+/*!  @enum       tIOPCIDeviceResetOptions
+ *   @constant   kIOPCIDeviceResetOptionNone      No options selected
+ *   @constant   kIOPCIDeviceResetOptionTerminate Terminate the IOPCIDevice(s) that were reset and re-probe the bus. This will stop
+ *               any attached client drivers. Devices with reset-initiated personality changes should use this option.
+ *
+ *               This option causes the reset function to initiate the asynchronous termination process, but not block on its completion.
+ */
+typedef enum tIOPCIDeviceResetOptions
+{
+    kIOPCIDeviceResetOptionNone      = 0x00000000,
+    kIOPCIDeviceResetOptionTerminate = 0x00000001,
+} tIOPCIDeviceResetOptions;
+
+enum tIOPCILinkControlASPMBits
+{
+    kIOPCILinkControlASPMBitsDisabled = 0,
+    kIOPCILinkControlASPMBitsL0s      = (1 << 0),
+    kIOPCILinkControlASPMBitsL1       = (1 << 1),
+    kIOPCILinkControlASPMBitsL0sL1    = kIOPCILinkControlASPMBitsL0s | kIOPCILinkControlASPMBitsL1
+};
 
 #endif /* IOPCIDefinitions_h */
