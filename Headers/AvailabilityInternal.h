@@ -35,21 +35,26 @@
 #endif
 
 #ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
-    #ifdef __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
-        /* compiler for Mac OS X sets __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ */
+    #if defined(__has_builtin) && __has_builtin(__is_target_os)
+        #if __is_target_os(macos)
+            #define __MAC_OS_X_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
+            #define __MAC_OS_X_VERSION_MAX_ALLOWED __MAC_14_5
+        #endif
+    #elif  __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ 
         #define __MAC_OS_X_VERSION_MIN_REQUIRED __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
-    #endif
-#endif /* __MAC_OS_X_VERSION_MIN_REQUIRED*/
+        #define __MAC_OS_X_VERSION_MAX_ALLOWED __MAC_14_5
+    #endif /*  __has_builtin(__is_target_os) && __is_target_os(macos) */
+#endif /* __MAC_OS_X_VERSION_MIN_REQUIRED */
 
 #ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(ios)
             #define __IPHONE_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __IPHONE_OS_VERSION_MAX_ALLOWED __IPHONE_17_0
+            #define __IPHONE_OS_VERSION_MAX_ALLOWED __IPHONE_17_5
         #endif
     #elif  __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ 
         #define __IPHONE_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
-        #define __IPHONE_OS_VERSION_MAX_ALLOWED __IPHONE_17_0
+        #define __IPHONE_OS_VERSION_MAX_ALLOWED __IPHONE_17_5
     #endif /*  __has_builtin(__is_target_os) && __is_target_os(ios) */
 #endif /* __IPHONE_OS_VERSION_MIN_REQUIRED */
 
@@ -57,13 +62,13 @@
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(watchos)
             #define __WATCH_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __WATCH_OS_VERSION_MAX_ALLOWED __WATCHOS_10_0
+            #define __WATCH_OS_VERSION_MAX_ALLOWED __WATCHOS_10_5
             /* for compatibility with existing code.  New code should use platform specific checks */
             #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_9_0
         #endif
     #elif  __ENVIRONMENT_WATCH_OS_VERSION_MIN_REQUIRED__ 
         #define __WATCH_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_WATCH_OS_VERSION_MIN_REQUIRED__
-        #define __WATCH_OS_VERSION_MAX_ALLOWED __WATCHOS_10_0
+        #define __WATCH_OS_VERSION_MAX_ALLOWED __WATCHOS_10_5
         /* for compatibility with existing code.  New code should use platform specific checks */
         #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_9_0
     #endif /*  __has_builtin(__is_target_os) && __is_target_os(watchos) */
@@ -73,13 +78,13 @@
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(tvos)
             #define __TV_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __TV_OS_VERSION_MAX_ALLOWED __TVOS_17_0
+            #define __TV_OS_VERSION_MAX_ALLOWED __TVOS_17_5
             /* for compatibility with existing code.  New code should use platform specific checks */
             #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_9_0
         #endif
     #elif  __ENVIRONMENT_TV_OS_VERSION_MIN_REQUIRED__ 
         #define __TV_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_TV_OS_VERSION_MIN_REQUIRED__
-        #define __TV_OS_VERSION_MAX_ALLOWED __TVOS_17_0
+        #define __TV_OS_VERSION_MAX_ALLOWED __TVOS_17_5
         /* for compatibility with existing code.  New code should use platform specific checks */
         #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_9_0
     #endif /*  __has_builtin(__is_target_os) && __is_target_os(tvos) */
@@ -89,7 +94,7 @@
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(bridgeos)
             #define __BRIDGE_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __BRIDGE_OS_VERSION_MAX_ALLOWED __BRIDGEOS_8_0
+            #define __BRIDGE_OS_VERSION_MAX_ALLOWED __BRIDGEOS_8_5
             /* for compatibility with existing code.  New code should use platform specific checks */
             #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_11_0
         #endif
@@ -100,22 +105,45 @@
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(driverkit)
             #define __DRIVERKIT_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __DRIVERKIT_VERSION_MAX_ALLOWED __DRIVERKIT_23_0
+            #define __DRIVERKIT_VERSION_MAX_ALLOWED __DRIVERKIT_23_5
         #endif
     #endif /*  __has_builtin(__is_target_os) && __is_target_os(driverkit) */
 #endif /* __DRIVERKIT_VERSION_MIN_REQUIRED */
 
-#ifndef __XR_OS_VERSION_MIN_REQUIRED
+#ifndef __VISION_OS_VERSION_MIN_REQUIRED
+    #if defined(__has_builtin) && __has_builtin(__is_target_os)
+        #if __is_target_os(visionos)
+            #define __VISION_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
+            #define __VISION_OS_VERSION_MAX_ALLOWED __VISIONOS_1_2
+            /* for compatibility with existing code.  New code should use platform specific checks */
+            #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_17_1
+        #endif
+    #endif /*  __has_builtin(__is_target_os) && __is_target_os(visionos) */
+#endif /* __VISION_OS_VERSION_MIN_REQUIRED */
+
+
+//FIXME: Workaround for rdar://116062344
+#ifndef __VISION_OS_VERSION_MIN_REQUIRED
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(xros)
-            #define __XR_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __XR_OS_VERSION_MAX_ALLOWED __XROS_1_0
+            #define __VISION_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
+            // Hardcoded these since until compiler fix for rdar://116062344 will land
+            #if defined(__VISIONOS_2_0)
+                #define __VISION_OS_VERSION_MAX_ALLOWED __VISIONOS_2_0
+            #elif defined(__VISIONOS_1_1)
+                #define __VISION_OS_VERSION_MAX_ALLOWED __VISIONOS_1_1
+            #elif defined(__VISIONOS_1_0)
+                #define __VISION_OS_VERSION_MAX_ALLOWED __VISIONOS_1_0
+            #endif
             /* for compatibility with existing code.  New code should use platform specific checks */
-            #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_17_0
+            #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_17_1
         #endif
-    #endif /*  __has_builtin(__is_target_os) && __is_target_os(xros) */
-#endif /* __XR_OS_VERSION_MIN_REQUIRED */
+    #endif /*  __has_builtin(__is_target_os) && __is_target_os(visionos) */
+#endif /* __VISION_OS_VERSION_MIN_REQUIRED */
 
+#ifndef __OPEN_SOURCE__
+
+#endif /* __OPEN_SOURCE__ */
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
     /* make sure a default max version is set */
@@ -150,35 +178,39 @@
 #if defined(__has_feature) && defined(__has_attribute)
  #if __has_attribute(availability)
    #define __API_AVAILABLE_PLATFORM_macos(x) macos,introduced=x
-   #define __API_UNAVAILABLE_PLATFORM_macos macos,unavailable
    #define __API_DEPRECATED_PLATFORM_macos(x,y) macos,introduced=x,deprecated=y
+   #define __API_UNAVAILABLE_PLATFORM_macos macos,unavailable
    #define __API_AVAILABLE_PLATFORM_macosx(x) macos,introduced=x
-   #define __API_UNAVAILABLE_PLATFORM_macosx macos,unavailable
    #define __API_DEPRECATED_PLATFORM_macosx(x,y) macos,introduced=x,deprecated=y
+   #define __API_UNAVAILABLE_PLATFORM_macosx macos,unavailable
    #define __API_AVAILABLE_PLATFORM_ios(x) ios,introduced=x
-   #define __API_UNAVAILABLE_PLATFORM_ios ios,unavailable
    #define __API_DEPRECATED_PLATFORM_ios(x,y) ios,introduced=x,deprecated=y
+   #define __API_UNAVAILABLE_PLATFORM_ios ios,unavailable
    #define __API_AVAILABLE_PLATFORM_macCatalyst(x) macCatalyst,introduced=x
-   #define __API_UNAVAILABLE_PLATFORM_macCatalyst macCatalyst,unavailable
    #define __API_DEPRECATED_PLATFORM_macCatalyst(x,y) macCatalyst,introduced=x,deprecated=y
+   #define __API_UNAVAILABLE_PLATFORM_macCatalyst macCatalyst,unavailable
    #define __API_AVAILABLE_PLATFORM_macCatalyst(x) macCatalyst,introduced=x
-   #define __API_UNAVAILABLE_PLATFORM_macCatalyst macCatalyst,unavailable
    #define __API_DEPRECATED_PLATFORM_macCatalyst(x,y) macCatalyst,introduced=x,deprecated=y
+   #define __API_UNAVAILABLE_PLATFORM_macCatalyst macCatalyst,unavailable
    #define __API_AVAILABLE_PLATFORM_watchos(x) watchos,introduced=x
-   #define __API_UNAVAILABLE_PLATFORM_watchos watchos,unavailable
    #define __API_DEPRECATED_PLATFORM_watchos(x,y) watchos,introduced=x,deprecated=y
+   #define __API_UNAVAILABLE_PLATFORM_watchos watchos,unavailable
    #define __API_AVAILABLE_PLATFORM_tvos(x) tvos,introduced=x
-   #define __API_UNAVAILABLE_PLATFORM_tvos tvos,unavailable
    #define __API_DEPRECATED_PLATFORM_tvos(x,y) tvos,introduced=x,deprecated=y
+   #define __API_UNAVAILABLE_PLATFORM_tvos tvos,unavailable
    
    
    
    #define __API_AVAILABLE_PLATFORM_driverkit(x) driverkit,introduced=x
-   #define __API_UNAVAILABLE_PLATFORM_driverkit driverkit,unavailable
    #define __API_DEPRECATED_PLATFORM_driverkit(x,y) driverkit,introduced=x,deprecated=y
-   #define __API_AVAILABLE_PLATFORM_xros(x) xros,introduced=x
-   #define __API_UNAVAILABLE_PLATFORM_xros xros,unavailable
-   #define __API_DEPRECATED_PLATFORM_xros(x,y) xros,introduced=x,deprecated=y
+   #define __API_UNAVAILABLE_PLATFORM_driverkit driverkit,unavailable
+   #define __API_AVAILABLE_PLATFORM_visionos(x) visionos,introduced=x
+   #define __API_DEPRECATED_PLATFORM_visionos(x,y) visionos,introduced=x,deprecated=y
+   #define __API_UNAVAILABLE_PLATFORM_visionos visionos,unavailable
+   #define __API_AVAILABLE_PLATFORM_xros(x) visionos,introduced=x
+   #define __API_DEPRECATED_PLATFORM_xros(x,y) visionos,introduced=x,deprecated=y
+   #define __API_UNAVAILABLE_PLATFORM_xros visionos,unavailable
+   
  #endif /* __has_attribute(availability) */
 #endif /* defined(__has_feature) && defined(__has_attribute) */
 
@@ -210,7 +242,8 @@
     #define __API_AVAILABLE5(arg0,arg1,arg2,arg3,arg4,arg5) __API_A(arg0) __API_A(arg1) __API_A(arg2) __API_A(arg3) __API_A(arg4) __API_A(arg5)
     #define __API_AVAILABLE6(arg0,arg1,arg2,arg3,arg4,arg5,arg6) __API_A(arg0) __API_A(arg1) __API_A(arg2) __API_A(arg3) __API_A(arg4) __API_A(arg5) __API_A(arg6)
     #define __API_AVAILABLE7(arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7) __API_A(arg0) __API_A(arg1) __API_A(arg2) __API_A(arg3) __API_A(arg4) __API_A(arg5) __API_A(arg6) __API_A(arg7)
-    #define __API_AVAILABLE_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,NAME,...) NAME
+    #define __API_AVAILABLE8(arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) __API_A(arg0) __API_A(arg1) __API_A(arg2) __API_A(arg3) __API_A(arg4) __API_A(arg5) __API_A(arg6) __API_A(arg7) __API_A(arg8)
+    #define __API_AVAILABLE_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,NAME,...) NAME
     
     #define __API_A_BEGIN(x) _Pragma(__API_RANGE_STRINGIFY (clang attribute (__attribute__((availability(__API_AVAILABLE_PLATFORM_##x))), apply_to = __API_APPLY_TO)))
     
@@ -222,7 +255,8 @@
     #define __API_AVAILABLE_BEGIN5(arg0,arg1,arg2,arg3,arg4,arg5) __API_A_BEGIN(arg0) __API_A_BEGIN(arg1) __API_A_BEGIN(arg2) __API_A_BEGIN(arg3) __API_A_BEGIN(arg4) __API_A_BEGIN(arg5)
     #define __API_AVAILABLE_BEGIN6(arg0,arg1,arg2,arg3,arg4,arg5,arg6) __API_A_BEGIN(arg0) __API_A_BEGIN(arg1) __API_A_BEGIN(arg2) __API_A_BEGIN(arg3) __API_A_BEGIN(arg4) __API_A_BEGIN(arg5) __API_A_BEGIN(arg6)
     #define __API_AVAILABLE_BEGIN7(arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7) __API_A_BEGIN(arg0) __API_A_BEGIN(arg1) __API_A_BEGIN(arg2) __API_A_BEGIN(arg3) __API_A_BEGIN(arg4) __API_A_BEGIN(arg5) __API_A_BEGIN(arg6) __API_A_BEGIN(arg7)
-    #define __API_AVAILABLE_BEGIN_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,NAME,...) NAME
+    #define __API_AVAILABLE_BEGIN8(arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) __API_A_BEGIN(arg0) __API_A_BEGIN(arg1) __API_A_BEGIN(arg2) __API_A_BEGIN(arg3) __API_A_BEGIN(arg4) __API_A_BEGIN(arg5) __API_A_BEGIN(arg6) __API_A_BEGIN(arg7) __API_A_BEGIN(arg8)
+    #define __API_AVAILABLE_BEGIN_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,NAME,...) NAME
 
     
 
@@ -236,7 +270,8 @@
     #define __API_DEPRECATED_MSG5(msg,arg0,arg1,arg2,arg3,arg4,arg5) __API_D(msg,arg0) __API_D(msg,arg1) __API_D(msg,arg2) __API_D(msg,arg3) __API_D(msg,arg4) __API_D(msg,arg5)
     #define __API_DEPRECATED_MSG6(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6) __API_D(msg,arg0) __API_D(msg,arg1) __API_D(msg,arg2) __API_D(msg,arg3) __API_D(msg,arg4) __API_D(msg,arg5) __API_D(msg,arg6)
     #define __API_DEPRECATED_MSG7(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7) __API_D(msg,arg0) __API_D(msg,arg1) __API_D(msg,arg2) __API_D(msg,arg3) __API_D(msg,arg4) __API_D(msg,arg5) __API_D(msg,arg6) __API_D(msg,arg7)
-    #define __API_DEPRECATED_MSG_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,NAME,...) NAME
+    #define __API_DEPRECATED_MSG8(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) __API_D(msg,arg0) __API_D(msg,arg1) __API_D(msg,arg2) __API_D(msg,arg3) __API_D(msg,arg4) __API_D(msg,arg5) __API_D(msg,arg6) __API_D(msg,arg7) __API_D(msg,arg8)
+    #define __API_DEPRECATED_MSG_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,_9,NAME,...) NAME
 
     #define __API_D_BEGIN(msg, x) _Pragma(__API_RANGE_STRINGIFY (clang attribute (__attribute__((availability(__API_DEPRECATED_PLATFORM_##x,message=msg))), apply_to = __API_APPLY_TO)))
 
@@ -248,7 +283,8 @@
     #define __API_DEPRECATED_BEGIN5(msg,arg0,arg1,arg2,arg3,arg4,arg5) __API_D_BEGIN(msg,arg0) __API_D_BEGIN(msg,arg1) __API_D_BEGIN(msg,arg2) __API_D_BEGIN(msg,arg3) __API_D_BEGIN(msg,arg4) __API_D_BEGIN(msg,arg5)
     #define __API_DEPRECATED_BEGIN6(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6) __API_D_BEGIN(msg,arg0) __API_D_BEGIN(msg,arg1) __API_D_BEGIN(msg,arg2) __API_D_BEGIN(msg,arg3) __API_D_BEGIN(msg,arg4) __API_D_BEGIN(msg,arg5) __API_D_BEGIN(msg,arg6)
     #define __API_DEPRECATED_BEGIN7(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7) __API_D_BEGIN(msg,arg0) __API_D_BEGIN(msg,arg1) __API_D_BEGIN(msg,arg2) __API_D_BEGIN(msg,arg3) __API_D_BEGIN(msg,arg4) __API_D_BEGIN(msg,arg5) __API_D_BEGIN(msg,arg6) __API_D_BEGIN(msg,arg7)
-    #define __API_DEPRECATED_BEGIN_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,NAME,...) NAME
+    #define __API_DEPRECATED_BEGIN8(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) __API_D_BEGIN(msg,arg0) __API_D_BEGIN(msg,arg1) __API_D_BEGIN(msg,arg2) __API_D_BEGIN(msg,arg3) __API_D_BEGIN(msg,arg4) __API_D_BEGIN(msg,arg5) __API_D_BEGIN(msg,arg6) __API_D_BEGIN(msg,arg7) __API_D_BEGIN(msg,arg8)
+    #define __API_DEPRECATED_BEGIN_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,_9,NAME,...) NAME
 
     #if __has_feature(attribute_availability_with_replacement)
         #define __API_R(rep,x) __attribute__((availability(__API_DEPRECATED_PLATFORM_##x,replacement=rep)))
@@ -264,7 +300,8 @@
     #define __API_DEPRECATED_REP5(msg,arg0,arg1,arg2,arg3,arg4,arg5) __API_R(msg,arg0) __API_R(msg,arg1) __API_R(msg,arg2) __API_R(msg,arg3) __API_R(msg,arg4) __API_R(msg,arg5)
     #define __API_DEPRECATED_REP6(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6) __API_R(msg,arg0) __API_R(msg,arg1) __API_R(msg,arg2) __API_R(msg,arg3) __API_R(msg,arg4) __API_R(msg,arg5) __API_R(msg,arg6)
     #define __API_DEPRECATED_REP7(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7) __API_R(msg,arg0) __API_R(msg,arg1) __API_R(msg,arg2) __API_R(msg,arg3) __API_R(msg,arg4) __API_R(msg,arg5) __API_R(msg,arg6) __API_R(msg,arg7)
-    #define __API_DEPRECATED_REP_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,NAME,...) NAME
+    #define __API_DEPRECATED_REP8(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) __API_R(msg,arg0) __API_R(msg,arg1) __API_R(msg,arg2) __API_R(msg,arg3) __API_R(msg,arg4) __API_R(msg,arg5) __API_R(msg,arg6) __API_R(msg,arg7) __API_R(msg,arg8)
+    #define __API_DEPRECATED_REP_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,_9,NAME,...) NAME
 
     #if __has_feature(attribute_availability_with_replacement)
         #define __API_R_BEGIN(rep,x) _Pragma(__API_RANGE_STRINGIFY (clang attribute (__attribute__((availability(__API_DEPRECATED_PLATFORM_##x,replacement=rep))), apply_to = __API_APPLY_TO)))    
@@ -280,7 +317,8 @@
     #define __API_DEPRECATED_BEGIN_REP5(msg,arg0,arg1,arg2,arg3,arg4,arg5) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3) __API_R_BEGIN(msg,arg4) __API_R_BEGIN(msg,arg5)
     #define __API_DEPRECATED_BEGIN_REP6(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3) __API_R_BEGIN(msg,arg4) __API_R_BEGIN(msg,arg5) __API_R_BEGIN(msg,arg6)
     #define __API_DEPRECATED_BEGIN_REP7(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3) __API_R_BEGIN(msg,arg4) __API_R_BEGIN(msg,arg5) __API_R_BEGIN(msg,arg6) __API_R_BEGIN(msg,arg7)
-    #define __API_DEPRECATED_BEGIN_REP_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,NAME,...) NAME
+    #define __API_DEPRECATED_BEGIN_REP8(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3) __API_R_BEGIN(msg,arg4) __API_R_BEGIN(msg,arg5) __API_R_BEGIN(msg,arg6) __API_R_BEGIN(msg,arg7) __API_R_BEGIN(msg,arg8)
+    #define __API_DEPRECATED_BEGIN_REP_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,_9,NAME,...) NAME
 
     /*
      * API Unavailability
@@ -301,7 +339,8 @@
     #define __API_UNAVAILABLE5(arg0,arg1,arg2,arg3,arg4,arg5) __API_U(arg0) __API_U(arg1) __API_U(arg2) __API_U(arg3) __API_U(arg4) __API_U(arg5)
     #define __API_UNAVAILABLE6(arg0,arg1,arg2,arg3,arg4,arg5,arg6) __API_U(arg0) __API_U(arg1) __API_U(arg2) __API_U(arg3) __API_U(arg4) __API_U(arg5) __API_U(arg6)
     #define __API_UNAVAILABLE7(arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7) __API_U(arg0) __API_U(arg1) __API_U(arg2) __API_U(arg3) __API_U(arg4) __API_U(arg5) __API_U(arg6) __API_U(arg7)
-    #define __API_UNAVAILABLE_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,NAME,...) NAME
+    #define __API_UNAVAILABLE8(arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) __API_U(arg0) __API_U(arg1) __API_U(arg2) __API_U(arg3) __API_U(arg4) __API_U(arg5) __API_U(arg6) __API_U(arg7) __API_U(arg8)
+    #define __API_UNAVAILABLE_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,NAME,...) NAME
 
     #define __API_U_BEGIN(x) _Pragma(__API_RANGE_STRINGIFY (clang attribute (__attribute__((availability(__API_UNAVAILABLE_PLATFORM_##x))), apply_to = __API_APPLY_TO)))
 
@@ -313,7 +352,8 @@
     #define __API_UNAVAILABLE_BEGIN5(arg0,arg1,arg2,arg3,arg4,arg5) __API_U_BEGIN(arg0) __API_U_BEGIN(arg1) __API_U_BEGIN(arg2) __API_U_BEGIN(arg3) __API_U_BEGIN(arg4) __API_U_BEGIN(arg5)
     #define __API_UNAVAILABLE_BEGIN6(arg0,arg1,arg2,arg3,arg4,arg5,arg6) __API_U_BEGIN(arg0) __API_U_BEGIN(arg1) __API_U_BEGIN(arg2) __API_U_BEGIN(arg3) __API_U_BEGIN(arg4) __API_U_BEGIN(arg5) __API_U_BEGIN(arg6)
     #define __API_UNAVAILABLE_BEGIN7(arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7) __API_U_BEGIN(arg0) __API_U_BEGIN(arg1) __API_U_BEGIN(arg2) __API_U_BEGIN(arg3) __API_U_BEGIN(arg4) __API_U_BEGIN(arg5) __API_U_BEGIN(arg6) __API_U_BEGIN(arg7)
-    #define __API_UNAVAILABLE_BEGIN_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,NAME,...) NAME
+    #define __API_UNAVAILABLE_BEGIN8(arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) __API_U_BEGIN(arg0) __API_U_BEGIN(arg1) __API_U_BEGIN(arg2) __API_U_BEGIN(arg3) __API_U_BEGIN(arg4) __API_U_BEGIN(arg5) __API_U_BEGIN(arg6) __API_U_BEGIN(arg7) __API_U_BEGIN(arg8)
+    #define __API_UNAVAILABLE_BEGIN_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,NAME,...) NAME
 
  #endif /* __has_attribute(availability) */
 #endif /* #if defined(__has_feature) && defined(__has_attribute) */
@@ -344,6 +384,14 @@
  
 #ifndef __SPI_AVAILABLE
   #define __SPI_AVAILABLE(...)
+#endif
+
+#ifndef __SPI_AVAILABLE_BEGIN
+  #define __SPI_AVAILABLE_BEGIN(...)
+#endif
+
+#ifndef __SPI_AVAILABLE_END
+  #define __SPI_AVAILABLE_END(...)
 #endif
 
 #endif /* __AVAILABILITY_INTERNAL__ */
