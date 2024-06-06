@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998-2000 Apple Computer, Inc. All rights reserved.
+ * Copyright (c) 1998-2021 Apple Computer, Inc. All rights reserved.
  *
  * @APPLE_LICENSE_HEADER_START@
  * 
@@ -27,7 +27,9 @@
 #include <IOKit/IOTypes.h>
 #include <IOKit/pci/IOPCIFamilyDefinitions.h>
 
-#if TARGET_OS_OSX
+#define TARGET_OS_HAS_PCIDRIVERKIT_IOPCIDEVICE __has_include(<PCIDriverKit/IOPCIDevice.h>)
+
+#if TARGET_OS_HAS_PCIDRIVERKIT_IOPCIDEVICE
 #include <PCIDriverKit/IOPCIDevice.h>
 #endif
 
@@ -174,20 +176,6 @@ struct IOPCIPhysicalAddress {
 #endif
 };
 
-// IOPCIDevice matching property names
-#define kIOPCITunnelCompatibleKey       "IOPCITunnelCompatible"
-#define kIOPCITunnelledKey              "IOPCITunnelled"
-#define kIOPCITunnelL1EnableKey         "IOPCITunnelL1Enable"
-
-#define kIOPCIPauseCompatibleKey        "IOPCIPauseCompatible"
-
-// property to control PCI default config space save on sleep
-#define kIOPMPCIConfigSpaceVolatileKey  "IOPMPCIConfigSpaceVolatile"
-// property to disable express link on sleep
-#define kIOPMPCISleepLinkDisableKey     "IOPMPCISleepLinkDisable"
-// property to reset secondary bus on sleep
-#define kIOPMPCISleepResetKey           "IOPMPCISleepReset"
-
 #ifndef kIOPlatformDeviceASPMEnableKey
 #define kIOPlatformDeviceASPMEnableKey  "IOPlatformDeviceASPMEnable"
 #endif
@@ -205,18 +193,18 @@ struct IOPCIPhysicalAddress {
 
 #define kIOPCIDeviceDeviceTreeEntryKey  "IOPCIDeviceDeviceTreeEntry"
 
+#if ACPI_SUPPORT
+#define kIOPCIUseDeviceMapperKey        "IOPCIUseDeviceMapper"
+#define kIOPCIChildBundleIdentifierKey  "driver-child-bundle"
+#define kIOPCIDeviceMapArgLen                1024
+#endif
+
 enum {
     kIOPCIDevicePowerStateCount = 4,
     kIOPCIDeviceOffState        = 0,
     kIOPCIDeviceDozeState       = 1,
     kIOPCIDeviceOnState         = 2,
     kIOPCIDevicePausedState     = 3,
-};
-
-enum
-{
-    // bits getInterruptType result
-    kIOInterruptTypePCIMessaged = 0x00010000
 };
 
 // setLatencyTolerance options
@@ -252,6 +240,7 @@ class IOPCI2PCIBridge;
 class IOPCIMessagedInterruptController;
 class IOPCIConfigurator;
 class IOPCIEventSource;
+class IOPCIHostBridgeData;
 
 // IOPCIEvent.event
 enum
@@ -268,6 +257,11 @@ struct IOPCIEvent
     IOPCIDevice * reporter;
     uint32_t      event;
     uint32_t      data[5];
+};
+
+enum IOPCIResetType {
+    kIOPCIResetNone,
+    kIOPCIResetHot,
 };
 
 class IOPCIEventSource : public IOEventSource
@@ -289,7 +283,8 @@ private:
     uint8_t           fWriteIndex;
     IOPCIEvent *      fEvents;
 
-public: 
+    IOPCIHostBridgeData *getHostBridgeData(void);
+public:
     virtual void enable( void ) APPLE_KEXT_OVERRIDE;
     virtual void disable( void ) APPLE_KEXT_OVERRIDE;
 
@@ -301,6 +296,8 @@ protected:
 
 typedef IOReturn (*IOPCIDeviceConfigHandler)(void * ref,
                                                 IOMessage message, IOPCIDevice * device, uint32_t state);
+
+typedef IOPCIResetType (* IOPCIDeviceCrashNotification_t)(void *clientObject, IOPCIDevice *device);
 
 /*! @class IOPCIDevice : public IOService
     @abstract An IOService class representing a PCI device.
@@ -366,7 +363,7 @@ Matches a device whose class code is 0x0200zz, an ethernet device.
 
 class IOPCIDevice : public IOService
 {
-#if TARGET_OS_OSX
+#if TARGET_OS_HAS_PCIDRIVERKIT_IOPCIDEVICE
     OSDeclareDefaultStructorsWithDispatch(IOPCIDevice)
 #else
     OSDeclareDefaultStructors(IOPCIDevice)
@@ -376,6 +373,7 @@ class IOPCIDevice : public IOService
     friend class IOPCI2PCIBridge;
     friend class IOPCIMessagedInterruptController;
     friend class IOPCIConfigurator;
+    friend class IOPCIHostBridgeData;
 
 protected:
     IOPCIBridge *       parent;
@@ -399,14 +397,16 @@ public:
     virtual void free( void ) APPLE_KEXT_OVERRIDE;
     virtual bool attach( IOService * provider ) APPLE_KEXT_OVERRIDE;
     virtual void detach( IOService * provider ) APPLE_KEXT_OVERRIDE;
-	virtual void detachAbove(const IORegistryPlane *) APPLE_KEXT_OVERRIDE;
+    virtual void detachAbove(const IORegistryPlane *) APPLE_KEXT_OVERRIDE;
 
     virtual IOReturn newUserClient( task_t owningTask, void * securityID,
                                     UInt32 type,  OSDictionary * properties,
                                     IOUserClient ** handler ) APPLE_KEXT_OVERRIDE;
 
-    virtual bool handleOpen(IOService * forClient, IOOptionBits options, void * arg) APPLE_KEXT_OVERRIDE;
-    virtual void handleClose(IOService * forClient, IOOptionBits options) APPLE_KEXT_OVERRIDE;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
+    virtual bool handleOpen(IOService * forClient, IOOptionBits options, void * arg);
+    virtual void handleClose(IOService * forClient, IOOptionBits options);
+#endif
 
     virtual IOReturn requestProbe( IOOptionBits options ) APPLE_KEXT_OVERRIDE;
 
@@ -415,16 +415,31 @@ public:
                                              IOService*      whatDevice) APPLE_KEXT_OVERRIDE;
     virtual IOReturn setPowerState( unsigned long, IOService * ) APPLE_KEXT_OVERRIDE;
 
-	virtual unsigned long maxCapabilityForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
-	virtual unsigned long initialPowerStateForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
-	virtual unsigned long powerStateForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_0
+    virtual IOReturn addPowerChild( IOService * theChild ) APPLE_KEXT_OVERRIDE;
+    virtual IOReturn removePowerChild( IOPowerConnection * theChild ) APPLE_KEXT_OVERRIDE;
+#endif
+
+    virtual unsigned long maxCapabilityForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
+    virtual unsigned long initialPowerStateForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
+    virtual unsigned long powerStateForDomainState ( IOPMPowerFlags domainState ) APPLE_KEXT_OVERRIDE;
 
     virtual bool compareName( OSString * name, OSString ** matched = 0 ) const APPLE_KEXT_OVERRIDE;
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     virtual bool matchPropertyTable(OSDictionary * table) APPLE_KEXT_OVERRIDE;
+#endif
+
     virtual bool matchPropertyTable( OSDictionary *     table,
                                      SInt32       *     score ) APPLE_KEXT_OVERRIDE;
     virtual IOService * matchLocation( IOService * client ) APPLE_KEXT_OVERRIDE;
     virtual IOReturn getResources( void ) APPLE_KEXT_OVERRIDE;
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_12_0
+    using IOService::getProperty;
+    virtual OSObject * getProperty( const OSSymbol * aKey) const APPLE_KEXT_OVERRIDE;
+#endif
+
     virtual IOReturn setProperties(OSObject * properties) APPLE_KEXT_OVERRIDE;
     virtual IOReturn callPlatformFunction(const OSSymbol * functionName,
                                           bool waitForFunction,
@@ -443,6 +458,7 @@ private:
     void     updateWakeReason(uint16_t pmeState);
     IOReturn enableLTR(IOPCIDevice * device, bool enable);
     IOReturn enableACS(IOPCIDevice * device, bool enable);
+    IOReturn clientCrashedThreadCall(thread_call_t threadCall);
 
 public:
 
@@ -537,7 +553,7 @@ public:
     @discussion This method sets masked bits in a configuration space register on the device by reading and writing the register. The value of the masked bits before the write is returned.
     @param offset An 8-bit offset into configuration space, of which bits 0-1 are ignored.
     @param mask An 32-bit mask indicating which bits in the value parameter are valid.
-    @param value An 32-bit value to be written in host byte order (big endian on PPC).
+    @param data An 32-bit value to be written in host byte order (big endian on PPC).
     @result The value of the register masked with the mask before the write. */
     
     virtual UInt32 setConfigBits( UInt8 offset, UInt32 mask, UInt32 value );
@@ -565,7 +581,7 @@ public:
     @param enable True or false to enable or disable bus mastering.
     @result True if bus mastering was previously enabled, false otherwise. */
 
-    virtual bool setBusMasterEnable( bool enable );
+    virtual bool setBusMasterEnable( bool enable ) /* API_DEPRECATED_WITH_REPLACEMENT("setBusLeadEnable", macos(10.0, 12.4), ios(1.0, 15.4), watchos(1.0, 8.5), tvos(1.0, 15.4)) */;
 
 /*! @function findPCICapability
     @abstract Search configuration space for a PCI capability register.
@@ -687,7 +703,7 @@ public:
 /*! @function hasPCIPowerManagement
     @abstract determine whether or not the device supports PCI Bus Power Management.
     @discussion This method will look at the device's capabilties registers and determine whether or not the device supports the PCI BUS Power Management Specification.
-    @param state (optional) Check for support of a specific state (e.g. kPCIPMCPMESupportFromD3Cold). If state is not suuplied or is 0, then check for a property in the registry which tells which state the hardware expects the device to go to during sleep.
+    @param state(optional) Check for support of a specific state (e.g. kPCIPMCPMESupportFromD3Cold). If state is not suuplied or is 0, then check for a property in the registry which tells which state the hardware expects the device to go to during sleep.
     @result true if the specified state is supported */
     virtual bool hasPCIPowerManagement(IOOptionBits state = 0);
     
@@ -695,7 +711,7 @@ public:
 /*! @function enablePCIPowerManagement
     @abstract enable PCI power management for sleep state
     @discussion This method will enable PCI Bus Powermanagement when going to sleep mode.
-    @param state (optional) Enables PCI Power Management by placing the function in the given state (e.g. kPCIPMCSPowerStateD3). If state is not specified or is 0xffffffff, then the IOPCIDevice determines the desired state. If state is kPCIPMCSPowerStateD0 (0) then PCI Power Management is disabled.
+    @param state(optional) Enables PCI Power Management by placing the function in the given state (e.g. kPCIPMCSPowerStateD3). If state is not specified or is 0xffffffff, then the IOPCIDevice determines the desired state. If state is kPCIPMCSPowerStateD0 (0) then PCI Power Management is disabled.
     @result kIOReturnSuccess if there were no errors */
     virtual IOReturn enablePCIPowerManagement(IOOptionBits state = 0xffffffff);
     
@@ -709,8 +725,26 @@ public:
 
     virtual UInt32 extendedFindPCICapability( UInt32 capabilityID, IOByteCount * offset = 0 );
 
-    // Unused Padding
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_12_3
+    OSMetaClassDeclareReservedUsed(IOPCIDevice,  3);
+/*! @function configureInterrupts
+    @abstract Configure interrupts.
+    @discussion This method allocates interrupts based on the passed parameters and the device's capabilities, i.e. MSI(X).
+    @param interruptType kIOInterruptTypeLevel, kIOInterruptTypePCIMessaged or kIOInterruptTypePCIMessagedX.
+    @param numRequired The minimum number of vectors for allocation to succeed.
+    @param numRequested The desired number of vectors to allocate.
+    @param options Unused
+    @result kIOReturnSuccess if there were no errors */
+
+    virtual IOReturn configureInterrupts( UInt32 interruptType = kIOInterruptTypeLevel,
+                                          UInt32 numRequired   = 1,
+                                          UInt32 numRequested  = 1,
+                                          IOOptionBits options = 0 );
+else
     OSMetaClassDeclareReservedUnused(IOPCIDevice,  3);
+#endif
+
+    // Unused Padding
     OSMetaClassDeclareReservedUnused(IOPCIDevice,  4);
     OSMetaClassDeclareReservedUnused(IOPCIDevice,  5);
     OSMetaClassDeclareReservedUnused(IOPCIDevice,  6);
@@ -805,6 +839,183 @@ public:
     enum { kIOPCIAERErrorDescriptionMaxLength = 256 };
 
     void copyAERErrorDescriptionForBit(bool correctable, uint32_t bit, char * string, size_t maxLength);
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
+	/*!
+	 * @brief       Reads a 64-bit value from the PCI device's aperture at a given memory index.
+	 * @discussion  This method reads a 64-bit register on the device and returns its value. 
+	 * @param       memoryIndex An index into the array of ranges assigned to the device.
+	 * @param       offset An offset into the device's memory specified by the index.
+	 * @param       readData An out parameter containing the 64-bit value in host byte order. -1 is written to readData on error.
+	 */
+	IOReturn deviceMemoryRead64(uint8_t   memoryIndex,
+						  uint64_t  offset,
+						  uint64_t* readData);
+
+	/*!
+	 * @brief       Reads a 32-bit value from the PCI device's aperture at a given memory index.
+	 * @discussion  This method reads a 32-bit register on the device and returns its value.
+	 * @param       memoryIndex An index into the array of ranges assigned to the device.
+	 * @param       offset An offset into the device's memory specified by the index.
+	 * @param       readData An out parameter containing the 32-bit value in host byte order. -1 is written to readData on error.
+	 */
+	IOReturn deviceMemoryRead32(uint8_t   memoryIndex,
+						  uint64_t  offset,
+						  uint32_t* readData);
+
+	/*!
+	 * @brief       Reads a 16-bit value from the PCI device's aperture at a given memory index.
+	 * @discussion  This method reads a 16-bit register on the device and returns its value.
+	 * @param       memoryIndex An index into the array of ranges assigned to the device.
+	 * @param       offset An offset into the device's memory specified by the index.
+	 * @param       readData An out parameter containing the 16-bit value in host byte order. -1 is written to readData on error.
+	 */
+	IOReturn deviceMemoryRead16(uint8_t   memoryIndex,
+						  uint64_t  offset,
+						  uint16_t* readData);
+
+	/*!
+	 * @brief       Reads an 8-bit value from the PCI device's aperture at a given memory index.
+	 * @discussion  This method reads an 8-bit register on the device and returns its value.
+	 * @param       memoryIndex An index into the array of ranges assigned to the device.
+	 * @param       offset An offset into the device's memory specified by the index.
+	 * @param       readData An out parameter containing the 8-bit. -1 is written to readData on error.
+	 */
+	IOReturn deviceMemoryRead8(uint8_t  memoryIndex,
+						 uint64_t offset,
+						 uint8_t* readData);
+
+	/*!
+	 * @brief       Writes a 64-bit value to the PCI device's aperture at a given memory index.
+	 * @discussion  This method writes a 64-bit register on the device and returns its value.
+	 * @param       memoryIndex An index into the array of ranges assigned to the device
+	 * @param       offset An offset into the device's memory specified by the index.
+	 * @param       data A 64-bit value to be written in host byte order.
+	 */
+	IOReturn deviceMemoryWrite64(uint8_t  memoryIndex,
+						   uint64_t offset,
+						   uint64_t data);
+
+	/*!
+	 * @brief       Writes a 32-bit value to the PCI device's aperture at a given memory index.
+	 * @discussion  This method writes a 32-bit register on the device and returns its value.
+	 * @param       memoryIndex An index into the array of ranges assigned to the device.
+	 * @param       offset An offset into the device's memory specified by the index.
+	 * @param       data A 32-bit value to be written in host byte order.
+	 */
+	IOReturn deviceMemoryWrite32(uint8_t  memoryIndex,
+						   uint64_t offset,
+						   uint32_t data);
+
+	/*!
+	 * @brief       Writes a 16-bit value to the PCI device's aperture at a given memory index.
+	 * @discussion  This method writes a 16-bit register on the device and returns its value.
+	 * @param       memoryIndex An index into the array of ranges assigned to the device.
+	 * @param       offset An offset into the device's memory specified by the index.
+	 * @param       data A 16-bit value to be written in host byte order.
+	 */
+	IOReturn deviceMemoryWrite16(uint8_t  memoryIndex,
+						   uint64_t offset,
+						   uint16_t data);
+
+	/*!
+	 * @brief       Writes an 8-bit value to the PCI device's aperture at a given memory index.
+	 * @discussion  This method writes an 8-bit register on the device and returns its value.
+	 * @param       memoryIndex An index into the array of ranges assigned to the device
+	 * @param       offset An offset into the device's memory specified by the index.
+	 * @param       data An 8-bit value.
+	 */
+	IOReturn deviceMemoryWrite8(uint8_t  memoryIndex,
+						  uint64_t offset,
+						  uint8_t  data);
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_0
+	/*!
+	 * @brief       Register a dext crash notification handler for this PCI device.
+	 * @discussion  The handler is invoked prior to disabling and terminating the crashed device,
+	 *              and it returns an IOPCIResetType to control whether and how the device is reset.
+	 *              kIOPCIResetNone: Do not reset the device, only terminate it
+	 *              kIOPCIResetHot: Perform a hot reset, terminate the device and any multi-function peers
+	 * @param       handler The notification handler
+	 * @param       clientObject The client object pointer passed to the handler
+	 */
+	void registerCrashNotification(IOPCIDeviceCrashNotification_t handler, void *clientObject);
+
+	void unregisterCrashNotification(void);
+
+	/*! @function setLinkSpeed
+	 *   @abstract    Set the link speed upper bound and optionally retrain
+	 *   @discussion  This function writes the device's upstream bridge's target-link-speed. This setting will be enforced during subsequent
+	 *                reset-initiated link trainings, and the function will immediately retrain the link if the retrain parameter is true.
+	 *                If retrain is true, this function will not return until training completes. The user must call IOPCIDevice::getLinkSpeed() to
+	 *                see the result of link training; a return value of kIOReturnSuccess does not indicate the requested link speed was reached.
+	 *   @param linkSpeed A tIOPCILinkSpeed.
+	 *   @param retrain If true, the function will retrain the link.
+	 *   @result      kIOReturnSuccess if there were no errors, such as linkSpeed unsupported by the upstream bridge. kIOReturnSuccess does not
+	 *                indicate the requested link speed was reached.
+	 */
+	IOReturn setLinkSpeed(tIOPCILinkSpeed linkSpeed,
+						  bool            retrain = false);
+
+	/*! @function getLinkSpeed
+	 *   @abstract    Get the endpoint's link speed
+	 *   @param linkSpeed A pointer to a tIOPCILinkSpeed.
+	 *   @result      Returns an IOReturn code indicating success or failure.
+	 */
+	IOReturn getLinkSpeed(tIOPCILinkSpeed *linkSpeed);
+#endif
+
+private:
+	static uint16_t getCloseCommandMask(uint32_t vendorDevice);
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_12_3
+public:
+	/*! @function setBusLeadEnable
+	 *  @abstract Sets the device's bus lead enable.
+	 *  @discussion This method sets the bus lead enable bit in the device's command config space register to the passed value, and returns the previous state of the enable.
+	 *  @param enable True or false to enable or disable bus leading capability.
+	 *  @result True if bus leading was previously enabled, false otherwise.
+	 */
+    bool setBusLeadEnable( bool enable );
+#endif
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_0
+	/*! @function reset
+	 *   @abstract     Reset the PCIe device.
+	 *   @discussion   If this is a multi-function device, all functions associated with the device will be reset.
+	 *                 Device configuration state is saved prior to resetting the device and restored after reset completes.
+	 *                 During reset, the caller must not attempt to access the device.
+	 *                 This call will block until the link comes up and the device is usable (except for type kIOPCIDeviceResetTypeWarmResetDisable).
+	 *   @param type     tIOPCIDeviceResetTypes.
+	 *   @param options  tIOPCIDeviceResetOptions.
+	 *   @return       kIOReturnSuccess if the reset specified is supported
+	 */
+	IOReturn reset(tIOPCIDeviceResetTypes type,
+				   tIOPCIDeviceResetOptions options = kIOPCIDeviceResetOptionNone);
+#endif
+
+private:
+	void releasePowerAssertion(void);
+	void powerAssertionTimeout(IOTimerEventSource* timer);
+	bool childPublished(void* refcon __unused, IOService* newService, IONotifier* notifier __unused);
+	bool childMatched(void* refcon __unused, IOService* newService, IONotifier* notifier __unused);
+
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_13_0
+public:
+	virtual bool setProperty(const OSSymbol * aKey, OSObject * anObject);
+	virtual bool setProperty(const OSString * aKey, OSObject * anObject);
+	virtual bool setProperty(const char * aKey, OSObject * anObject);
+	virtual bool setProperty(const char * aKey, const char * aString);
+	virtual bool setProperty(const char * aKey, bool aBoolean);
+	virtual bool setProperty(const char * aKey, unsigned long long aValue, unsigned int aNumberOfBits);
+	virtual bool setProperty(const char * aKey, void * bytes, unsigned int length);
+#endif
+
+private:
+	uint32_t configWrite32Filter(IOByteCount offset, uint32_t data);
+	uint16_t configWrite16Filter(IOByteCount offset, uint16_t data);
+	uint8_t configWrite8Filter(IOByteCount offset, uint8_t data);
 };
 
 #endif /* defined(KERNEL) */
