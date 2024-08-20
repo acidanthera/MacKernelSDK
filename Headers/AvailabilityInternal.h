@@ -35,15 +35,11 @@
 #endif
 
 #ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
-    #if defined(__has_builtin) && __has_builtin(__is_target_os)
-        #if __is_target_os(macos)
-            #define __MAC_OS_X_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __MAC_OS_X_VERSION_MAX_ALLOWED __MAC_14_5
-        #endif
-    #elif  __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ 
+    #if  __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
+        /* compiler for Mac OS X sets __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ */
         #define __MAC_OS_X_VERSION_MIN_REQUIRED __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
         #define __MAC_OS_X_VERSION_MAX_ALLOWED __MAC_14_5
-    #endif /*  __has_builtin(__is_target_os) && __is_target_os(macos) */
+    #endif
 #endif /* __MAC_OS_X_VERSION_MIN_REQUIRED */
 
 #ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
