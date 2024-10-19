@@ -30,15 +30,13 @@
 #ifndef __AVAILABILITY_INTERNAL__
 #define __AVAILABILITY_INTERNAL__
 
-#if __has_include(<AvailabilityInternalPrivate.h>)
-  #include <AvailabilityInternalPrivate.h>
-#endif
+#include <AvailabilityVersions.h>
 
 #ifndef __MAC_OS_X_VERSION_MIN_REQUIRED
     #if  __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
         /* compiler for Mac OS X sets __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ */
         #define __MAC_OS_X_VERSION_MIN_REQUIRED __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
-        #define __MAC_OS_X_VERSION_MAX_ALLOWED __MAC_14_5
+        #define __MAC_OS_X_VERSION_MAX_ALLOWED __MAC_15_0
     #endif
 #endif /* __MAC_OS_X_VERSION_MIN_REQUIRED */
 
@@ -46,11 +44,11 @@
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(ios)
             #define __IPHONE_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __IPHONE_OS_VERSION_MAX_ALLOWED __IPHONE_17_5
+            #define __IPHONE_OS_VERSION_MAX_ALLOWED __IPHONE_18_0
         #endif
     #elif  __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ 
         #define __IPHONE_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__
-        #define __IPHONE_OS_VERSION_MAX_ALLOWED __IPHONE_17_5
+        #define __IPHONE_OS_VERSION_MAX_ALLOWED __IPHONE_18_0
     #endif /*  __has_builtin(__is_target_os) && __is_target_os(ios) */
 #endif /* __IPHONE_OS_VERSION_MIN_REQUIRED */
 
@@ -58,13 +56,13 @@
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(watchos)
             #define __WATCH_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __WATCH_OS_VERSION_MAX_ALLOWED __WATCHOS_10_5
+            #define __WATCH_OS_VERSION_MAX_ALLOWED __WATCHOS_11_0
             /* for compatibility with existing code.  New code should use platform specific checks */
             #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_9_0
         #endif
     #elif  __ENVIRONMENT_WATCH_OS_VERSION_MIN_REQUIRED__ 
         #define __WATCH_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_WATCH_OS_VERSION_MIN_REQUIRED__
-        #define __WATCH_OS_VERSION_MAX_ALLOWED __WATCHOS_10_5
+        #define __WATCH_OS_VERSION_MAX_ALLOWED __WATCHOS_11_0
         /* for compatibility with existing code.  New code should use platform specific checks */
         #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_9_0
     #endif /*  __has_builtin(__is_target_os) && __is_target_os(watchos) */
@@ -74,13 +72,13 @@
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(tvos)
             #define __TV_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __TV_OS_VERSION_MAX_ALLOWED __TVOS_17_5
+            #define __TV_OS_VERSION_MAX_ALLOWED __TVOS_18_0
             /* for compatibility with existing code.  New code should use platform specific checks */
             #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_9_0
         #endif
     #elif  __ENVIRONMENT_TV_OS_VERSION_MIN_REQUIRED__ 
         #define __TV_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_TV_OS_VERSION_MIN_REQUIRED__
-        #define __TV_OS_VERSION_MAX_ALLOWED __TVOS_17_5
+        #define __TV_OS_VERSION_MAX_ALLOWED __TVOS_18_0
         /* for compatibility with existing code.  New code should use platform specific checks */
         #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_9_0
     #endif /*  __has_builtin(__is_target_os) && __is_target_os(tvos) */
@@ -90,7 +88,7 @@
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(bridgeos)
             #define __BRIDGE_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __BRIDGE_OS_VERSION_MAX_ALLOWED __BRIDGEOS_8_5
+            #define __BRIDGE_OS_VERSION_MAX_ALLOWED __BRIDGEOS_9_0
             /* for compatibility with existing code.  New code should use platform specific checks */
             #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_11_0
         #endif
@@ -101,7 +99,7 @@
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(driverkit)
             #define __DRIVERKIT_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __DRIVERKIT_VERSION_MAX_ALLOWED __DRIVERKIT_23_5
+            #define __DRIVERKIT_VERSION_MAX_ALLOWED __DRIVERKIT_24_0
         #endif
     #endif /*  __has_builtin(__is_target_os) && __is_target_os(driverkit) */
 #endif /* __DRIVERKIT_VERSION_MIN_REQUIRED */
@@ -110,7 +108,7 @@
     #if defined(__has_builtin) && __has_builtin(__is_target_os)
         #if __is_target_os(visionos)
             #define __VISION_OS_VERSION_MIN_REQUIRED __ENVIRONMENT_OS_VERSION_MIN_REQUIRED__
-            #define __VISION_OS_VERSION_MAX_ALLOWED __VISIONOS_1_2
+            #define __VISION_OS_VERSION_MAX_ALLOWED __VISIONOS_2_0
             /* for compatibility with existing code.  New code should use platform specific checks */
             #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_17_1
         #endif
@@ -168,8 +166,6 @@
 #define __AVAILABILITY_INTERNAL_UNAVAILABLE           __attribute__((unavailable))
 #define __AVAILABILITY_INTERNAL_WEAK_IMPORT           __attribute__((weak_import))
 #define __AVAILABILITY_INTERNAL_REGULAR            
-
-#include <AvailabilityInternalLegacy.h>
 
 #if defined(__has_feature) && defined(__has_attribute)
  #if __has_attribute(availability)
@@ -315,6 +311,16 @@
     #define __API_DEPRECATED_BEGIN_REP7(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3) __API_R_BEGIN(msg,arg4) __API_R_BEGIN(msg,arg5) __API_R_BEGIN(msg,arg6) __API_R_BEGIN(msg,arg7)
     #define __API_DEPRECATED_BEGIN_REP8(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3) __API_R_BEGIN(msg,arg4) __API_R_BEGIN(msg,arg5) __API_R_BEGIN(msg,arg6) __API_R_BEGIN(msg,arg7) __API_R_BEGIN(msg,arg8)
     #define __API_DEPRECATED_BEGIN_REP_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,_9,NAME,...) NAME
+    #define __API_DEPRECATED_WITH_REPLACEMENT_BEGIN0(msg,arg0) __API_R_BEGIN(msg,arg0)
+    #define __API_DEPRECATED_WITH_REPLACEMENT_BEGIN1(msg,arg0,arg1) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1)
+    #define __API_DEPRECATED_WITH_REPLACEMENT_BEGIN2(msg,arg0,arg1,arg2) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2)
+    #define __API_DEPRECATED_WITH_REPLACEMENT_BEGIN3(msg,arg0,arg1,arg2,arg3) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3)
+    #define __API_DEPRECATED_WITH_REPLACEMENT_BEGIN4(msg,arg0,arg1,arg2,arg3,arg4) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3) __API_R_BEGIN(msg,arg4)
+    #define __API_DEPRECATED_WITH_REPLACEMENT_BEGIN5(msg,arg0,arg1,arg2,arg3,arg4,arg5) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3) __API_R_BEGIN(msg,arg4) __API_R_BEGIN(msg,arg5)
+    #define __API_DEPRECATED_WITH_REPLACEMENT_BEGIN6(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3) __API_R_BEGIN(msg,arg4) __API_R_BEGIN(msg,arg5) __API_R_BEGIN(msg,arg6)
+    #define __API_DEPRECATED_WITH_REPLACEMENT_BEGIN7(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3) __API_R_BEGIN(msg,arg4) __API_R_BEGIN(msg,arg5) __API_R_BEGIN(msg,arg6) __API_R_BEGIN(msg,arg7)
+    #define __API_DEPRECATED_WITH_REPLACEMENT_BEGIN8(msg,arg0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) __API_R_BEGIN(msg,arg0) __API_R_BEGIN(msg,arg1) __API_R_BEGIN(msg,arg2) __API_R_BEGIN(msg,arg3) __API_R_BEGIN(msg,arg4) __API_R_BEGIN(msg,arg5) __API_R_BEGIN(msg,arg6) __API_R_BEGIN(msg,arg7) __API_R_BEGIN(msg,arg8)
+    #define __API_DEPRECATED_WITH_REPLACEMENT_BEGIN_GET_MACRO(_0,_1,_2,_3,_4,_5,_6,_7,_8,_9,NAME,...) NAME
 
     /*
      * API Unavailability
@@ -372,22 +378,6 @@
     #define __swift_compiler_version_at_least(...) __swift_compiler_version_at_least_impl(__VA_ARGS__, 0, 0, 0, 0)
 #else
     #define __swift_compiler_version_at_least(...) 1
-#endif
-
-/*
- * If __SPI_AVAILABLE has not been defined elsewhere, disable it.
- */
- 
-#ifndef __SPI_AVAILABLE
-  #define __SPI_AVAILABLE(...)
-#endif
-
-#ifndef __SPI_AVAILABLE_BEGIN
-  #define __SPI_AVAILABLE_BEGIN(...)
-#endif
-
-#ifndef __SPI_AVAILABLE_END
-  #define __SPI_AVAILABLE_END(...)
 #endif
 
 #endif /* __AVAILABILITY_INTERNAL__ */
