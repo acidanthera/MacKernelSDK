@@ -182,6 +182,10 @@
 
 #include <AvailabilityVersions.h>
 #include <AvailabilityInternal.h>
+#include <AvailabilityInternalLegacy.h>
+#if __has_include(<AvailabilityInternalPrivate.h>)
+  #include <AvailabilityInternalPrivate.h>
+#endif
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
     #define __OSX_AVAILABLE_STARTING(_osx, _ios) __AVAILABILITY_INTERNAL##_ios
@@ -557,3 +561,4 @@
 #endif
 
 #endif /* __AVAILABILITY__ */
+
