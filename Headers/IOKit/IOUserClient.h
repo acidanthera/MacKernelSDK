@@ -73,12 +73,34 @@ typedef IOReturn (IOService::*IOAsyncMethod)(OSAsyncReference asyncRef,
 typedef IOReturn (IOService::*IOTrap)(void * p1, void * p2, void * p3,
     void * p4, void * p5, void * p6 );
 
-typedef IOReturn (*IOMethodACID)(IOService * svc, void * p1, void * p2, void * p3,
+typedef IOReturn (*IOMethodACID32)(IOService * svc, void * p1, void * p2, void * p3,
     void * p4, void * p5, void * p6 );
+
+typedef IOReturn (*IOAsyncMethodACID32)(IOService * svc, OSAsyncReference asyncRef,
+	void * p1, void * p2, void * p3,
+	void * p4, void * p5, void * p6 );
+
+typedef IOReturn (*IOTrapACID32)(IOService * svc, void * p1, void * p2, void * p3,
+	void * p4, void * p5, void * p6 );
+
+//
+// When building for i386, clang does not emit code that is compatible with GCC-built code for the below structs.
+// The below struct modifications are workarounds to have the correct positioning of the function pointer.
+//
+// padding must be set to kIOExternalMethodACIDClangPadding
+//
+#if (defined(__i386__) && defined(__clang__))
+#define kIOExternalMethodACID32Padding 0xFFFF0000
+#endif
 
 struct IOExternalMethod {
 	IOService *         object;
+#if (defined(__i386__) && defined(__clang__))
+  	uint32_t            padding;
+	IOMethodACID32      func;
+#else
 	IOMethod            func;
+#endif
 	IOOptionBits        flags;
 	IOByteCount         count0;
 	IOByteCount         count1;
@@ -86,7 +108,12 @@ struct IOExternalMethod {
 
 struct IOExternalAsyncMethod {
 	IOService *         object;
+#if (defined(__i386__) && defined(__clang__))
+	uint32_t            padding;
+	IOAsyncMethodACID32 func;
+#else
 	IOAsyncMethod       func;
+#endif
 	IOOptionBits        flags;
 	IOByteCount         count0;
 	IOByteCount         count1;
@@ -94,34 +121,13 @@ struct IOExternalAsyncMethod {
 
 struct IOExternalTrap {
 	IOService *         object;
-	IOTrap              func;
-};
-
-//
-// When building for i386, clang does not emit proper code for IOExternalMethod.
-// The below struct is a workaround to have the correct positioning of the function pointer.
-//
-struct IOExternalMethodACID {
-  IOService *         object;
-#if defined(__i386__)
-  uint32_t            padding;
-#endif
-  IOMethodACID        func;
-#if defined(__x86_64__)
-  uint64_t            padding;
-#endif
-  IOOptionBits        flags;
-  IOByteCount         count0;
-  IOByteCount         count1;
-};
-
-#if defined(__i386__)
-#define kIOExternalMethodACIDPadding 0xFFFF0000
-#elif defined(__x86_64__)
-#define kIOExternalMethodACIDPadding 0x0
+#if (defined(__i386__) && defined(__clang__))
+	uint32_t            padding;
+	IOTrapACID32        func;
 #else
-#error Unsupported arch
+	IOTrap              func;
 #endif
+};
 
 enum {
 	kIOUserNotifyMaxMessageSize = 64

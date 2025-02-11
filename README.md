@@ -129,3 +129,8 @@ To compile for 32-bit you will need to add a set of flags in your project:
     - In `KUNCUserNotifications.h` due to KPI deprecation
     - In `IOSCSIParallelInterfaceController.h` due to missing overrides
     - In `IOPCIBridge.h` due to missing overrides
+- Fixed incorrect compiler behavior:
+    - In `IOUserClient.h` to avoid issues with `IOExternalMethod` on 32-bit platforms
+        - Use `IOMethodACID` in place of `IOMethod`, referencing a static method taking the class as the first parameter
+        - Set `padding` in `IOExternalMethod` to `kIOExternalMethodACIDClangPadding`
+        - Refer to the `IOExternalMethod` definition for more details
