@@ -187,7 +187,9 @@ public:
 
     virtual bool start( IOService * provider ) APPLE_KEXT_OVERRIDE;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_5
     virtual void stop( IOService * provider ) APPLE_KEXT_OVERRIDE;
+#endif
 
     virtual bool configure( IOService * provider );
 
