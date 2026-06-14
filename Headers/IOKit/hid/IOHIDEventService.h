@@ -621,6 +621,7 @@ protected:
                                 IOFixed                         azimuth         = 0,
                                 IOOptionBits                    options         = 0 );
     
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_10
     /*!
      @function dispatchUnicodeEvent
      @abstract Dispatch unicode events
@@ -652,6 +653,10 @@ protected:
                                                  IOOptionBits               options     = 0);
 
     
+#else
+    OSMetaClassDeclareReservedUnused(IOHIDEventService,  6);
+#endif
+
 private:
     enum {
         kDigitizerOrientationTypeTilt = 0,
@@ -678,6 +683,7 @@ private:
                                 IOOptionBits                    options                 = 0 );
     
 
+#if TARGET_OS_EMBEDDED || __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12
 public:
     typedef void (*Action)(OSObject *target, OSObject * sender, void *context, OSObject *event, IOOptionBits options);
 
@@ -788,6 +794,18 @@ protected:
                                                                 IOFixed                         joystickZ,
                                                                 IOFixed                         joystickRz,
                                                                 IOOptionBits                    options         = 0 );
+    
+
+#else
+protected:
+    OSMetaClassDeclareReservedUnused(IOHIDEventService,  7);
+    OSMetaClassDeclareReservedUnused(IOHIDEventService,  8);
+    OSMetaClassDeclareReservedUnused(IOHIDEventService,  9);
+    OSMetaClassDeclareReservedUnused(IOHIDEventService, 10);
+    OSMetaClassDeclareReservedUnused(IOHIDEventService, 11);
+    OSMetaClassDeclareReservedUnused(IOHIDEventService, 12);
+    OSMetaClassDeclareReservedUnused(IOHIDEventService, 13);
+#endif
     
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12
     /*!
