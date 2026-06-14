@@ -326,6 +326,7 @@ public:
 
     virtual IOReturn message( UInt32 type, IOService * provider,  void * argument = 0 ) APPLE_KEXT_OVERRIDE;
 
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0
     using IOService::setProperty;
 /*! @function setProperty
     @abstract Synchronized method to add a property to an IOHIDDevice's property table.
@@ -335,6 +336,7 @@ public:
     @result true on success or false on a resource failure. */
 
     virtual bool setProperty( const OSSymbol * aKey, OSObject * anObject) APPLE_KEXT_OVERRIDE;
+#endif
 
 /*! @function newTransportString
     @abstract Returns a string object that describes the transport
