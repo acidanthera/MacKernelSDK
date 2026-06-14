@@ -683,7 +683,7 @@ private:
                                 IOOptionBits                    options                 = 0 );
     
 
-#if TARGET_OS_EMBEDDED || __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12
 public:
     typedef void (*Action)(OSObject *target, OSObject * sender, void *context, OSObject *event, IOOptionBits options);
 
@@ -958,7 +958,9 @@ protected:
     OSMetaClassDeclareReservedUnused(IOHIDEventService, 31);
 
 public:
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12
     virtual void            close( IOService * forClient, IOOptionBits options = 0 ) APPLE_KEXT_OVERRIDE;
+#endif
     
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_15
     /*! @function message
