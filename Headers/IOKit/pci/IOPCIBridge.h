@@ -514,6 +514,12 @@ public:
     // Host bridge data is shared, when bridges have shared resources, i.e. PCIe config space (legacy systems).
     // They must be unique, if bridge has no resources to share (Apple Silicone).
     IOService *bridgeData;
+
+    // IOPCIFamily 726 (macOS Tahoe) extends the private host bridge layout.
+    // Keep subclass storage beyond fields written by the runtime superclass.
+    uint32_t _domainId;
+private:
+    IONotifier *_publishNotifier;
 };
 #endif
 
